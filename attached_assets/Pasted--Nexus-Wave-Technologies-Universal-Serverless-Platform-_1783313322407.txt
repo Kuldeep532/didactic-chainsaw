@@ -1,0 +1,844 @@
+# Nexus Wave Technologies — Universal Serverless Platform Development Instruction
+
+तुम एक Senior Full-Stack Architect, Backend Security Engineer, Mobile API Architect, Accessibility Engineer और Serverless Deployment Engineer हो।
+
+Nexus Wave Technologies के लिए एक complete production-ready platform बनाओ जिसमें:
+
+* Public website
+* Backend
+* Universal API Gateway
+* Google Login
+* User accounts
+* Secure Admin Panel
+* Nexus Plus backend
+* Geeta Nexus backend
+* Dynamic API provider system
+* AI model provider system
+* Contact and Support system
+* Products
+* Notifications
+* Device registration
+* Remote configuration
+* App version control
+* APK release and download system
+* Privacy Policy
+* Terms and Conditions
+* Refund Policy
+* Disclaimer
+* Accessibility Statement
+* Audit logs
+
+सभी एक central ecosystem के रूप में काम करें।
+
+निर्देश Hindi में हैं, लेकिन पूरा source code, variables, functions, classes, API actions, database fields, comments और technical documentation English में हो।
+
+Website और Admin Panel में कोई emoji उपयोग न करो।
+
+पूरा platform blind users सहित disabled users के लिए accessible हो और WCAG 2.2 AA-oriented implementation रखे।
+
+---
+
+## 1. Company Information
+
+Company Name:
+
+Nexus Wave Technologies
+
+Tagline:
+
+High-efficiency barrier-free utilities for everyone
+
+Contact Email:
+
+[info@nexusweb.co.in](mailto:info@nexusweb.co.in)
+
+Applications:
+
+Nexus Plus
+
+Package ID:
+
+com.nexuswavetech.nexusplus
+
+Description:
+
+Enhanced features and seamless integration
+
+Geeta Nexus
+
+Package ID:
+
+com.nexuswavetech.geetanexus
+
+Description:
+
+Spiritual wisdom meets modern technology
+
+---
+
+## 2. Framework Freedom
+
+किसी भी suitable framework या technology stack का उपयोग कर सकते हो।
+
+Examples:
+
+* Next.js
+* Laravel
+* WordPress with a secure custom application backend
+* Nuxt
+* SvelteKit
+* Astro with server functions
+* Remix
+* Other mature frameworks
+
+Framework केवल popularity के आधार पर select मत करो।
+
+ऐसा architecture चुनो जो:
+
+* Easy to maintain हो
+* Secure हो
+* Serverless-compatible हो
+* Portable हो
+* Vendor lock-in कम रखे
+* Universal Gateway support करे
+* Mobile apps को backend provide कर सके
+* Google authentication support करे
+* Accessibility requirements पूरी करे
+* Multiple deployment environments में काम कर सके
+
+Application business logic को hosting-provider-specific code में tightly couple मत करो।
+
+Core services को adapters और interfaces के पीछे रखो।
+
+---
+
+## 3. Deployment Portability
+
+System को serverless-first और portable architecture में बनाओ।
+
+Target environments में शामिल हो सकते हैं:
+
+* Vercel
+* Netlify
+* Cloudflare-compatible serverless environments
+* AWS-compatible serverless environments
+* Container-based hosting
+* Other Node.js, PHP या compatible serverless platforms
+
+Static hosting environments केवल frontend host कर सकते हैं यदि वे secure server-side execution support नहीं करते।
+
+ऐसे environment में:
+
+Frontend
+→ Universal Gateway URL
+→ Secure serverless backend
+
+architecture उपयोग करो।
+
+Backend को static client bundle में convert मत करो।
+
+Secrets browser या mobile application में expose मत करो।
+
+Deployment adapter अलग हो सकता है, लेकिन business logic, gateway contract और API behavior समान रहना चाहिए।
+
+---
+
+## 4. One URL Mobile Integration
+
+Mobile application integration अत्यंत simple होनी चाहिए।
+
+App developer को केवल एक URL configure करना पड़े:
+
+https://nexusweb.co.in/api/v1/gateway
+
+Android example:
+
+object AppConfig {
+const val NEXUS_GATEWAY_URL =
+"https://nexusweb.co.in/api/v1/gateway"
+}
+
+इसके बाद app को अलग-अलग URLs configure न करने पड़ें।
+
+App में अलग URLs hard-code न हों:
+
+* AI API URL
+* NASA API URL
+* Product API URL
+* Notification API URL
+* Social links API URL
+* Release API URL
+* Remote Config URL
+* Support API URL
+* Contact API URL
+
+App केवल Universal Gateway से communicate करे।
+
+Flow:
+
+Mobile App
+→ Universal Gateway
+→ Request Verification
+→ Authentication
+→ Authorization
+→ Action Router
+→ Provider Router
+→ Configured Service
+→ Response Validation
+→ Normalized Response
+
+Website frontend भी जहाँ appropriate हो, इसी central backend architecture का उपयोग करे।
+
+---
+
+## 5. Universal Gateway
+
+Primary endpoint:
+
+POST /api/v1/gateway
+
+सभी business operations action-based हों।
+
+Required actions:
+
+GET_PUBLIC_CONFIG
+
+GET_COMPANY_INFO
+
+GET_SOCIAL_LINKS
+
+GET_APPS
+
+GET_APP_DETAILS
+
+GET_REMOTE_CONFIG
+
+CHECK_APP_VERSION
+
+GET_MAINTENANCE_STATUS
+
+GET_LATEST_RELEASE
+
+GET_RELEASE_HISTORY
+
+SUBMIT_CONTACT
+
+SUBMIT_SUPPORT_REQUEST
+
+FETCH_PRODUCTS
+
+GET_PRODUCT_DETAILS
+
+REGISTER_DEVICE
+
+REGISTER_PUSH
+
+GET_NOTIFICATIONS
+
+MARK_NOTIFICATION_READ
+
+USER_PROFILE
+
+UPDATE_USER_PROFILE
+
+DELETE_USER_ACCOUNT
+
+AI_REQUEST
+
+EXTERNAL_API_REQUEST
+
+ADMIN_QUERY
+
+Gateway:
+
+* Request validate करे
+* Client identify करे
+* Authentication verify करे
+* Authorization verify करे
+* App integrity policy enforce करे
+* Rate limit करे
+* Replay protection करे
+* Correct service route करे
+* Provider select करे
+* Response validate करे
+* Errors normalize करे
+* Request ID maintain करे
+* Security events log करे
+
+---
+
+## 6. No Source-Code Modification for New API Configuration
+
+यह एक critical requirement है।
+
+नई API key, AI model, external service endpoint या provider configuration add करने के लिए application source code modify, rebuild या redeploy करने की आवश्यकता नहीं होनी चाहिए, बशर्ते उस provider के लिए compatible generic adapter या protocol adapter पहले से supported हो।
+
+Provider system configuration-driven बनाओ।
+
+Configuration environment variables, deployment secrets या encrypted Admin configuration से load हो।
+
+उदाहरण configuration model:
+
+PROVIDER_NAME
+
+PROVIDER_TYPE
+
+PROVIDER_BASE_URL
+
+PROVIDER_API_KEY
+
+PROVIDER_AUTH_TYPE
+
+PROVIDER_MODEL
+
+PROVIDER_TIMEOUT
+
+PROVIDER_ENABLED
+
+PROVIDER_PRIORITY
+
+PROVIDER_CAPABILITIES
+
+PROVIDER_REQUEST_FORMAT
+
+PROVIDER_RESPONSE_MAPPING
+
+PROVIDER_RATE_LIMIT
+
+PROVIDER_FALLBACK
+
+Exact naming implementation के अनुसार बदल सकती है।
+
+लेकिन architecture ऐसा हो कि supported protocol family की नई service जोड़ने के लिए केवल:
+
+* Secret add करना
+* Base URL add करना
+* Model name add करना
+* Provider type select करना
+* Provider enable करना
+
+पर्याप्त हो।
+
+Source code modification आवश्यक न हो।
+
+Important security rule:
+
+Arbitrary environment variable को automatically executable API configuration मत मानो।
+
+केवल validated provider schema, approved protocol adapter और secure configuration registry के माध्यम से provider enable करो।
+
+---
+
+## 7. Generic Provider Adapter Architecture
+
+Backend में reusable adapters बनाओ।
+
+Examples:
+
+* OpenAI-compatible adapter
+* Generic REST JSON adapter
+* OAuth API adapter
+* API-key header adapter
+* Bearer-token adapter
+* Query-key API adapter
+* Image-generation adapter
+* Text-generation adapter
+* Structured-data API adapter
+* Webhook adapter
+
+यदि कोई नई AI service OpenAI-compatible protocol support करती है, तो केवल environment configuration बदलकर उसे connect किया जा सके।
+
+यदि कोई REST API generic supported configuration से map हो सकती है, तो source modification के बिना configuration से connect हो सके।
+
+यदि कोई provider completely unique protocol use करता है, तो उसके लिए एक बार adapter development आवश्यक हो सकता है।
+
+उसके बाद उसी protocol family के नए providers configuration से add किए जा सकें।
+
+यह limitation documentation में साफ लिखो।
+
+---
+
+## 8. Dynamic Secrets
+
+सभी secrets hosting platform के secure environment या secret management system में रहें।
+
+Examples:
+
+GOOGLE_CLIENT_ID
+
+GOOGLE_CLIENT_SECRET
+
+AUTH_SECRET
+
+SESSION_SECRET
+
+DATABASE_URL
+
+EMAIL_API_KEY
+
+REALTIME_API_KEY
+
+RELEASE_PROVIDER_TOKEN
+
+NASA_API_KEY
+
+AI_PROVIDER_API_KEY
+
+AI_PROVIDER_BASE_URL
+
+AI_PROVIDER_MODEL
+
+POLLINATIONS_CONFIGURATION
+
+UNITY_SERVICE_CONFIGURATION
+
+PRODUCT_FEED_CREDENTIALS
+
+MOBILE_REQUEST_SECRET
+
+ANDROID_CERTIFICATE_FINGERPRINT
+
+Secrets:
+
+* Git repository में न हों
+* Browser JavaScript में न हों
+* HTML में न हों
+* Public API response में न हों
+* Android app में न हों
+* Client logs में न हों
+* Error messages में न हों
+
+System environment configuration validate करे।
+
+Optional provider missing होने पर पूरा system crash न करे।
+
+केवल संबंधित capability unavailable state return करे।
+
+---
+
+## 9. Dynamic API Discovery
+
+Backend configured providers automatically discover करे।
+
+इसका अर्थ:
+
+1. Registered environment configuration read करो।
+2. Provider schema validate करो।
+3. Required credentials की availability check करो।
+4. Provider health state determine करो।
+5. Provider registry build करो।
+6. Requested capability के लिए eligible provider select करो।
+7. Authentication और authorization verify करो।
+8. External request execute करो।
+9. External response validate करो।
+10. Normalized response app को return करो।
+
+Unknown URL को automatically trust मत करो।
+
+User input से arbitrary external URL call मत करो।
+
+SSRF protection implement करो।
+
+Provider base URLs केवल trusted configuration registry से resolve हों।
+
+---
+
+## 10. AI Provider Router
+
+Apps किसी AI model provider को directly call न करें।
+
+Flow:
+
+App
+→ Universal Gateway
+→ AI_REQUEST
+→ Security Validation
+→ Usage Policy
+→ Rate Limit
+→ Provider Router
+→ Configured Model
+→ Response Validation
+→ App
+
+Architecture multiple models support करे।
+
+Provider configuration dynamically define कर सके:
+
+* Provider
+* Base URL
+* API key
+* Model
+* Capability
+* Priority
+* Timeout
+* Fallback provider
+* Enabled state
+
+AI keys server-side रहें।
+
+App को provider name जानना भी आवश्यक न हो।
+
+Backend task और configuration के अनुसार provider select कर सके।
+
+---
+
+## 11. App Security
+
+Known packages:
+
+com.nexuswavetech.nexusplus
+
+com.nexuswavetech.geetanexus
+
+Configured Android signing SHA-256 fingerprint:
+
+71:9A:03:D5:60:DE:9E:BE:2D:40:79:E5:18:6D:32:E1:54:A0:AD:6C:02:E0:F3:43:32:07:94:BE:EF:E8:BF:EC
+
+Fingerprint को secure environment configuration से load करो।
+
+Mobile requests के लिए layered verification implement करो:
+
+* Package identity
+* Signing certificate identity
+* Request signature
+* Timestamp
+* Request ID
+* Replay protection
+* Nonce where required
+* Device registration
+* App version policy
+* Integrity attestation where supported
+* Rate limiting
+
+यदि app tampered, cloned, repackaged, resigned या unauthorized हो:
+
+* Login deny करो
+* Protected session create मत करो
+* Sensitive data return मत करो
+* Protected API access deny करो
+* Security event log करो
+* Existing compromised session revoke करने की capability रखो
+
+App को intentionally crash मत कराओ।
+
+Fail-closed secure state use करो।
+
+---
+
+## 12. Google Login
+
+Real Google authentication implement करो।
+
+Support:
+
+* User login
+* First-login account creation
+* Existing account lookup
+* Secure callback
+* Durable session
+* Logout
+* Session expiration
+* Session revocation
+* Multiple-device session management
+* Account deletion
+* User profile
+
+Admin login भी verified Google identity use कर सकता है।
+
+Google login alone admin access नहीं देगा।
+
+Admin authorization server-side role table या secure allowlist से verify हो।
+
+---
+
+## 13. Admin Panel
+
+Admin Panel:
+
+* Public navigation में न दिखे
+* Footer में न दिखे
+* Sitemap में expose न हो
+* Unauthorized users को content न दे
+* Authentication और authorization दोनों verify करे
+
+Hidden URL को security mechanism मत मानो।
+
+Admin modules:
+
+* Dashboard
+* Users
+* Sessions
+* Apps
+* App Version Rules
+* Remote Configuration
+* Public Configuration
+* Social Links
+* API Providers
+* AI Providers
+* Provider Health
+* Contacts
+* Support Tickets
+* Products
+* Devices
+* Notifications
+* Releases
+* Audit Logs
+* Admin Roles
+
+Admin से supported provider configuration manage की जा सके, लेकिन secrets plain text में वापस display न हों।
+
+Secret update possible हो, secret retrieval नहीं।
+
+---
+
+## 14. Official Public Configuration
+
+Central configuration में यह data include करो:
+
+Company:
+
+Nexus Wave Technologies
+
+Tagline:
+
+High-efficiency barrier-free utilities for everyone
+
+Email:
+
+[info@nexusweb.co.in](mailto:info@nexusweb.co.in)
+
+X:
+
+https://x.com/NexusWaveApps
+
+LinkedIn:
+
+https://www.linkedin.com/company/nexus-wave-technologies/
+
+Instagram:
+
+https://www.instagram.com/nexuswave_technologies
+
+WhatsApp Channel:
+
+https://whatsapp.com/channel/0029VbDI2cL42Dcc9m6nfm3T
+
+Telegram:
+
+https://t.me/NexusWave5
+
+Discord:
+
+https://discord.gg/3yp8MMwJe
+
+Facebook:
+
+https://facebook.com/profile.php?id=61590971301245
+
+Release Source:
+
+https://github.com/Kuldeep532/refactored-octo-couscous/releases
+
+Frontend और apps इस public data को centralized backend configuration से प्राप्त करें।
+
+Links अलग-अलग components में duplicate hard-code मत करो।
+
+---
+
+## 15. Required Website Pages
+
+Create:
+
+* Home
+* About Us
+* Applications
+* Nexus Plus
+* Geeta Nexus
+* Features
+* Products when real data exists
+* Download Center
+* Support
+* FAQ
+* Contact
+* Login
+* User Account
+* Session Management
+* Privacy Policy
+* Terms and Conditions
+* Refund Policy
+* Disclaimer
+* Cookie Policy when applicable
+* Accessibility Statement
+* Account Deletion Information
+
+Legal pages complete और dedicated routes पर हों।
+
+---
+
+## 16. Privacy and Third-Party APIs
+
+Privacy Policy actual implementation से match करे।
+
+Configured और actually used services के अनुसार disclose करो:
+
+* Google authentication
+* AI providers
+* NASA API
+* Pollinations integration
+* Unity-related services
+* Other configured model APIs
+* Email provider
+* Database processor
+* Realtime provider
+* Release hosting
+* Product providers
+* Analytics only when actually used
+
+ऐसी API का claim मत करो जो enabled नहीं है।
+
+Provider registry maintain करो ताकि active integrations track किए जा सकें।
+
+---
+
+## 17. Accessibility
+
+पूरा website, login, account area, forms, downloads और Admin Panel blind users के लिए usable हो।
+
+WCAG 2.2 AA-oriented implementation करो।
+
+Required:
+
+* Semantic HTML
+* Landmarks
+* Correct headings
+* Skip link
+* Full keyboard navigation
+* Visible focus
+* Screen-reader-friendly navigation
+* Accessible mobile menu
+* Persistent form labels
+* Programmatic errors
+* Accessible status announcements
+* Sufficient contrast
+* Text zoom
+* Responsive reflow
+* Reduced motion
+* Meaningful links
+* Descriptive buttons
+* Accessible tables
+* Accessible pagination
+* Accessible accordions
+* Accessible dialogs
+* Accessible authentication
+* Accessible Admin Panel
+* No keyboard traps
+* No hover-only information
+* No color-only status communication
+
+Native HTML को ARIA पर प्राथमिकता दो।
+
+Keyboard-only और screen-reader-oriented testing करो।
+
+---
+
+## 18. No Emoji Policy
+
+पूरे system में emoji use मत करो।
+
+यह rule लागू है:
+
+* Public website
+* Admin Panel
+* Navigation
+* Buttons
+* Cards
+* Loading states
+* Error messages
+* Success messages
+* Notifications
+* Toasts
+* Empty states
+* Contact form
+* Login
+* Download Center
+* Support system
+* Push notification templates
+* Email templates
+
+Professional text और accessible SVG icons use करो।
+
+---
+
+## 19. Serverless Portability
+
+Core business logic को platform-independent रखो।
+
+Hosting-specific code adapters में isolate करो।
+
+Abstract these services:
+
+* Database
+* Cache
+* Object storage
+* Email
+* Authentication
+* Realtime
+* Scheduled jobs
+* Secrets
+* Logging
+
+जहाँ practical हो standard environment variables और portable interfaces use करो।
+
+System को process memory पर निर्भर मत बनाओ।
+
+Production state local filesystem में store मत करो।
+
+Permanent WebSocket server को serverless function में force मत करो।
+
+Managed realtime या polling/SSE-compatible architecture deployment platform के अनुसार adapter से use करो।
+
+---
+
+## 20. Final Development Rule
+
+Unnecessary planning में time waste मत करो।
+
+पहले केवल short architecture decision दो और तुरंत implementation शुरू करो।
+
+Optional API key missing होने पर development मत रोको।
+
+Provider adapter और environment configuration contract implement करो।
+
+फिर बाकी platform complete करो।
+
+Mobile application integration का मुख्य लक्ष्य:
+
+App developer केवल यह URL configure करे:
+
+https://nexusweb.co.in/api/v1/gateway
+
+उसके बाद:
+
+* Company data
+* Social links
+* App configuration
+* Version policy
+* Products
+* AI services
+* External APIs
+* Notifications
+* Support
+* Release information
+* Maintenance status
+
+सभी backend से dynamically प्राप्त हों।
+
+नई supported API या model provider जोड़ने के लिए source code modification न करना पड़े।
+
+केवल validated secrets और provider configuration add करनी पड़े।
+
+Final system mockup नहीं होना चाहिए।
+
+Complete frontend, backend, Universal Gateway, authentication, Admin Panel, app security, dynamic provider registry, AI router, external API adapters, notifications, products, releases, legal pages, accessibility, testing और deployment documentation implement करो।
+
+पूरा platform secure, accessible, serverless-first, portable और production-ready होना चाहिए।
