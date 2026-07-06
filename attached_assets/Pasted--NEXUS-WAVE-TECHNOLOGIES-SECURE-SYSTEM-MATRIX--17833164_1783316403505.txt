@@ -1,0 +1,72 @@
+# ==========================================
+# NEXUS WAVE TECHNOLOGIES SECURE SYSTEM MATRIX
+# ==========================================
+"Empowering users of all abilities through accessible, high-performance digital solutions."
+
+## 1. FIXED SIMPLE APK FILES (Zero Versioning Dependence)
+# In filenames ko badalna nahi hai. Website storage ya releases isi naam ko direct target karegi.
+- Geeta Nexus App:    geeta-nexus.apk
+- Nexus Plus App:     nexus-plus.apk
+
+## 2. OFFICIAL PLATFORM LINKS
+- GitHub Releases:   https://github.com/Kuldeep532/refactored-octo-couscous/releases
+- LinkedIn Company:  https://www.linkedin.com/company/nexus-wave-technologies/
+- Discord Community: https://discord.gg/3yp8MMwJe
+- X (formerly Twitter): https://x.com/NexusWaveApps
+- WhatsApp Channel:  https://whatsapp.com/channel/0029VbDI2cL42Dcc9m6nfm3T
+
+---
+
+## 3. WEBSITE-DRIVEN NOTIFICATION BROADCAST (No Firebase for Push)
+# App ke andar ek fixed WebSocket ya Server-Sent Events (SSE) URL point hoga. 
+# Jab bhi aap website panel se news push karenge, yeh real-time payload direct apps tak jayega.
+
+[
+  {
+    "target_channel": "geeta_nexus",
+    "broadcast_type": "website_news",
+    "title": "Nayi Khabar aur Updates Live!",
+    "message": "Geeta Nexus app ka naya nirdesh website aur server par live ho chuka hai.",
+    "action_url": "https://github.com/Kuldeep532/refactored-octo-couscous/releases/tag/latest"
+  },
+  {
+    "target_channel": "nexus_plus",
+    "broadcast_type": "website_news",
+    "title": "Website Service Notification",
+    "message": "Nexus Plus users ke liye panel par nayi khabar post ki gayi hai.",
+    "action_url": "https://github.com/Kuldeep532/refactored-octo-couscous/releases/tag/latest"
+  }
+]
+
+---
+
+## 4. FIREBASE GOOGLE CREDENTIAL MANAGER (Website Backend Secrets Setup)
+# App ke andar koi code nahi badalna hai, bas website backend config ke andar Client ID point karni hai.
+# Android Credential Manager app se token lekar website backend validation API ko pass karega.
+
+```javascript
+// WEBSITE BACKEND (Secure Server Endpoint for Google Identity / Credential Manager)
+const { OAuth2Client } = require('google-auth-library');
+
+// Client ID strictly backend secrets (.env) ke andar locked rahegi
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_WEB_CLIENT_ID; 
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+
+exports.verifyGoogleUser = async (req, res) => {
+  try {
+    const { idToken } = req.body; // App ke Credential Manager se aaya hua token
+    
+    const ticket = await client.verifyIdToken({
+        idToken: idToken,
+        audience: GOOGLE_CLIENT_ID,
+    });
+    
+    const payload = ticket.getPayload();
+    const userId = payload['sub']; // Unique Profile ID for Detection
+    
+    // Auto login/register profile session
+    res.status(200).json({ success: true, user: { uid: userId, email: payload.email, name: payload.name } });
+  } catch (error) {
+    res.status(401).json({ success: false, error: "Invalid Google Credentials" });
+  }
+};

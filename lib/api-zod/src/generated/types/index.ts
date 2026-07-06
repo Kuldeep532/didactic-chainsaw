@@ -7,10 +7,19 @@
  */
 
 export * from './appInfo';
+export * from './authResponse';
+export * from './authResponseUser';
+export * from './blogPost';
+export * from './blogPostInput';
 export * from './contactMessage';
 export * from './contactMessageInput';
 export * from './errorResponse';
+export * from './googleSignInInput';
 export * from './healthStatus';
+export * from './notification';
+export * from './notificationInput';
+export * from './notificationSocketInfo';
 export * from './publicConfig';
 export * from './supportRequest';
 export * from './supportRequestInput';
+export * from './userProfile';

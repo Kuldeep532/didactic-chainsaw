@@ -1,4 +1,11 @@
 import { Link } from "wouter";
+import {
+  Github,
+  Linkedin,
+  Twitter,
+  MessageCircle,
+  Globe,
+} from "lucide-react";
 import logo from "@assets/nexus_wave_logo_transparent.png";
 
 export default function Footer() {
@@ -12,8 +19,25 @@ export default function Footer() {
               <span className="font-bold text-foreground">Nexus Wave Technologies</span>
             </Link>
             <p className="text-sm max-w-md">
-              High-efficiency barrier-free utilities for everyone. We build modern, accessible applications for the people who use them every day.
+              High-efficiency barrier-free utilities for everyone. Built by Kuldeep — sole proprietorship, focused on accessible tools for real people.
             </p>
+            <div className="mt-4 flex items-center space-x-4">
+              <a href="https://github.com/Kuldeep532/refactored-octo-couscous/releases" target="_blank" rel="noopener noreferrer" aria-label="GitHub Releases" className="hover:text-foreground transition-colors">
+                <Github className="h-5 w-5" aria-hidden="true" />
+              </a>
+              <a href="https://www.linkedin.com/company/nexus-wave-technologies/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-foreground transition-colors">
+                <Linkedin className="h-5 w-5" aria-hidden="true" />
+              </a>
+              <a href="https://x.com/NexusWaveApps" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="hover:text-foreground transition-colors">
+                <Twitter className="h-5 w-5" aria-hidden="true" />
+              </a>
+              <a href="https://discord.gg/3yp8MMwJe" target="_blank" rel="noopener noreferrer" aria-label="Discord" className="hover:text-foreground transition-colors">
+                <MessageCircle className="h-5 w-5" aria-hidden="true" />
+              </a>
+              <a href="https://whatsapp.com/channel/0029VbDI2cL42Dcc9m6nfm3T" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Channel" className="hover:text-foreground transition-colors">
+                <Globe className="h-5 w-5" aria-hidden="true" />
+              </a>
+            </div>
           </div>
           <div>
             <h3 className="font-semibold text-foreground mb-4">Company</h3>

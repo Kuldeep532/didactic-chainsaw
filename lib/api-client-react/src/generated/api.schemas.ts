@@ -75,3 +75,80 @@ export interface SupportRequest {
   createdAt: string;
 }
 
+export interface GoogleSignInInput {
+  /** ID token from Android Credential Manager */
+  idToken: string;
+}
+
+export type AuthResponseUser = {
+  id: number;
+  email: string;
+  name?: string;
+  picture?: string;
+  isAdmin: boolean;
+};
+
+export interface AuthResponse {
+  success: boolean;
+  /** JWT session token */
+  token: string;
+  user: AuthResponseUser;
+}
+
+export interface UserProfile {
+  id: number;
+  email: string;
+  name?: string;
+  picture?: string;
+  isAdmin: boolean;
+}
+
+export interface Notification {
+  id: number;
+  /** nexus_plus or geeta_nexus */
+  targetChannel: string;
+  title: string;
+  message: string;
+  actionUrl?: string;
+  broadcastType: string;
+  createdAt: string;
+}
+
+export interface NotificationInput {
+  /** nexus_plus or geeta_nexus */
+  targetChannel: string;
+  /** @minLength 1 */
+  title: string;
+  /** @minLength 1 */
+  message: string;
+  actionUrl?: string;
+  broadcastType?: string;
+}
+
+export interface NotificationSocketInfo {
+  wsUrl: string;
+  channels: string[];
+}
+
+export interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt?: string;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BlogPostInput {
+  /** @minLength 1 */
+  title: string;
+  /** @minLength 1 */
+  slug: string;
+  /** @minLength 1 */
+  content: string;
+  excerpt?: string;
+  published?: boolean;
+}
+
