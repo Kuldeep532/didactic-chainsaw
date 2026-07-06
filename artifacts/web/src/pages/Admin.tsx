@@ -1,78 +1,93 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import {
-  useAdminListContactMessages,
-  useAdminListSupportRequests,
-  useCreateNotification,
-  useCreateBlogPost,
-  useListBlogPosts,
-} from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader2, RefreshCw } from "lucide-react";
+import {
+  useAdminListContactMessages, useAdminListSupportRequests,
+  useCreateNotification, useCreateBlogPost, useListBlogPosts,
+} from "@workspace/api-client-react";
+import { Loader2, RefreshCw, Upload, Trash2, CheckCircle, XCircle, Clock, ShieldAlert } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { Link } from "wouter";
 
-const ADMIN_STORAGE_KEY = "nexus_admin_pass";
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-function getAdminHeaders(): Record<string, string> | undefined {
-  const pass = sessionStorage.getItem(ADMIN_STORAGE_KEY);
-  if (!pass) return undefined;
-  return { Authorization: `Bearer admin:${pass}` };
+function getHeaders(token: string | null): Record<string, string> {
+  if (!token) return {};
+  return { Authorization: `Bearer ${token}` };
 }
 
-function LoginGate({ onLogin }: { onLogin: (pass: string) => void }) {
-  const [pass, setPass] = useState("");
-  return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Admin Panel</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              onLogin(pass);
-            }}
-            className="space-y-4"
-          >
-            <div>
-              <Label htmlFor="admin-pass">Password</Label>
-              <Input
-                id="admin-pass"
-                type="password"
-                value={pass}
-                onChange={(e) => setPass(e.target.value)}
-                placeholder="Enter admin password"
-              />
-            </div>
-            <Button type="submit" className="w-full">
-              Login
+// ─── Access guard ─────────────────────────────────────────────────────────────
+
+function AdminGuard({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" aria-label="Loading" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Sign In Required</CardTitle>
+            <CardDescription>You must be signed in to access the admin panel.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild className="w-full">
+              <Link href="/login">Sign In</Link>
             </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
-  );
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!user.isAdmin) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ShieldAlert className="h-5 w-5 text-destructive" aria-hidden="true" />
+              Access Denied
+            </CardTitle>
+            <CardDescription>Your account does not have admin privileges.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild variant="outline" className="w-full">
+              <Link href="/">Return to Home</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
 }
+
+// ─── Contacts Tab ─────────────────────────────────────────────────────────────
 
 function ContactsTab() {
+  const { token } = useAuth();
   const { data, isLoading } = useAdminListContactMessages({
-    request: { headers: getAdminHeaders() },
+    request: { headers: getHeaders(token) },
   });
 
   if (isLoading) return <p className="text-muted-foreground">Loading contacts...</p>;
@@ -106,9 +121,12 @@ function ContactsTab() {
   );
 }
 
+// ─── Support Tab ──────────────────────────────────────────────────────────────
+
 function SupportTab() {
+  const { token } = useAuth();
   const { data, isLoading } = useAdminListSupportRequests({
-    request: { headers: getAdminHeaders() },
+    request: { headers: getHeaders(token) },
   });
 
   if (isLoading) return <p className="text-muted-foreground">Loading support requests...</p>;
@@ -131,9 +149,7 @@ function SupportTab() {
           {data.map((req) => (
             <TableRow key={req.id}>
               <TableCell className="font-medium">{req.name}</TableCell>
-              <TableCell>
-                <Badge variant="outline">{req.appId}</Badge>
-              </TableCell>
+              <TableCell><Badge variant="outline">{req.appId}</Badge></TableCell>
               <TableCell>{req.subject}</TableCell>
               <TableCell className="max-w-xs truncate">{req.message}</TableCell>
               <TableCell>{req.status}</TableCell>
@@ -146,7 +162,10 @@ function SupportTab() {
   );
 }
 
+// ─── Blog Tab ─────────────────────────────────────────────────────────────────
+
 function BlogTab() {
+  const { token } = useAuth();
   const { data: posts, isLoading } = useListBlogPosts();
   const createPost = useCreateBlogPost();
   const { toast } = useToast();
@@ -163,9 +182,7 @@ function BlogTab() {
           toast({ title: "Blog post created" });
           setForm({ title: "", slug: "", content: "", excerpt: "", category: "" });
         },
-        onError: () => {
-          toast({ title: "Failed to create post", variant: "destructive" });
-        },
+        onError: () => toast({ title: "Failed to create post", variant: "destructive" }),
       }
     );
   };
@@ -173,12 +190,12 @@ function BlogTab() {
   const handleScrape = async () => {
     setScraping(true);
     try {
-      const res = await fetch("/api/admin/scrape-blog", {
+      const res = await fetch(`${BASE}/api/admin/scrape-blog`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", ...getAdminHeaders() },
+        headers: { "Content-Type": "application/json", ...getHeaders(token) },
       });
-      if (!res.ok) throw new Error("Scrape failed");
-      const data = await res.json();
+      if (!res.ok) throw new Error();
+      const data = await res.json() as { insertedCount: number };
       toast({ title: `Scraped ${data.insertedCount} new articles` });
       queryClient.invalidateQueries({ queryKey: ["/blog-posts"] });
     } catch {
@@ -188,49 +205,60 @@ function BlogTab() {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    try {
+      const res = await fetch(`${BASE}/api/admin/blog-posts/${id}`, {
+        method: "DELETE",
+        headers: getHeaders(token),
+      });
+      if (!res.ok) throw new Error();
+      toast({ title: "Post deleted" });
+      queryClient.invalidateQueries({ queryKey: ["/blog-posts"] });
+    } catch {
+      toast({ title: "Delete failed", variant: "destructive" });
+    }
+  };
+
   return (
     <div className="space-y-8">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Auto-Scrape Blog</CardTitle>
           <Button variant="outline" size="sm" onClick={handleScrape} disabled={scraping}>
-            {scraping ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <RefreshCw className="h-4 w-4 mr-1" />}
+            {scraping ? <Loader2 className="h-4 w-4 animate-spin mr-1" aria-hidden="true" /> : <RefreshCw className="h-4 w-4 mr-1" aria-hidden="true" />}
             {scraping ? "Scraping..." : "Scrape RSS"}
           </Button>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">
-            Pull latest articles from Hacker News & TechCrunch RSS feeds automatically.
-            Duplicates are skipped based on article title slug.
+          <p className="text-sm text-muted-foreground">
+            Pull latest articles from Hacker News and TechCrunch RSS feeds. Duplicates are skipped automatically.
           </p>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">New Blog Post</CardTitle>
-        </CardHeader>
+        <CardHeader><CardTitle className="text-lg">New Blog Post</CardTitle></CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+              <div className="space-y-1.5">
                 <Label htmlFor="bp-title">Title</Label>
                 <Input id="bp-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
               </div>
-              <div>
+              <div className="space-y-1.5">
                 <Label htmlFor="bp-slug">Slug</Label>
                 <Input id="bp-slug" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} required />
               </div>
             </div>
-            <div>
+            <div className="space-y-1.5">
               <Label htmlFor="bp-category">Category</Label>
-              <Input id="bp-category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="e.g. Technology, News, Updates" />
+              <Input id="bp-category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="Technology, News, Updates" />
             </div>
-            <div>
+            <div className="space-y-1.5">
               <Label htmlFor="bp-excerpt">Excerpt</Label>
               <Input id="bp-excerpt" value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} />
             </div>
-            <div>
+            <div className="space-y-1.5">
               <Label htmlFor="bp-content">Content</Label>
               <Textarea id="bp-content" value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} rows={8} required />
             </div>
@@ -248,12 +276,17 @@ function BlogTab() {
             {posts.map((p) => (
               <Card key={p.id}>
                 <CardContent className="py-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{p.title}</p>
-                      <p className="text-sm text-muted-foreground">/{p.slug} • {new Date(p.createdAt).toLocaleDateString()}</p>
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="font-medium truncate">{p.title}</p>
+                      <p className="text-sm text-muted-foreground">/{p.slug} · {new Date(p.createdAt).toLocaleDateString()}</p>
                     </div>
-                    <Badge variant={p.published ? "default" : "secondary"}>{p.published ? "Published" : "Draft"}</Badge>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Badge variant={p.published ? "default" : "secondary"}>{p.published ? "Published" : "Draft"}</Badge>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => handleDelete(p.id)} aria-label={`Delete post ${p.title}`}>
+                        <Trash2 className="h-4 w-4" aria-hidden="true" />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -266,6 +299,8 @@ function BlogTab() {
     </div>
   );
 }
+
+// ─── Notifications Tab ────────────────────────────────────────────────────────
 
 function NotificationsTab() {
   const createNotif = useCreateNotification();
@@ -281,48 +316,40 @@ function NotificationsTab() {
       { data: { targetChannel: channel, title, message, actionUrl, broadcastType: "website_news" } },
       {
         onSuccess: () => {
-          toast({ title: "Notification sent!" });
-          setTitle("");
-          setMessage("");
-          setActionUrl("");
+          toast({ title: "Notification sent" });
+          setTitle(""); setMessage(""); setActionUrl("");
         },
-        onError: () => {
-          toast({ title: "Failed to send notification", variant: "destructive" });
-        },
+        onError: () => toast({ title: "Failed to send notification", variant: "destructive" }),
       }
     );
   };
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">Send App Notification</CardTitle>
-      </CardHeader>
+      <CardHeader><CardTitle className="text-lg">Send App Notification</CardTitle></CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label>Target App</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="n-channel">Target App</Label>
             <Select value={channel} onValueChange={setChannel}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
+              <SelectTrigger id="n-channel"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="nexus_plus">Nexus Plus</SelectItem>
                 <SelectItem value="geeta_nexus">Geeta Nexus</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <div>
+          <div className="space-y-1.5">
             <Label htmlFor="n-title">Title</Label>
             <Input id="n-title" value={title} onChange={(e) => setTitle(e.target.value)} required />
           </div>
-          <div>
+          <div className="space-y-1.5">
             <Label htmlFor="n-message">Message</Label>
             <Textarea id="n-message" value={message} onChange={(e) => setMessage(e.target.value)} required />
           </div>
-          <div>
+          <div className="space-y-1.5">
             <Label htmlFor="n-url">Action URL (optional)</Label>
-            <Input id="n-url" value={actionUrl} onChange={(e) => setActionUrl(e.target.value)} placeholder="https://..." />
+            <Input id="n-url" type="url" value={actionUrl} onChange={(e) => setActionUrl(e.target.value)} placeholder="https://..." />
           </div>
           <Button type="submit" disabled={createNotif.isPending}>
             {createNotif.isPending ? "Broadcasting..." : "Broadcast Notification"}
@@ -333,35 +360,269 @@ function NotificationsTab() {
   );
 }
 
-export default function Admin() {
-  const [adminPass, setAdminPass] = useState<string | null>(() =>
-    sessionStorage.getItem(ADMIN_STORAGE_KEY)
-  );
+// ─── Training Center Tab ──────────────────────────────────────────────────────
 
-  if (!adminPass) {
-    return <LoginGate onLogin={(p) => { sessionStorage.setItem(ADMIN_STORAGE_KEY, p); setAdminPass(p); }} />;
-  }
+interface Dataset {
+  id: number;
+  name: string;
+  description: string | null;
+  status: string;
+  rowCount: number;
+  chunkCount: number;
+  errorMessage: string | null;
+  createdAt: string;
+}
+
+function TrainingCenterTab() {
+  const { token } = useAuth();
+  const { toast } = useToast();
+  const [datasets, setDatasets] = useState<Dataset[]>([]);
+  const [loadingDatasets, setLoadingDatasets] = useState(true);
+  const [form, setForm] = useState({ name: "", description: "", contentColumn: "" });
+  const [uploading, setUploading] = useState(false);
+
+  const loadDatasets = async () => {
+    try {
+      const res = await fetch(`${BASE}/api/admin/datasets`, { headers: getHeaders(token) });
+      if (res.ok) setDatasets(await res.json() as Dataset[]);
+    } finally {
+      setLoadingDatasets(false);
+    }
+  };
+
+  // Use useEffect (not useState) for side effects on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { loadDatasets(); }, []);
+
+  const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.name.endsWith(".csv")) {
+      toast({ title: "Only CSV files are supported", variant: "destructive" });
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: "File size must be under 10 MB", variant: "destructive" });
+      return;
+    }
+    if (!form.name.trim()) {
+      toast({ title: "Please enter a dataset name first", variant: "destructive" });
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const csvContent = await file.text();
+      const res = await fetch(`${BASE}/api/ai/train`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...getHeaders(token) },
+        body: JSON.stringify({
+          name: form.name,
+          description: form.description || undefined,
+          csvContent,
+          contentColumn: form.contentColumn || undefined,
+        }),
+      });
+      if (!res.ok) throw new Error((await res.json() as { error?: string }).error ?? "Upload failed");
+      toast({ title: "Dataset processing started", description: "Refresh the list in a moment to see the status." });
+      setForm({ name: "", description: "", contentColumn: "" });
+      e.target.value = "";
+      setTimeout(loadDatasets, 3000);
+    } catch (err) {
+      toast({ title: String(err) || "Upload failed", variant: "destructive" });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const toggleDataset = async (id: number, currentStatus: string) => {
+    const newStatus = currentStatus === "active" ? "inactive" : "active";
+    const res = await fetch(`${BASE}/api/admin/datasets/${id}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...getHeaders(token) },
+      body: JSON.stringify({ status: newStatus }),
+    });
+    if (res.ok) {
+      setDatasets((prev) => prev.map((d) => d.id === id ? { ...d, status: newStatus } : d));
+      toast({ title: `Dataset ${newStatus === "active" ? "activated" : "deactivated"}` });
+    }
+  };
+
+  const deleteDataset = async (id: number) => {
+    const res = await fetch(`${BASE}/api/admin/datasets/${id}`, {
+      method: "DELETE",
+      headers: getHeaders(token),
+    });
+    if (res.ok) {
+      setDatasets((prev) => prev.filter((d) => d.id !== id));
+      toast({ title: "Dataset deleted" });
+    }
+  };
+
+  const statusIcon = (status: string) => {
+    if (status === "active") return <CheckCircle className="h-4 w-4 text-green-500" aria-hidden="true" />;
+    if (status === "error") return <XCircle className="h-4 w-4 text-destructive" aria-hidden="true" />;
+    if (status === "processing") return <Loader2 className="h-4 w-4 animate-spin text-primary" aria-hidden="true" />;
+    return <Clock className="h-4 w-4 text-muted-foreground" aria-hidden="true" />;
+  };
 
   return (
-    <div className="container mx-auto px-4 md:px-8 max-w-screen-2xl py-10">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">Admin Panel</h1>
-        <Button variant="outline" size="sm" onClick={() => { sessionStorage.removeItem(ADMIN_STORAGE_KEY); setAdminPass(null); }}>
-          Logout
-        </Button>
+    <div className="space-y-8">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Upload Training Data</CardTitle>
+          <CardDescription>
+            Upload a CSV file to add knowledge to Nexus Mitra. The system will parse, chunk, embed, and index the content automatically.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="ds-name">Dataset Name <span aria-hidden="true">*</span></Label>
+              <Input
+                id="ds-name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="e.g. App FAQ 2025"
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="ds-column">Content Column (optional)</Label>
+              <Input
+                id="ds-column"
+                value={form.contentColumn}
+                onChange={(e) => setForm({ ...form, contentColumn: e.target.value })}
+                placeholder="Leave blank to auto-detect"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="ds-desc">Description (optional)</Label>
+            <Input
+              id="ds-desc"
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              placeholder="Brief description of this dataset"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="ds-file">CSV File <span aria-hidden="true">*</span></Label>
+            <div className="flex items-center gap-3">
+              <label
+                htmlFor="ds-file"
+                className="flex items-center gap-2 px-4 py-2 rounded-md border border-border bg-muted hover:bg-muted/80 cursor-pointer text-sm font-medium transition-colors"
+              >
+                <Upload className="h-4 w-4" aria-hidden="true" />
+                {uploading ? "Processing..." : "Choose CSV File"}
+                <input
+                  id="ds-file"
+                  type="file"
+                  accept=".csv"
+                  onChange={handleFileUpload}
+                  className="sr-only"
+                  disabled={uploading}
+                />
+              </label>
+              <p className="text-xs text-muted-foreground">Max 10 MB. UTF-8 CSV with header row.</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold">Knowledge Sources</h3>
+          <Button variant="outline" size="sm" onClick={loadDatasets}>
+            <RefreshCw className="h-4 w-4 mr-1" aria-hidden="true" />
+            Refresh
+          </Button>
+        </div>
+        {loadingDatasets ? (
+          <p className="text-muted-foreground">Loading...</p>
+        ) : datasets.length === 0 ? (
+          <p className="text-muted-foreground">No datasets uploaded yet.</p>
+        ) : (
+          <div className="space-y-3">
+            {datasets.map((d) => (
+              <Card key={d.id}>
+                <CardContent className="py-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        {statusIcon(d.status)}
+                        <p className="font-medium truncate">{d.name}</p>
+                        <Badge variant={d.status === "active" ? "default" : d.status === "error" ? "destructive" : "secondary"} className="shrink-0">
+                          {d.status}
+                        </Badge>
+                      </div>
+                      {d.description && <p className="text-sm text-muted-foreground truncate">{d.description}</p>}
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {d.rowCount} rows · {d.chunkCount} chunks · {new Date(d.createdAt).toLocaleDateString()}
+                      </p>
+                      {d.errorMessage && <p className="text-xs text-destructive mt-1 truncate">{d.errorMessage}</p>}
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      {(d.status === "active" || d.status === "inactive") && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => toggleDataset(d.id, d.status)}
+                        >
+                          {d.status === "active" ? "Deactivate" : "Activate"}
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-destructive hover:text-destructive"
+                        onClick={() => deleteDataset(d.id)}
+                        aria-label={`Delete dataset ${d.name}`}
+                      >
+                        <Trash2 className="h-4 w-4" aria-hidden="true" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
-      <Tabs defaultValue="contacts">
-        <TabsList className="mb-6">
-          <TabsTrigger value="contacts">Contacts</TabsTrigger>
-          <TabsTrigger value="support">Support</TabsTrigger>
-          <TabsTrigger value="blog">Blog</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-        </TabsList>
-        <TabsContent value="contacts"><ContactsTab /></TabsContent>
-        <TabsContent value="support"><SupportTab /></TabsContent>
-        <TabsContent value="blog"><BlogTab /></TabsContent>
-        <TabsContent value="notifications"><NotificationsTab /></TabsContent>
-      </Tabs>
     </div>
+  );
+}
+
+// ─── Main Admin Page ──────────────────────────────────────────────────────────
+
+export default function Admin() {
+  const { user, logout } = useAuth();
+
+  return (
+    <AdminGuard>
+      <div className="container mx-auto px-4 md:px-8 max-w-screen-2xl py-10">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold">Admin Panel</h1>
+            <p className="text-sm text-muted-foreground mt-1">Signed in as {user?.email}</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={logout}>Sign Out</Button>
+        </div>
+        <Tabs defaultValue="contacts">
+          <TabsList className="mb-6 flex-wrap h-auto gap-1">
+            <TabsTrigger value="contacts">Contacts</TabsTrigger>
+            <TabsTrigger value="support">Support</TabsTrigger>
+            <TabsTrigger value="blog">Blog</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            <TabsTrigger value="training">Training Center</TabsTrigger>
+          </TabsList>
+          <TabsContent value="contacts"><ContactsTab /></TabsContent>
+          <TabsContent value="support"><SupportTab /></TabsContent>
+          <TabsContent value="blog"><BlogTab /></TabsContent>
+          <TabsContent value="notifications"><NotificationsTab /></TabsContent>
+          <TabsContent value="training"><TrainingCenterTab /></TabsContent>
+        </Tabs>
+      </div>
+    </AdminGuard>
   );
 }
