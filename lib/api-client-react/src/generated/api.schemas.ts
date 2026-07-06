@@ -136,6 +136,7 @@ export interface BlogPost {
   slug: string;
   content: string;
   excerpt?: string;
+  category?: string;
   published: boolean;
   createdAt: string;
   updatedAt: string;
@@ -149,6 +150,7 @@ export interface BlogPostInput {
   /** @minLength 1 */
   content: string;
   excerpt?: string;
+  category?: string;
   published?: boolean;
 }
 

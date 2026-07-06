@@ -1,12 +1,5 @@
 import { Link } from "wouter";
-import {
-  Github,
-  Linkedin,
-  Twitter,
-  MessageCircle,
-  Globe,
-} from "lucide-react";
-import logo from "@assets/nexus_wave_logo_transparent.png";
+import { Github, Linkedin, Twitter, MessageCircle, Globe, Hexagon } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -15,11 +8,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center space-x-2 mb-4" aria-label="Nexus Wave Technologies Home">
-              <img src={logo} alt="Nexus Wave Technologies Logo" className="h-8 w-auto grayscale opacity-70" />
+              <Hexagon className="h-7 w-7 text-primary" aria-hidden="true" strokeWidth={2.5} />
               <span className="font-bold text-foreground">Nexus Wave Technologies</span>
             </Link>
             <p className="text-sm max-w-md">
-              High-efficiency barrier-free utilities for everyone. Built by Kuldeep — sole proprietorship, focused on accessible tools for real people.
+              High-efficiency barrier-free utilities for everyone. Built by Kuldeep Kumar Yadav — sole proprietorship, focused on accessible tools for real people.
             </p>
             <div className="mt-4 flex items-center space-x-4">
               <a href="https://github.com/Kuldeep532/refactored-octo-couscous/releases" target="_blank" rel="noopener noreferrer" aria-label="GitHub Releases" className="hover:text-foreground transition-colors">
@@ -45,6 +38,7 @@ export default function Footer() {
               <li><Link href="/about" className="hover:underline hover:text-foreground focus-visible:outline-primary">About Us</Link></li>
               <li><Link href="/apps" className="hover:underline hover:text-foreground focus-visible:outline-primary">Our Apps</Link></li>
               <li><Link href="/contact" className="hover:underline hover:text-foreground focus-visible:outline-primary">Contact</Link></li>
+              <li><Link href="/blog" className="hover:underline hover:text-foreground focus-visible:outline-primary">Blog</Link></li>
             </ul>
           </div>
           <div>

@@ -12,6 +12,7 @@ export interface BlogPost {
   slug: string;
   content: string;
   excerpt?: string;
+  category?: string;
   published: boolean;
   createdAt: Date;
   updatedAt: Date;

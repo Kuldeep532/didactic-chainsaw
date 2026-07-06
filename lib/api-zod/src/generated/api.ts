@@ -189,6 +189,7 @@ export const ListBlogPostsResponseItem = zod.object({
   "slug": zod.string(),
   "content": zod.string(),
   "excerpt": zod.string().optional(),
+  "category": zod.string().optional(),
   "published": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -209,6 +210,7 @@ export const CreateBlogPostBody = zod.object({
   "slug": zod.string().min(1),
   "content": zod.string().min(1),
   "excerpt": zod.string().optional(),
+  "category": zod.string().optional(),
   "published": zod.boolean().default(createBlogPostBodyPublishedDefault)
 })
 
@@ -218,6 +220,7 @@ export const CreateBlogPostResponse = zod.object({
   "slug": zod.string(),
   "content": zod.string(),
   "excerpt": zod.string().optional(),
+  "category": zod.string().optional(),
   "published": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -237,6 +240,7 @@ export const GetBlogPostBySlugResponse = zod.object({
   "slug": zod.string(),
   "content": zod.string(),
   "excerpt": zod.string().optional(),
+  "category": zod.string().optional(),
   "published": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()

@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu } from "lucide-react";
-import logo from "@assets/nexus_wave_logo_transparent.png";
+import { Menu, Hexagon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,23 +11,32 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import DarkModeToggle from "../DarkModeToggle";
 
 const NAV_LINKS = [
   { href: "/about", label: "About" },
   { href: "/apps", label: "Apps" },
+  { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
 
 export default function Navbar() {
   const [location] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 16);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${scrolled ? "border-border/60 shadow-sm shadow-black/5 bg-background/90 backdrop-blur-lg" : "border-border/30 bg-background/70 backdrop-blur-md"}`}>
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between mx-auto px-4 md:px-8">
-        <Link href="/" className="flex items-center space-x-2" aria-label="Nexus Wave Technologies Home">
-          <img src={logo} alt="Nexus Wave Technologies Logo" className="h-8 w-auto" />
-          <span className="font-bold">Nexus Wave Technologies</span>
+        <Link href="/" className="flex items-center space-x-2 group" aria-label="Nexus Wave Technologies Home">
+          <Hexagon className="h-7 w-7 text-primary group-hover:rotate-12 transition-transform duration-300" aria-hidden="true" strokeWidth={2.5} />
+          <span className="font-bold text-foreground">Nexus Wave Technologies</span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium" aria-label="Primary">
@@ -40,32 +48,37 @@ export default function Navbar() {
                 href={link.href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "transition-colors hover:text-foreground",
+                  "relative transition-colors hover:text-foreground",
                   isActive ? "text-foreground font-semibold" : "text-foreground/60",
                 )}
               >
                 {link.label}
+                {isActive && (
+                  <span className="absolute -bottom-[17px] left-0 right-0 h-0.5 bg-primary rounded-full" />
+                )}
               </Link>
             );
           })}
         </nav>
 
-        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              aria-label="Open menu"
-            >
-              <Menu className="h-6 w-6" aria-hidden="true" />
-            </Button>
-          </SheetTrigger>
+        <div className="flex items-center gap-2">
+          <DarkModeToggle />
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                aria-label="Open menu"
+              >
+                <Menu className="h-6 w-6" aria-hidden="true" />
+              </Button>
+            </SheetTrigger>
           <SheetContent side="right" className="w-72">
             <SheetHeader>
               <SheetTitle>
                 <span className="flex items-center space-x-2">
-                  <img src={logo} alt="" className="h-7 w-auto" />
+                  <Hexagon className="h-6 w-6 text-primary" aria-hidden="true" strokeWidth={2.5} />
                   <span>Nexus Wave Technologies</span>
                 </span>
               </SheetTitle>
@@ -91,6 +104,7 @@ export default function Navbar() {
             </nav>
           </SheetContent>
         </Sheet>
+        </div>
       </div>
     </header>
   );

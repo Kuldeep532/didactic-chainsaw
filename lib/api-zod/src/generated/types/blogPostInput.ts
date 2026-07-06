@@ -14,5 +14,6 @@ export interface BlogPostInput {
   /** @minLength 1 */
   content: string;
   excerpt?: string;
+  category?: string;
   published?: boolean;
 }

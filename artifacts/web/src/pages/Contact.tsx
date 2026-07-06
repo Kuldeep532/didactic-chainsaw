@@ -3,44 +3,49 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, MapPin, CheckCircle2 } from "lucide-react";
-import { useSubmitContactMessage } from "@workspace/api-client-react";
-import { useToast } from "@/hooks/use-toast";
+import { Mail, MapPin, CheckCircle2, Send } from "lucide-react";
 
 export default function Contact() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { toast } = useToast();
-  const submitContactMessage = useSubmitContactMessage();
+  const [isPending, setIsPending] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsPending(true);
     const form = e.currentTarget;
     const formData = new FormData(form);
 
-    submitContactMessage.mutate(
-      {
-        data: {
-          firstName: String(formData.get("firstName") ?? ""),
-          lastName: String(formData.get("lastName") ?? ""),
-          email: String(formData.get("email") ?? ""),
-          subject: String(formData.get("subject") ?? ""),
-          message: String(formData.get("message") ?? ""),
-        },
-      },
-      {
-        onSuccess: () => {
-          setIsSubmitted(true);
-          form.reset();
-        },
-        onError: () => {
-          toast({
-            title: "Something went wrong",
-            description: "We couldn't send your message. Please try again in a moment.",
-            variant: "destructive",
-          });
-        },
-      },
-    );
+    // Cloudflare Email Routing: use FormSubmit with hidden fields
+    // This sends directly to the Cloudflare email route
+    const data = {
+      firstName: String(formData.get("firstName") ?? ""),
+      lastName: String(formData.get("lastName") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      subject: String(formData.get("subject") ?? ""),
+      message: String(formData.get("message") ?? ""),
+    };
+
+    // Use a simple form submission via fetch to FormSubmit (free, no backend needed)
+    fetch("https://formsubmit.co/info@nexusweb.co.in", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        name: `${data.firstName} ${data.lastName}`,
+        email: data.email,
+        subject: `[Website Contact] ${data.subject}`,
+        message: data.message,
+        _captcha: "false",
+        _template: "box",
+      }),
+    })
+      .then(() => {
+        setIsSubmitted(true);
+        setIsPending(false);
+        form.reset();
+      })
+      .catch(() => {
+        setIsPending(false);
+      });
   };
 
   return (
@@ -49,7 +54,7 @@ export default function Contact() {
         <div className="container mx-auto px-4 md:px-8 max-w-screen-xl text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Contact Us</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Get in touch with the engineering team at Nexus Wave Technologies.
+            Get in touch with the team at Nexus Wave Technologies.
           </p>
         </div>
       </section>
@@ -57,16 +62,16 @@ export default function Contact() {
       <section className="py-20">
         <div className="container mx-auto px-4 md:px-8 max-w-screen-lg">
           <div className="grid md:grid-cols-5 gap-12">
-            
+
             <div className="md:col-span-2 space-y-8">
               <div>
                 <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
                 <p className="text-muted-foreground mb-8">
-                  Whether you have a question about our apps, need support for Nexus Plus or Geeta Nexus, 
+                  Whether you have a question about our apps, need support for Nexus Plus or Geeta Nexus,
                   or want to discuss a partnership, our team is ready to help.
                 </p>
               </div>
-              
+
               <div className="space-y-6">
                 <div className="flex items-start">
                   <Mail className="w-6 h-6 text-primary mt-1 mr-4 shrink-0" aria-hidden="true" />
@@ -76,14 +81,13 @@ export default function Contact() {
                     <a href="mailto:info@nexusweb.co.in" className="text-primary hover:underline font-mono">info@nexusweb.co.in</a>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start">
                   <MapPin className="w-6 h-6 text-primary mt-1 mr-4 shrink-0" aria-hidden="true" />
                   <div>
-                    <h3 className="font-semibold text-lg">Headquarters</h3>
+                    <h3 className="font-semibold text-lg">Location</h3>
                     <p className="text-muted-foreground">
-                      Nexus Wave Technologies<br />
-                      Global Distributed Team
+                      India • Serving users worldwide
                     </p>
                   </div>
                 </div>
@@ -97,7 +101,7 @@ export default function Contact() {
                     <CheckCircle2 className="w-16 h-16 text-green-500 mb-6" aria-hidden="true" />
                     <h3 className="text-2xl font-bold mb-2">Message Received</h3>
                     <p className="text-muted-foreground mb-8">
-                      Thank you for contacting Nexus Wave Technologies. An engineer will review your message and respond shortly.
+                      Thank you for contacting Nexus Wave Technologies. We will review your message and respond shortly.
                     </p>
                     <Button onClick={() => setIsSubmitted(false)} variant="outline">
                       Send Another Message
@@ -115,24 +119,25 @@ export default function Contact() {
                         <Input id="lastName" name="lastName" required aria-required="true" />
                       </div>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="email">Work Email</Label>
                       <Input id="email" name="email" type="email" required aria-required="true" />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="subject">Subject</Label>
                       <Input id="subject" name="subject" required aria-required="true" />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="message">Message</Label>
                       <Textarea id="message" name="message" rows={5} required aria-required="true" className="resize-none" />
                     </div>
-                    
-                    <Button type="submit" className="w-full" disabled={submitContactMessage.isPending}>
-                      {submitContactMessage.isPending ? "Sending..." : "Send Message"}
+
+                    <Button type="submit" className="w-full" disabled={isPending}>
+                      <Send className="w-4 h-4 mr-2" aria-hidden="true" />
+                      {isPending ? "Sending..." : "Send Message"}
                     </Button>
                     <p className="text-xs text-muted-foreground text-center mt-4">
                       By submitting this form, you agree to our Privacy Policy regarding the processing of your data.

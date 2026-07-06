@@ -1,4 +1,4 @@
-import { Code2, Users, Heart, Globe } from "lucide-react";
+import { Code2, Heart, Globe, Hexagon } from "lucide-react";
 
 export default function About() {
   return (
@@ -19,15 +19,15 @@ export default function About() {
           <div className="bg-card border border-border rounded-2xl p-8 md:p-12 shadow-sm">
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="flex-shrink-0">
-                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-primary/10 flex items-center justify-center text-3xl font-bold text-primary">
-                  K
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-primary/10 flex items-center justify-center text-3xl font-bold text-primary transition-transform duration-500 hover:scale-105">
+                  <Hexagon className="h-12 w-12 md:h-16 md:w-16" strokeWidth={2.5} />
                 </div>
               </div>
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold mb-2">Kuldeep</h2>
+                <h2 className="text-2xl md:text-3xl font-bold mb-2">Kuldeep Kumar Yadav</h2>
                 <p className="text-muted-foreground font-medium mb-4">Founder & Developer</p>
                 <p className="text-muted-foreground">
-                  Nexus Wave Technologies is a sole proprietorship run by me, Kuldeep. I started this studio
+                  Nexus Wave Technologies is a sole proprietorship run by me, Kuldeep Kumar Yadav. I started this studio
                   to build software that actually helps people — fast, accessible, and designed for real-world use.
                   Everything you see here, from the apps to this website, is built with that same care and focus.
                 </p>

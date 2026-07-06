@@ -23,6 +23,8 @@ import {
   useCreateBlogPost,
   useListBlogPosts,
 } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Loader2, RefreshCw } from "lucide-react";
 
 const ADMIN_STORAGE_KEY = "nexus_admin_pass";
 
@@ -148,7 +150,9 @@ function BlogTab() {
   const { data: posts, isLoading } = useListBlogPosts();
   const createPost = useCreateBlogPost();
   const { toast } = useToast();
-  const [form, setForm] = useState({ title: "", slug: "", content: "", excerpt: "" });
+  const queryClient = useQueryClient();
+  const [form, setForm] = useState({ title: "", slug: "", content: "", excerpt: "", category: "" });
+  const [scraping, setScraping] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -157,7 +161,7 @@ function BlogTab() {
       {
         onSuccess: () => {
           toast({ title: "Blog post created" });
-          setForm({ title: "", slug: "", content: "", excerpt: "" });
+          setForm({ title: "", slug: "", content: "", excerpt: "", category: "" });
         },
         onError: () => {
           toast({ title: "Failed to create post", variant: "destructive" });
@@ -166,8 +170,42 @@ function BlogTab() {
     );
   };
 
+  const handleScrape = async () => {
+    setScraping(true);
+    try {
+      const res = await fetch("/api/admin/scrape-blog", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...getAdminHeaders() },
+      });
+      if (!res.ok) throw new Error("Scrape failed");
+      const data = await res.json();
+      toast({ title: `Scraped ${data.insertedCount} new articles` });
+      queryClient.invalidateQueries({ queryKey: ["/blog-posts"] });
+    } catch {
+      toast({ title: "Scrape failed", variant: "destructive" });
+    } finally {
+      setScraping(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-lg">Auto-Scrape Blog</CardTitle>
+          <Button variant="outline" size="sm" onClick={handleScrape} disabled={scraping}>
+            {scraping ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <RefreshCw className="h-4 w-4 mr-1" />}
+            {scraping ? "Scraping..." : "Scrape RSS"}
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground mb-4">
+            Pull latest articles from Hacker News & TechCrunch RSS feeds automatically.
+            Duplicates are skipped based on article title slug.
+          </p>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">New Blog Post</CardTitle>
@@ -183,6 +221,10 @@ function BlogTab() {
                 <Label htmlFor="bp-slug">Slug</Label>
                 <Input id="bp-slug" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} required />
               </div>
+            </div>
+            <div>
+              <Label htmlFor="bp-category">Category</Label>
+              <Input id="bp-category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="e.g. Technology, News, Updates" />
             </div>
             <div>
               <Label htmlFor="bp-excerpt">Excerpt</Label>

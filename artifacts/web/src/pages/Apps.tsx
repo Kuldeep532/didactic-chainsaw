@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Layers, Sparkles, ExternalLink, Shield, Download, Star, Zap } from "lucide-react";
+import { Layers, Sparkles, ExternalLink, Shield, Zap, Download, Star, Hexagon } from "lucide-react";
+import SmartDownloadButton from "@/components/SmartDownloadButton";
 
 export default function Apps() {
   return (
@@ -8,7 +9,7 @@ export default function Apps() {
         <div className="container mx-auto px-4 md:px-8 max-w-screen-xl text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Our Apps</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Two focused apps built by a single developer. Available on Google Play Store and as direct APK downloads.
+            Two focused apps built by a single developer. Available as direct APK downloads.
           </p>
         </div>
       </section>
@@ -35,24 +36,13 @@ export default function Apps() {
                   <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-primary mr-3"></div> Accessible for all users</li>
                   <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-primary mr-3"></div> No unnecessary permissions</li>
                 </ul>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="https://github.com/Kuldeep532/refactored-octo-couscous/releases/download/latest/nexus-plus.apk" target="_blank" rel="noopener noreferrer">
-                    <Button>
-                      <Download className="w-4 h-4 mr-2" aria-hidden="true" />
-                      Download APK
-                    </Button>
-                  </a>
-                  <a href="https://play.google.com/store/apps/details?id=com.nexuswavetech.nexusplus" target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline">
-                      <ExternalLink className="w-4 h-4 mr-2" aria-hidden="true" />
-                      Play Store
-                    </Button>
-                  </a>
-                </div>
+                <SmartDownloadButton app="nexus_plus" />
               </div>
-              <div className="bg-card border border-border rounded-2xl p-8 shadow-sm aspect-square flex flex-col justify-center items-center text-center relative overflow-hidden">
+              <div className="bg-card border border-border rounded-2xl p-8 shadow-sm aspect-square flex flex-col justify-center items-center text-center relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-                <Layers className="w-24 h-24 text-primary/80 mb-6" aria-hidden="true" />
+                <div className="transition-transform duration-500 group-hover:scale-110">
+                  <Hexagon className="w-24 h-24 text-primary/80 mb-6" aria-hidden="true" strokeWidth={1.5} />
+                </div>
                 <h3 className="text-2xl font-bold">Nexus Plus</h3>
                 <p className="text-muted-foreground mt-2">Productivity & Integration</p>
               </div>
@@ -62,9 +52,11 @@ export default function Apps() {
           {/* Geeta Nexus */}
           <div id="geeta-nexus" className="scroll-mt-32">
             <div className="grid md:grid-cols-2 gap-12 items-center flex-row-reverse">
-              <div className="order-2 md:order-1 bg-card border border-border rounded-2xl p-8 shadow-sm aspect-square flex flex-col justify-center items-center text-center relative overflow-hidden">
+              <div className="order-2 md:order-1 bg-card border border-border rounded-2xl p-8 shadow-sm aspect-square flex flex-col justify-center items-center text-center relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent pointer-events-none" />
-                <Sparkles className="w-24 h-24 text-blue-500/80 mb-6" aria-hidden="true" />
+                <div className="transition-transform duration-500 group-hover:scale-110">
+                  <Sparkles className="w-24 h-24 text-blue-500/80 mb-6" aria-hidden="true" />
+                </div>
                 <h3 className="text-2xl font-bold">Geeta Nexus</h3>
                 <p className="text-muted-foreground mt-2">Spiritual Wisdom, Modern UI</p>
               </div>
@@ -84,20 +76,7 @@ export default function Apps() {
                   <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-3"></div> Offline-first — works without internet</li>
                   <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-3"></div> No ads, no tracking, no bloat</li>
                 </ul>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="https://github.com/Kuldeep532/refactored-octo-couscous/releases/download/latest/geeta-nexus.apk" target="_blank" rel="noopener noreferrer">
-                    <Button>
-                      <Download className="w-4 h-4 mr-2" aria-hidden="true" />
-                      Download APK
-                    </Button>
-                  </a>
-                  <a href="https://play.google.com/store/apps/details?id=com.nexuswavetech.geetanexus" target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline">
-                      <ExternalLink className="w-4 h-4 mr-2" aria-hidden="true" />
-                      Play Store
-                    </Button>
-                  </a>
-                </div>
+                <SmartDownloadButton app="geeta_nexus" />
               </div>
             </div>
           </div>
@@ -105,27 +84,22 @@ export default function Apps() {
         </div>
       </section>
 
-      {/* Store Optimization Banner */}
+      {/* Download Banner */}
       <section className="bg-muted/30 py-16 border-y border-border/50">
         <div className="container mx-auto px-4 md:px-8 max-w-screen-lg text-center">
           <div className="inline-flex items-center space-x-2 bg-background border border-border rounded-full px-5 py-2 text-sm font-medium mb-6">
             <Star className="w-4 h-4 text-yellow-500" aria-hidden="true" />
-            <span>Google Play Store Optimized</span>
+            <span>Direct APK Download</span>
           </div>
-          <h2 className="text-3xl font-bold mb-4">Available on Google Play</h2>
+          <h2 className="text-3xl font-bold mb-4">Get Our Apps</h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Both apps are published on the Google Play Store with regular updates, proper screenshots,
-            and Play Store Console optimization. Direct APK downloads are also available from our GitHub releases.
+            Both apps are available as direct APK downloads from our GitHub releases page.
+            The smart download button above will automatically route your device to the right source.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="https://play.google.com/store/apps/dev?id=YOUR_DEV_ID" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/Kuldeep532/refactored-octo-couscous/releases" target="_blank" rel="noopener noreferrer">
               <Button size="lg">
                 <Zap className="w-4 h-4 mr-2" aria-hidden="true" />
-                Visit Developer Page
-              </Button>
-            </a>
-            <a href="https://github.com/Kuldeep532/refactored-octo-couscous/releases" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="lg">
                 GitHub Releases
               </Button>
             </a>
