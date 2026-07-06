@@ -12,7 +12,7 @@ export default function Footer() {
               <span className="font-bold text-foreground">Nexus Wave Technologies</span>
             </Link>
             <p className="text-sm max-w-md">
-              High-efficiency barrier-free utilities for everyone. We build the "Universal Gateway" backend platform powering modern, accessible applications.
+              High-efficiency barrier-free utilities for everyone. We build modern, accessible applications for the people who use them every day.
             </p>
           </div>
           <div>

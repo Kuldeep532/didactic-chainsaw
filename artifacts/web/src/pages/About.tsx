@@ -6,7 +6,7 @@ export default function About() {
       {/* Hero */}
       <section className="bg-muted/30 py-20 border-b border-border/50">
         <div className="container mx-auto px-4 md:px-8 max-w-screen-xl text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Building the Universal Gateway</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Engineering for Everyone</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Nexus Wave Technologies is an engineering-first cloud technology company. 
             We build the plumbing that modern, accessible applications rely on.
@@ -26,8 +26,8 @@ export default function About() {
                 creating systems that scale elegantly without breaking a sweat.
               </p>
               <p className="text-muted-foreground">
-                The Universal Gateway is the culmination of this philosophy — a backend platform 
-                designed to route, process, and deliver data with zero friction.
+                Every product we ship is the result of this philosophy — software designed 
+                to work fast, feel effortless, and never get in your way.
               </p>
             </div>
             <div className="bg-card border border-border p-8 rounded-xl shadow-sm">

@@ -16,7 +16,7 @@ export default function Disclaimer() {
       <p>The spiritual content, translations, and interpretations provided in the Geeta Nexus application are intended for personal study and contemplation. Nexus Wave Technologies acts as a technological conduit for this content and makes no claims regarding theological absolute truth. Users are encouraged to study the texts thoughtfully.</p>
 
       <h2>4. Platform Availability</h2>
-      <p>While our Universal Gateway is engineered for high availability and reliability, Nexus Wave Technologies does not warrant that the website or applications will operate uninterrupted, timely, secure, or error-free. We reserve the right to modify, suspend, or discontinue any aspect of our services at any time.</p>
+      <p>While our services are engineered for high availability and reliability, Nexus Wave Technologies does not warrant that the website or applications will operate uninterrupted, timely, secure, or error-free. We reserve the right to modify, suspend, or discontinue any aspect of our services at any time.</p>
       
       <h2>5. Contact Us</h2>
       <p>If you require any more information or have any questions about our site's disclaimer, please feel free to contact us by email at <strong>info@nexusweb.co.in</strong>.</p>

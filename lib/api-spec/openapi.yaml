@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: config
+    description: Public configuration for websites and client apps
+  - name: contact
+    description: Contact and support requests
 paths:
   /healthz:
     get:
@@ -24,6 +28,68 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /public-config:
+    get:
+      operationId: getPublicConfig
+      tags: [config]
+      summary: Get public configuration
+      description: Returns company info and the list of published apps. Safe to call from any client, including native mobile apps, without authentication.
+      responses:
+        "200":
+          description: Public configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicConfig"
+  /contact-messages:
+    post:
+      operationId: submitContactMessage
+      tags: [contact]
+      summary: Submit a contact message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactMessageInput"
+      responses:
+        "201":
+          description: Message received
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactMessage"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /support-requests:
+    post:
+      operationId: submitSupportRequest
+      tags: [contact]
+      summary: Submit an app support request
+      description: Used by native mobile apps (e.g. Nexus Plus, Geeta Nexus) and the website to raise a support ticket.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupportRequestInput"
+      responses:
+        "201":
+          description: Support request received
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportRequest"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +99,149 @@ components:
           type: string
       required:
         - status
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    AppInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        packageId:
+          type: string
+        description:
+          type: string
+      required:
+        - id
+        - name
+        - packageId
+        - description
+    PublicConfig:
+      type: object
+      properties:
+        companyName:
+          type: string
+        tagline:
+          type: string
+        contactEmail:
+          type: string
+        apps:
+          type: array
+          items:
+            $ref: "#/components/schemas/AppInfo"
+      required:
+        - companyName
+        - tagline
+        - contactEmail
+        - apps
+    ContactMessageInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+        subject:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
+      required:
+        - firstName
+        - lastName
+        - email
+        - subject
+        - message
+    ContactMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - subject
+        - message
+        - createdAt
+    SupportRequestInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+        appId:
+          type: string
+          minLength: 1
+          description: "Identifier of the app raising the request, e.g. nexus-plus or geeta-nexus"
+        subject:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
+      required:
+        - name
+        - email
+        - appId
+        - subject
+        - message
+    SupportRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        appId:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - email
+        - appId
+        - subject
+        - message
+        - status
+        - createdAt
 

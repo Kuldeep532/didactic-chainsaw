@@ -19,8 +19,8 @@ export default function Terms() {
         <li>Redistribute content from Nexus Wave Technologies without explicit permission</li>
       </ul>
 
-      <h2>3. Universal Gateway Usage</h2>
-      <p>If you are utilizing our Universal Gateway APIs, you agree to adhere to our rate limits, reasonable usage policies, and security guidelines. Any attempt to abuse, overload, or compromise the integrity of the infrastructure will result in immediate termination of access.</p>
+      <h2>3. Acceptable Use</h2>
+      <p>If you are using our applications or services, you agree to adhere to reasonable usage policies and security guidelines. Any attempt to abuse, overload, or compromise the integrity of our services will result in immediate termination of access.</p>
 
       <h2>4. Hyperlinking to our Content</h2>
       <p>The following organizations may link to our Website without prior written approval:</p>

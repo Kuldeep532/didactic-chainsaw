@@ -4,14 +4,43 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, MapPin, CheckCircle2 } from "lucide-react";
+import { useSubmitContactMessage } from "@workspace/api-client-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Contact() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { toast } = useToast();
+  const submitContactMessage = useSubmitContactMessage();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    // In a real app, this would send data to an API
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    submitContactMessage.mutate(
+      {
+        data: {
+          firstName: String(formData.get("firstName") ?? ""),
+          lastName: String(formData.get("lastName") ?? ""),
+          email: String(formData.get("email") ?? ""),
+          subject: String(formData.get("subject") ?? ""),
+          message: String(formData.get("message") ?? ""),
+        },
+      },
+      {
+        onSuccess: () => {
+          setIsSubmitted(true);
+          form.reset();
+        },
+        onError: () => {
+          toast({
+            title: "Something went wrong",
+            description: "We couldn't send your message. Please try again in a moment.",
+            variant: "destructive",
+          });
+        },
+      },
+    );
   };
 
   return (
@@ -33,8 +62,8 @@ export default function Contact() {
               <div>
                 <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
                 <p className="text-muted-foreground mb-8">
-                  Whether you have a question about the Universal Gateway, need support for Nexus Plus, 
-                  or want to discuss enterprise integration, our team is ready to help.
+                  Whether you have a question about our apps, need support for Nexus Plus or Geeta Nexus, 
+                  or want to discuss a partnership, our team is ready to help.
                 </p>
               </div>
               
@@ -79,30 +108,32 @@ export default function Contact() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="firstName">First Name</Label>
-                        <Input id="firstName" required aria-required="true" />
+                        <Input id="firstName" name="firstName" required aria-required="true" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="lastName">Last Name</Label>
-                        <Input id="lastName" required aria-required="true" />
+                        <Input id="lastName" name="lastName" required aria-required="true" />
                       </div>
                     </div>
                     
                     <div className="space-y-2">
                       <Label htmlFor="email">Work Email</Label>
-                      <Input id="email" type="email" required aria-required="true" />
+                      <Input id="email" name="email" type="email" required aria-required="true" />
                     </div>
                     
                     <div className="space-y-2">
                       <Label htmlFor="subject">Subject</Label>
-                      <Input id="subject" required aria-required="true" />
+                      <Input id="subject" name="subject" required aria-required="true" />
                     </div>
                     
                     <div className="space-y-2">
                       <Label htmlFor="message">Message</Label>
-                      <Textarea id="message" rows={5} required aria-required="true" className="resize-none" />
+                      <Textarea id="message" name="message" rows={5} required aria-required="true" className="resize-none" />
                     </div>
                     
-                    <Button type="submit" className="w-full">Send Message</Button>
+                    <Button type="submit" className="w-full" disabled={submitContactMessage.isPending}>
+                      {submitContactMessage.isPending ? "Sending..." : "Send Message"}
+                    </Button>
                     <p className="text-xs text-muted-foreground text-center mt-4">
                       By submitting this form, you agree to our Privacy Policy regarding the processing of your data.
                     </p>

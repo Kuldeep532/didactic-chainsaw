@@ -11,7 +11,7 @@ export default function Home() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center rounded-full border border-border px-3 py-1 text-sm font-medium mb-6 bg-muted/50 text-muted-foreground backdrop-blur-sm">
               <span className="flex h-2 w-2 rounded-full bg-primary mr-2"></span>
-              Universal Gateway Platform Active
+              Trusted by thousands of users worldwide
             </div>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground mb-6 font-sans">
               High-efficiency <br className="hidden md:block" />
@@ -67,8 +67,8 @@ export default function Home() {
               <div className="p-3 bg-primary/10 rounded-lg mb-4 text-primary">
                 <Activity className="h-6 w-6" aria-hidden="true" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Universal Gateway</h3>
-              <p className="text-muted-foreground">A robust backend platform providing seamless integration and high-efficiency performance.</p>
+              <h3 className="text-xl font-bold mb-2">High Performance</h3>
+              <p className="text-muted-foreground">Fast, reliable software with seamless integration and consistently high-efficiency performance.</p>
             </div>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default function Home() {
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Powered by Nexus</h2>
             <p className="text-muted-foreground">
-              Discover the applications built on our Universal Gateway platform, demonstrating our commitment to quality and accessibility.
+              Discover the applications built by our team, demonstrating our commitment to quality and accessibility.
             </p>
           </div>
           

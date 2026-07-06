@@ -8,8 +8,8 @@ export default function Apps() {
         <div className="container mx-auto px-4 md:px-8 max-w-screen-xl text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Our Ecosystem</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Applications built on top of the Universal Gateway platform. 
-            Showcasing our commitment to seamless integration, high-efficiency, and universal accessibility.
+            Applications built by Nexus Wave Technologies, showcasing our commitment to
+            seamless integration, high-efficiency, and universal accessibility.
           </p>
         </div>
       </section>
@@ -30,8 +30,8 @@ export default function Apps() {
                 <p className="text-xl font-medium mb-4">Enhanced features and seamless integration.</p>
                 <p className="text-muted-foreground mb-8">
                   Nexus Plus is our premier productivity and integration suite. It connects siloed workflows 
-                  into a unified, highly-efficient interface. Built entirely on the Universal Gateway, it demonstrates 
-                  how fast, reliable, and accessible enterprise software can be.
+                  into a unified, highly-efficient interface, demonstrating how fast, reliable, and accessible 
+                  enterprise software can be.
                 </p>
                 <div className="space-y-4 mb-8">
                   <div className="flex items-start">
