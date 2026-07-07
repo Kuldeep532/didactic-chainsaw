@@ -16,7 +16,7 @@ import {
   useAdminListContactMessages, useAdminListSupportRequests,
   useCreateNotification, useCreateBlogPost, useListBlogPosts,
 } from "@workspace/api-client-react";
-import { Loader2, RefreshCw, Upload, Trash2, CheckCircle, XCircle, Clock, ShieldAlert, Megaphone } from "lucide-react";
+import { Loader2, RefreshCw, Upload, Trash2, CheckCircle, XCircle, Clock, ShieldAlert, Megaphone, Settings } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/context/AuthContext";
 import { Link } from "wouter";
@@ -590,6 +590,115 @@ function GlobalMessagesTab() {
   );
 }
 
+// ─── Remote Config Tab ────────────────────────────────────────────────────────
+
+interface RemoteConfig {
+  baseUrl: string;
+  minimumSupportedVersion: string;
+  latestVersion: string;
+  updateUrl: string;
+  maintenanceMode: boolean;
+  firebaseProjectId: string | null;
+  authProviders: string[];
+}
+
+function RemoteConfigTab() {
+  const { token } = useAuth();
+  const { toast } = useToast();
+  const [config, setConfig] = useState<RemoteConfig | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const load = async () => {
+    try {
+      const res = await fetch(`${BASE}/admin/config`, { headers: getHeaders(token) });
+      if (res.ok) setConfig(await res.json() as RemoteConfig);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { load(); }, []);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!config) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`${BASE}/admin/config`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", ...getHeaders(token) },
+        body: JSON.stringify({
+          baseUrl: config.baseUrl,
+          minimumSupportedVersion: config.minimumSupportedVersion,
+          latestVersion: config.latestVersion,
+          updateUrl: config.updateUrl,
+          maintenanceMode: config.maintenanceMode,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to update config");
+      toast({ title: "Remote config updated" });
+    } catch {
+      toast({ title: "Failed to update remote config", variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <p className="text-muted-foreground">Loading remote config...</p>;
+  if (!config) return <p className="text-muted-foreground">Could not load remote config.</p>;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg flex items-center gap-2">
+          <Settings className="h-5 w-5" aria-hidden="true" />
+          Remote Config
+        </CardTitle>
+        <CardDescription>
+          Configure the single backend URL, app versions, and update controls that all clients (website + mobile apps) read at startup.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="rc-base-url">Base URL</Label>
+            <Input id="rc-base-url" value={config.baseUrl} onChange={(e) => setConfig({ ...config, baseUrl: e.target.value })} placeholder="https://example.com" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="rc-min-version">Minimum Supported Version</Label>
+              <Input id="rc-min-version" value={config.minimumSupportedVersion} onChange={(e) => setConfig({ ...config, minimumSupportedVersion: e.target.value })} placeholder="1.0.0" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="rc-latest-version">Latest Version</Label>
+              <Input id="rc-latest-version" value={config.latestVersion} onChange={(e) => setConfig({ ...config, latestVersion: e.target.value })} placeholder="1.0.0" />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="rc-update-url">Update URL</Label>
+            <Input id="rc-update-url" value={config.updateUrl} onChange={(e) => setConfig({ ...config, updateUrl: e.target.value })} placeholder="https://example.com/apps" />
+          </div>
+          <div className="flex items-center gap-3">
+            <Switch id="rc-maintenance" checked={config.maintenanceMode} onCheckedChange={(v) => setConfig({ ...config, maintenanceMode: v })} />
+            <Label htmlFor="rc-maintenance" className="cursor-pointer">Maintenance mode</Label>
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-medium">Firebase Project ID</p>
+            <p className="text-sm text-muted-foreground">{config.firebaseProjectId ?? "Not configured"}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-medium">Auth Providers</p>
+            <p className="text-sm text-muted-foreground">{config.authProviders.join(", ")}</p>
+          </div>
+          <Button type="submit" disabled={saving}>{saving ? "Saving..." : "Save Remote Config"}</Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
 // ─── Training Center Tab ──────────────────────────────────────────────────────
 
 interface Dataset {
@@ -845,6 +954,7 @@ export default function Admin() {
             <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            <TabsTrigger value="config">Remote Config</TabsTrigger>
             <TabsTrigger value="training">Training Center</TabsTrigger>
           </TabsList>
           <TabsContent value="contacts"><ContactsTab /></TabsContent>
@@ -852,6 +962,7 @@ export default function Admin() {
           <TabsContent value="messages"><GlobalMessagesTab /></TabsContent>
           <TabsContent value="blog"><BlogTab /></TabsContent>
           <TabsContent value="notifications"><NotificationsTab /></TabsContent>
+          <TabsContent value="config"><RemoteConfigTab /></TabsContent>
           <TabsContent value="training"><TrainingCenterTab /></TabsContent>
         </Tabs>
       </div>

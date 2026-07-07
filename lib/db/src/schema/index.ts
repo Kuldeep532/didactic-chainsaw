@@ -6,3 +6,4 @@ export * from "./blog-posts";
 export * from "./datasets";
 export * from "./knowledge-chunks";
 export * from "./global-messages";
+export * from "./app-config";

@@ -18,6 +18,7 @@ import Admin from "./pages/Admin";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Login from "./pages/Login";
+import Tools from "./pages/Tools";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import Terms from "./pages/legal/Terms";
 import RefundPolicy from "./pages/legal/RefundPolicy";
@@ -76,6 +77,7 @@ function FocusRouter() {
         <Route path="/blog/:slug" component={BlogPost} />
         <Route path="/login" component={Login} />
         <Route path="/admin" component={Admin} />
+        <Route path="/tools" component={Tools} />
         <Route path="/legal/privacy" component={PrivacyPolicy} />
         <Route path="/legal/terms" component={Terms} />
         <Route path="/legal/refund" component={RefundPolicy} />

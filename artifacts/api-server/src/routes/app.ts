@@ -1,7 +1,10 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { z } from "zod/v4";
 import { createHash } from "crypto";
+import { db, appConfigTable } from "@workspace/db";
+import { eq } from "drizzle-orm";
 import { logger } from "../lib/logger";
+import { requireAdmin } from "../middlewares/require-auth";
 
 const router: IRouter = Router();
 
@@ -12,19 +15,93 @@ const router: IRouter = Router();
  * pinning in the apps.
  */
 
+// ─── Remote Config Helpers ────────────────────────────────────────────────────
+
+async function getRemoteConfig(): Promise<{
+  baseUrl: string;
+  minimumSupportedVersion: string;
+  latestVersion: string;
+  updateUrl: string;
+  maintenanceMode: boolean;
+  firebaseProjectId: string | null;
+  authProviders: string[];
+}> {
+  const rows = await db.select().from(appConfigTable).limit(1);
+  const row = rows[0];
+
+  const baseUrl = row?.baseUrl ?? process.env.BASE_URL ?? "";
+  return {
+    baseUrl,
+    minimumSupportedVersion: row?.minimumSupportedVersion ?? process.env.MINIMUM_SUPPORTED_VERSION ?? "1.0.0",
+    latestVersion: row?.latestVersion ?? process.env.LATEST_VERSION ?? "1.0.0",
+    updateUrl: row?.updateUrl ?? process.env.UPDATE_URL ?? `${baseUrl}/apps`,
+    maintenanceMode: row?.maintenanceMode ?? process.env.MAINTENANCE_MODE === "true",
+    firebaseProjectId: process.env.VITE_FIREBASE_PROJECT_ID ?? process.env.FIREBASE_ADMIN_PROJECT_ID ?? null,
+    authProviders: row?.authProviders ?? ["email", "google"],
+  };
+}
+
 // ─── App Version / Remote Config ──────────────────────────────────────────────
 
-router.get("/v1/config", (_req: Request, res: Response) => {
-  const baseUrl = process.env.BASE_URL ?? "";
-  res.json({
-    baseUrl,
-    minimumSupportedVersion: process.env.MINIMUM_SUPPORTED_VERSION ?? "1.0.0",
-    latestVersion: process.env.LATEST_VERSION ?? "1.0.0",
-    updateUrl: process.env.UPDATE_URL ?? `${baseUrl}/apps`,
-    maintenanceMode: process.env.MAINTENANCE_MODE === "true",
-    firebaseProjectId: process.env.VITE_FIREBASE_PROJECT_ID ?? process.env.FIREBASE_ADMIN_PROJECT_ID ?? null,
-    authProviders: ["email", "google"],
-  });
+router.get("/v1/config", async (_req: Request, res: Response) => {
+  try {
+    const config = await getRemoteConfig();
+    res.json(config);
+  } catch (err) {
+    logger.error({ err }, "Failed to fetch remote config");
+    res.status(500).json({ error: "Failed to fetch remote config" });
+  }
+});
+
+// ─── Admin Remote Config Management ─────────────────────────────────────────────
+
+const UpdateConfigSchema = z.object({
+  baseUrl: z.string().optional(),
+  minimumSupportedVersion: z.string().max(50).optional(),
+  latestVersion: z.string().max(50).optional(),
+  updateUrl: z.string().optional(),
+  maintenanceMode: z.boolean().optional(),
+  authProviders: z.array(z.string()).optional(),
+});
+
+router.get("/admin/config", requireAdmin, async (_req: Request, res: Response) => {
+  try {
+    const config = await getRemoteConfig();
+    res.json(config);
+  } catch (err) {
+    logger.error({ err }, "Failed to fetch admin config");
+    res.status(500).json({ error: "Failed to fetch remote config" });
+  }
+});
+
+router.put("/admin/config", requireAdmin, async (req: Request, res: Response) => {
+  const parsed = UpdateConfigSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "Invalid config payload" });
+    return;
+  }
+
+  try {
+    const rows = await db.select().from(appConfigTable).limit(1);
+    const row = rows[0];
+    const values = {
+      ...parsed.data,
+      updatedAt: new Date(),
+    };
+
+    if (row) {
+      await db.update(appConfigTable).set(values).where(eq(appConfigTable.id, row.id));
+    } else {
+      await db.insert(appConfigTable).values(values);
+    }
+
+    const config = await getRemoteConfig();
+    logger.info({ adminId: req.auth!.userId }, "Remote config updated");
+    res.json(config);
+  } catch (err) {
+    logger.error({ err }, "Failed to update remote config");
+    res.status(500).json({ error: "Failed to update remote config" });
+  }
 });
 
 // ─── App Verification Challenge ─────────────────────────────────────────────────
