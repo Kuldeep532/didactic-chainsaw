@@ -98,6 +98,11 @@ router.post("/auth/session", async (req: Request, res: Response) => {
     return;
   }
 
+  if (!getFirebaseAuth()) {
+    res.status(503).json({ error: "Authentication service is not configured" });
+    return;
+  }
+
   const firebase = await verifyFirebaseToken(parsed.data.idToken);
   if (!firebase) {
     res.status(401).json({ error: "Invalid Firebase credentials" });
@@ -120,6 +125,11 @@ router.post("/auth/google", async (req: Request, res: Response) => {
   const parsed = FirebaseSessionBodySchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Firebase ID token is required" });
+    return;
+  }
+
+  if (!getFirebaseAuth()) {
+    res.status(503).json({ error: "Authentication service is not configured" });
     return;
   }
 
