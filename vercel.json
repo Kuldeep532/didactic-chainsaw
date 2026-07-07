@@ -1,15 +1,16 @@
 {
-  "version": 2,
-  "buildCommand": "PORT=5173 BASE_PATH=/ pnpm -w run typecheck:libs && PORT=5173 BASE_PATH=/ pnpm --filter @workspace/web run build",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
   "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm --filter @workspace/web run build",
   "outputDirectory": "artifacts/web/dist/public",
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/:path*",
       "destination": "/api/index"
     },
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ],
@@ -21,9 +22,12 @@
   },
   "headers": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/:path*",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store" }
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
       ]
     }
   ]
