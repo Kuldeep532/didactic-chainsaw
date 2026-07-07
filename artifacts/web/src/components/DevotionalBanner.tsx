@@ -10,7 +10,7 @@ interface DailyShloka {
   chapter: string;
 }
 
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const BASE = (import.meta.env.VITE_BASE_URL as string | undefined)?.replace(/\/$/, "") ?? "";
 
 export default function DevotionalBanner() {
   const [shloka, setShloka] = useState<DailyShloka | null>(null);

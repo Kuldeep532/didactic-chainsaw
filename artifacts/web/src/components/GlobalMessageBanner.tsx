@@ -14,7 +14,7 @@ interface GlobalMessage {
   expiresAt: string;
 }
 
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const BASE = (import.meta.env.VITE_BASE_URL as string | undefined)?.replace(/\/$/, "") ?? "";
 
 const icons = {
   info: Info,

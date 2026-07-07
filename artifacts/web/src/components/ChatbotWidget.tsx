@@ -5,7 +5,7 @@ import { MessageCircle, X, Send, Bot, User, Lock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Link } from "wouter";
 
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const BASE = (import.meta.env.VITE_BASE_URL as string | undefined)?.replace(/\/$/, "") ?? "";
 
 interface Message {
   role: "user" | "bot";

@@ -5,6 +5,7 @@ export interface AuthPayload {
   userId: number;
   email: string;
   isAdmin: boolean;
+  firebaseUid: string;
 }
 
 declare global {
@@ -20,7 +21,8 @@ const JWT_SECRET = process.env.SESSION_SECRET || "dev-secret";
 /**
  * Attaches decoded auth payload to req.auth if a valid Bearer JWT is present.
  * Does NOT reject unauthenticated requests — use requireAuth() or requireAdmin()
- * for that.
+ * for that. The JWT is issued by /api/auth/session after a Firebase ID token is
+ * verified, so the backend only verifies Firebase tokens at sign-in time.
  */
 export function attachAuth(req: Request, _res: Response, next: NextFunction): void {
   const header = req.headers.authorization;
@@ -56,3 +58,6 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction): v
   }
   next();
 }
+
+export const guard = [attachAuth, requireAuth];
+export const adminGuard = [attachAuth, requireAuth, requireAdmin];

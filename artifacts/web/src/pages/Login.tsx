@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,32 +7,16 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
+import {
+  signInWithEmail,
+  signUpWithEmail,
+  signInWithGoogle,
+  isFirebaseConfigured,
+} from "@/lib/firebase";
 import { Loader2, Hexagon, AlertCircle } from "lucide-react";
 import { Link } from "wouter";
 
-// VITE_GOOGLE_CLIENT_ID must be set in the environment for Google sign-in to work
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
-
-// Minimal type for Google Identity Services window object
-declare global {
-  interface Window {
-    google?: {
-      accounts: {
-        id: {
-          initialize: (config: {
-            client_id: string;
-            callback: (response: { credential: string }) => void;
-            use_fedcm_for_prompt?: boolean;
-          }) => void;
-          prompt: (momentNotification?: (notification: { isNotDisplayed: () => boolean; isSkippedMoment: () => boolean }) => void) => void;
-          cancel: () => void;
-        };
-      };
-    };
-  }
-}
-
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const BASE = (import.meta.env.VITE_BASE_URL as string | undefined)?.replace(/\/$/, "") ?? "";
 
 export default function Login() {
   const { login, user } = useAuth();
@@ -44,6 +28,21 @@ export default function Login() {
     navigate("/");
     return null;
   }
+
+  const handleFirebaseSuccess = async (firebaseToken: string) => {
+    const res = await fetch(`${BASE}/api/auth/session`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken: firebaseToken }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.token || !data.user) {
+      throw new Error(data.error ?? "Server sign-in failed");
+    }
+    toast({ title: "Welcome to Nexus Wave Technologies" });
+    login(data.token, data.user);
+    navigate("/");
+  };
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-16">
@@ -63,10 +62,10 @@ export default function Login() {
           </TabsList>
 
           <TabsContent value="login">
-            <LoginForm onSuccess={(token, user) => { login(token, user); navigate("/"); }} />
+            <LoginForm onSuccess={handleFirebaseSuccess} />
           </TabsContent>
           <TabsContent value="register">
-            <RegisterForm onSuccess={(token, user) => { login(token, user); navigate("/"); }} />
+            <RegisterForm onSuccess={handleFirebaseSuccess} />
           </TabsContent>
         </Tabs>
       </div>
@@ -76,31 +75,26 @@ export default function Login() {
 
 // ─── Login Form ───────────────────────────────────────────────────────────────
 
-function LoginForm({ onSuccess }: { onSuccess: (token: string, user: import("@/context/AuthContext").AuthUser) => void }) {
+function LoginForm({ onSuccess }: { onSuccess: (firebaseToken: string) => Promise<void> }) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [form, setForm] = useState({ emailOrUsername: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+    if (!isFirebaseConfigured) {
+      setError("Authentication is not configured.");
+      return;
+    }
     setLoading(true);
     try {
-      const res = await fetch(`${BASE}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "Login failed");
-        return;
-      }
-      toast({ title: "Welcome back!" });
-      onSuccess(data.token, data.user);
-    } catch {
-      setError("Unable to connect. Please try again.");
+      const { token } = await signInWithEmail(form.email, form.password);
+      await onSuccess(token);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Sign in failed";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -121,13 +115,13 @@ function LoginForm({ onSuccess }: { onSuccess: (token: string, user: import("@/c
             </div>
           )}
           <div className="space-y-1.5">
-            <Label htmlFor="login-id">Email or Username</Label>
+            <Label htmlFor="login-email">Email</Label>
             <Input
-              id="login-id"
-              type="text"
-              autoComplete="username email"
-              value={form.emailOrUsername}
-              onChange={(e) => setForm({ ...form, emailOrUsername: e.target.value })}
+              id="login-email"
+              type="email"
+              autoComplete="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="you@example.com"
               required
             />
@@ -156,39 +150,34 @@ function LoginForm({ onSuccess }: { onSuccess: (token: string, user: import("@/c
 
 // ─── Register Form ────────────────────────────────────────────────────────────
 
-function RegisterForm({ onSuccess }: { onSuccess: (token: string, user: import("@/context/AuthContext").AuthUser) => void }) {
+function RegisterForm({ onSuccess }: { onSuccess: (firebaseToken: string) => Promise<void> }) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [form, setForm] = useState({ username: "", email: "", password: "", confirmPassword: "" });
+  const [form, setForm] = useState({ email: "", password: "", confirmPassword: "" });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+    if (!isFirebaseConfigured) {
+      setError("Authentication is not configured.");
+      return;
+    }
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-    if (form.password.length < 8) {
-      setError("Password must be at least 8 characters");
+    if (form.password.length < 6) {
+      setError("Password must be at least 6 characters");
       return;
     }
     setLoading(true);
     try {
-      const res = await fetch(`${BASE}/api/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: form.username, email: form.email, password: form.password }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "Registration failed");
-        return;
-      }
-      toast({ title: "Account created", description: "Welcome to Nexus Wave Technologies." });
-      onSuccess(data.token, data.user);
-    } catch {
-      setError("Unable to connect. Please try again.");
+      const { token } = await signUpWithEmail(form.email, form.password);
+      await onSuccess(token);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Registration failed";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -209,22 +198,6 @@ function RegisterForm({ onSuccess }: { onSuccess: (token: string, user: import("
             </div>
           )}
           <div className="space-y-1.5">
-            <Label htmlFor="reg-username">Username</Label>
-            <Input
-              id="reg-username"
-              type="text"
-              autoComplete="username"
-              value={form.username}
-              onChange={(e) => setForm({ ...form, username: e.target.value })}
-              placeholder="yourname"
-              pattern="[a-zA-Z0-9_]+"
-              minLength={3}
-              maxLength={32}
-              required
-            />
-            <p className="text-xs text-muted-foreground">Letters, numbers, and underscores only.</p>
-          </div>
-          <div className="space-y-1.5">
             <Label htmlFor="reg-email">Email Address</Label>
             <Input
               id="reg-email"
@@ -244,7 +217,7 @@ function RegisterForm({ onSuccess }: { onSuccess: (token: string, user: import("
               autoComplete="new-password"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
-              minLength={8}
+              minLength={6}
               required
             />
           </div>
@@ -270,110 +243,28 @@ function RegisterForm({ onSuccess }: { onSuccess: (token: string, user: import("
   );
 }
 
-// ─── Google Sign-In ───────────────────────────────────────────────────────────
+// ─── Google Sign-In (Firebase) ────────────────────────────────────────────────
 
-/**
- * Loads the Google Identity Services script once and initialises the One Tap
- * flow.  When a credential is returned it is POSTed to /api/auth/google and
- * the resulting JWT is handed to `onSuccess`.
- *
- * Requires VITE_GOOGLE_CLIENT_ID to be set at build time.  When not set the
- * button is rendered in a disabled/info state so the UI is still consistent.
- */
-function GoogleSignInButton({ onSuccess }: { onSuccess: (token: string, user: import("@/context/AuthContext").AuthUser) => void }) {
+function GoogleSignInButton({ onSuccess }: { onSuccess: (firebaseToken: string) => Promise<void> }) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [gisReady, setGisReady] = useState(false);
 
-  // Load the GIS script on mount (only when a client ID is configured)
-  useEffect(() => {
-    if (!GOOGLE_CLIENT_ID) return;
-
-    if (window.google?.accounts?.id) {
-      setGisReady(true);
+  const handleClick = async () => {
+    if (!isFirebaseConfigured) {
+      toast({ title: "Authentication is not configured", variant: "destructive" });
       return;
     }
-
-    const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setGisReady(true);
-    script.onerror = () => {
-      console.warn("Failed to load Google Identity Services script");
-    };
-    document.head.appendChild(script);
-
-    return () => {
-      // Cancel any pending One Tap prompt on unmount
-      window.google?.accounts.id.cancel();
-    };
-  }, []);
-
-  const handleCredential = async (credential: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`${BASE}/api/auth/google`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idToken: credential }),
-      });
-      const data = await res.json() as { token?: string; user?: import("@/context/AuthContext").AuthUser; error?: string };
-      if (!res.ok || !data.token || !data.user) {
-        toast({ title: data.error ?? "Google sign-in failed", variant: "destructive" });
-        return;
-      }
-      toast({ title: "Signed in with Google" });
-      onSuccess(data.token, data.user);
-    } catch {
-      toast({ title: "Google sign-in failed. Please try again.", variant: "destructive" });
+      const { token } = await signInWithGoogle();
+      await onSuccess(token);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Google sign-in failed";
+      toast({ title: message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
   };
-
-  const handleClick = () => {
-    if (!GOOGLE_CLIENT_ID) {
-      toast({
-        title: "Google Sign-In not configured",
-        description: "Set VITE_GOOGLE_CLIENT_ID in your environment to enable Google sign-in.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!gisReady || !window.google?.accounts?.id) {
-      toast({ title: "Google Sign-In is loading — please try again", variant: "destructive" });
-      return;
-    }
-
-    setLoading(true);
-
-    // Initialise GIS with a one-time callback for this sign-in attempt
-    window.google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: ({ credential }) => {
-        handleCredential(credential).finally(() => setLoading(false));
-      },
-      use_fedcm_for_prompt: true,
-    });
-
-    // Show the One Tap prompt
-    window.google.accounts.id.prompt((notification) => {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-        // One Tap was blocked (third-party cookie restrictions, etc.)
-        // Fall back: let the user know and stop loading
-        setLoading(false);
-        toast({
-          title: "Google One Tap was blocked by your browser",
-          description: "Try disabling third-party cookie restrictions or use email sign-in.",
-          variant: "destructive",
-        });
-      }
-    });
-  };
-
-  const isConfigured = Boolean(GOOGLE_CLIENT_ID);
 
   return (
     <div className="relative">
@@ -388,8 +279,7 @@ function GoogleSignInButton({ onSuccess }: { onSuccess: (token: string, user: im
         variant="outline"
         className="w-full mt-4"
         onClick={handleClick}
-        disabled={loading || (isConfigured && !gisReady)}
-        title={!isConfigured ? "Google Sign-In requires VITE_GOOGLE_CLIENT_ID to be configured" : undefined}
+        disabled={loading}
       >
         {loading ? (
           <Loader2 className="h-4 w-4 animate-spin mr-2" aria-hidden="true" />
@@ -403,11 +293,6 @@ function GoogleSignInButton({ onSuccess }: { onSuccess: (token: string, user: im
         )}
         Continue with Google
       </Button>
-      {!isConfigured && (
-        <p className="text-xs text-center text-muted-foreground mt-2">
-          Google sign-in requires configuration — use email sign-in above.
-        </p>
-      )}
     </div>
   );
 }

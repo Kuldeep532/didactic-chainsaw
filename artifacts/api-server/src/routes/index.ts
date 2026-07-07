@@ -10,6 +10,8 @@ import aiRouter from "./ai";
 import gatewayRouter from "./gateway";
 import shlokasRouter from "./shlokas";
 import messagesRouter from "./messages";
+import proxyRouter from "./proxy";
+import appRouter from "./app";
 
 const router: IRouter = Router();
 
@@ -24,5 +26,7 @@ router.use(aiRouter);
 router.use(gatewayRouter);
 router.use(shlokasRouter);
 router.use(messagesRouter);
+router.use(proxyRouter);
+router.use(appRouter);
 
 export default router;
