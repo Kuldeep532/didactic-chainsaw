@@ -8,6 +8,8 @@ import blogRouter from "./blog";
 import adminRouter from "./admin";
 import aiRouter from "./ai";
 import gatewayRouter from "./gateway";
+import shlokasRouter from "./shlokas";
+import messagesRouter from "./messages";
 
 const router: IRouter = Router();
 
@@ -20,5 +22,7 @@ router.use(blogRouter);
 router.use(adminRouter);
 router.use(aiRouter);
 router.use(gatewayRouter);
+router.use(shlokasRouter);
+router.use(messagesRouter);
 
 export default router;

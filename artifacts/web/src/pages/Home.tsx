@@ -88,7 +88,6 @@ export default function Home() {
               <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity duration-500">
                 <Code2 className="w-24 h-24 text-primary" aria-hidden="true" />
               </div>
-              <div className="mb-4 text-sm font-mono text-muted-foreground">com.nexuswavetech.nexusplus</div>
               <h3 className="text-2xl font-bold mb-3">Nexus Plus</h3>
               <p className="text-muted-foreground mb-6">Enhanced productivity with seamless integration. Your personal command center for everyday tasks.</p>
               <Button asChild variant="secondary" className="w-full sm:w-auto">
@@ -99,7 +98,6 @@ export default function Home() {
               <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity duration-500">
                 <Sparkles className="w-24 h-24 text-blue-500" aria-hidden="true" />
               </div>
-              <div className="mb-4 text-sm font-mono text-muted-foreground">com.nexuswavetech.geetanexus</div>
               <h3 className="text-2xl font-bold mb-3">Geeta Nexus</h3>
               <p className="text-muted-foreground mb-6">Spiritual wisdom meets modern technology in an accessible format.</p>
               <Button asChild variant="secondary" className="w-full sm:w-auto">

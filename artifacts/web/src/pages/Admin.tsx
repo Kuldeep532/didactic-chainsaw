@@ -16,7 +16,8 @@ import {
   useAdminListContactMessages, useAdminListSupportRequests,
   useCreateNotification, useCreateBlogPost, useListBlogPosts,
 } from "@workspace/api-client-react";
-import { Loader2, RefreshCw, Upload, Trash2, CheckCircle, XCircle, Clock, ShieldAlert } from "lucide-react";
+import { Loader2, RefreshCw, Upload, Trash2, CheckCircle, XCircle, Clock, ShieldAlert, Megaphone } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/context/AuthContext";
 import { Link } from "wouter";
 
@@ -360,6 +361,235 @@ function NotificationsTab() {
   );
 }
 
+// ─── Global Messages Tab ────────────────────────────────────────────────────
+
+interface GlobalMessage {
+  id: number;
+  title: string;
+  message: string;
+  target: string;
+  enabled: boolean;
+  actionUrl: string | null;
+  kind: string;
+  startsAt: string;
+  expiresAt: string;
+  createdAt: string;
+}
+
+function GlobalMessagesTab() {
+  const { token } = useAuth();
+  const { toast } = useToast();
+  const [messages, setMessages] = useState<GlobalMessage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState({
+    title: "",
+    message: "",
+    target: "all",
+    kind: "info",
+    actionUrl: "",
+    startsAt: "",
+    expiresAt: "",
+    enabled: true,
+  });
+
+  const load = async () => {
+    try {
+      const res = await fetch(`${BASE}/api/admin/messages`, { headers: getHeaders(token) });
+      if (res.ok) setMessages(await res.json() as GlobalMessage[]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { load(); }, []);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!form.title.trim() || !form.message.trim() || !form.startsAt || !form.expiresAt) {
+      toast({ title: "Please fill all required fields", variant: "destructive" });
+      return;
+    }
+    try {
+      const res = await fetch(`${BASE}/api/admin/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...getHeaders(token) },
+        body: JSON.stringify({
+          title: form.title,
+          message: form.message,
+          target: form.target,
+          kind: form.kind,
+          actionUrl: form.actionUrl || undefined,
+          startsAt: new Date(form.startsAt).toISOString(),
+          expiresAt: new Date(form.expiresAt).toISOString(),
+          enabled: form.enabled,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to create message");
+      toast({ title: "Announcement created" });
+      setForm({ title: "", message: "", target: "all", kind: "info", actionUrl: "", startsAt: "", expiresAt: "", enabled: true });
+      load();
+    } catch {
+      toast({ title: "Failed to create announcement", variant: "destructive" });
+    }
+  };
+
+  const toggle = async (id: number, enabled: boolean) => {
+    const res = await fetch(`${BASE}/api/admin/messages/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...getHeaders(token) },
+      body: JSON.stringify({ enabled: !enabled }),
+    });
+    if (res.ok) {
+      setMessages((prev) => prev.map((m) => m.id === id ? { ...m, enabled: !enabled } : m));
+      toast({ title: enabled ? "Announcement disabled" : "Announcement enabled" });
+    }
+  };
+
+  const remove = async (id: number) => {
+    const res = await fetch(`${BASE}/api/admin/messages/${id}`, {
+      method: "DELETE",
+      headers: getHeaders(token),
+    });
+    if (res.ok) {
+      setMessages((prev) => prev.filter((m) => m.id !== id));
+      toast({ title: "Announcement deleted" });
+    }
+  };
+
+  const statusBadge = (m: GlobalMessage) => {
+    const now = new Date().toISOString();
+    if (!m.enabled) return <Badge variant="outline">Disabled</Badge>;
+    if (m.startsAt > now) return <Badge variant="secondary">Scheduled</Badge>;
+    if (m.expiresAt < now) return <Badge variant="destructive">Expired</Badge>;
+    return <Badge variant="default">Active</Badge>;
+  };
+
+  return (
+    <div className="space-y-8">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Megaphone className="h-5 w-5" aria-hidden="true" />
+            New Announcement
+          </CardTitle>
+          <CardDescription>Create timed messages for the website or mobile apps. Expired messages disappear automatically.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="msg-title">Title <span aria-hidden="true">*</span></Label>
+                <Input id="msg-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="msg-target">Target</Label>
+                <Select value={form.target} onValueChange={(v) => setForm({ ...form, target: v })}>
+                  <SelectTrigger id="msg-target"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="website">Website</SelectItem>
+                    <SelectItem value="nexus_plus">Nexus Plus App</SelectItem>
+                    <SelectItem value="geeta_nexus">Geeta Nexus App</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="msg-body">Message <span aria-hidden="true">*</span></Label>
+              <Textarea id="msg-body" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} required />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="msg-kind">Kind</Label>
+                <Select value={form.kind} onValueChange={(v) => setForm({ ...form, kind: v })}>
+                  <SelectTrigger id="msg-kind"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="info">Info</SelectItem>
+                    <SelectItem value="warning">Warning</SelectItem>
+                    <SelectItem value="success">Success</SelectItem>
+                    <SelectItem value="error">Error</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="msg-start">Start Time <span aria-hidden="true">*</span></Label>
+                <Input id="msg-start" type="datetime-local" value={form.startsAt} onChange={(e) => setForm({ ...form, startsAt: e.target.value })} required />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="msg-expiry">Expiry Time <span aria-hidden="true">*</span></Label>
+                <Input id="msg-expiry" type="datetime-local" value={form.expiresAt} onChange={(e) => setForm({ ...form, expiresAt: e.target.value })} required />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="msg-url">Action URL (optional)</Label>
+              <Input id="msg-url" type="url" value={form.actionUrl} onChange={(e) => setForm({ ...form, actionUrl: e.target.value })} placeholder="https://..." />
+            </div>
+            <div className="flex items-center gap-3">
+              <Switch id="msg-enabled" checked={form.enabled} onCheckedChange={(v) => setForm({ ...form, enabled: v })} />
+              <Label htmlFor="msg-enabled" className="cursor-pointer">Enabled immediately</Label>
+            </div>
+            <Button type="submit">Create Announcement</Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold">Announcements</h3>
+          <Button variant="outline" size="sm" onClick={load}>
+            <RefreshCw className="h-4 w-4 mr-1" aria-hidden="true" />
+            Refresh
+          </Button>
+        </div>
+        {loading ? (
+          <p className="text-muted-foreground">Loading...</p>
+        ) : messages.length === 0 ? (
+          <p className="text-muted-foreground">No announcements yet.</p>
+        ) : (
+          <div className="space-y-3">
+            {messages.map((m) => (
+              <Card key={m.id}>
+                <CardContent className="py-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="font-medium truncate">{m.title}</p>
+                        {statusBadge(m)}
+                        <Badge variant="outline">{m.target}</Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{m.message}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {new Date(m.startsAt).toLocaleString()} → {new Date(m.expiresAt).toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Switch
+                        checked={m.enabled}
+                        onCheckedChange={() => toggle(m.id, m.enabled)}
+                        aria-label={`${m.enabled ? "Disable" : "Enable"} announcement ${m.title}`}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-destructive hover:text-destructive"
+                        onClick={() => remove(m.id)}
+                        aria-label={`Delete announcement ${m.title}`}
+                      >
+                        <Trash2 className="h-4 w-4" aria-hidden="true" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Training Center Tab ──────────────────────────────────────────────────────
 
 interface Dataset {
@@ -612,12 +842,14 @@ export default function Admin() {
           <TabsList className="mb-6 flex-wrap h-auto gap-1">
             <TabsTrigger value="contacts">Contacts</TabsTrigger>
             <TabsTrigger value="support">Support</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
             <TabsTrigger value="training">Training Center</TabsTrigger>
           </TabsList>
           <TabsContent value="contacts"><ContactsTab /></TabsContent>
           <TabsContent value="support"><SupportTab /></TabsContent>
+          <TabsContent value="messages"><GlobalMessagesTab /></TabsContent>
           <TabsContent value="blog"><BlogTab /></TabsContent>
           <TabsContent value="notifications"><NotificationsTab /></TabsContent>
           <TabsContent value="training"><TrainingCenterTab /></TabsContent>
