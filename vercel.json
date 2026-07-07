@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "pnpm run typecheck:libs && pnpm --filter @workspace/web run build",
+  "buildCommand": "pnpm -w run typecheck:libs && pnpm --filter @workspace/web run build",
   "installCommand": "pnpm install --frozen-lockfile",
   "outputDirectory": "artifacts/web/dist/public",
   "rewrites": [
