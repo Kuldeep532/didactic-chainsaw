@@ -1,7 +1,9 @@
 {
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
-  "files": [],
+  "files": [
+    "./global-bypass.d.ts"
+  ],
   "references": [
     {
       "path": "./lib/db"
