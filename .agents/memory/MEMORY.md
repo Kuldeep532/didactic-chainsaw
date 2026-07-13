@@ -1,0 +1,1 @@
+- [Migration-backup artifacts auto-discovered](migration-backup-artifacts.md) — .migration-backup/ gets registered as live artifacts; safe to ignore, only start artifacts/* workflows.
