@@ -1,0 +1,627 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: config
+    description: Public configuration for websites and client apps
+  - name: contact
+    description: Contact and support requests
+  - name: auth
+    description: Google Sign-In and session management
+  - name: notifications
+    description: Notification broadcast system for apps
+  - name: blog
+    description: Blog post management
+  - name: admin
+    description: Admin panel data APIs
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /public-config:
+    get:
+      operationId: getPublicConfig
+      tags: [config]
+      summary: Get public configuration
+      description: Returns company info and the list of published apps. Safe to call from any client, including native mobile apps, without authentication.
+      responses:
+        "200":
+          description: Public configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicConfig"
+  /contact-messages:
+    post:
+      operationId: submitContactMessage
+      tags: [contact]
+      summary: Submit a contact message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactMessageInput"
+      responses:
+        "201":
+          description: Message received
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactMessage"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /support-requests:
+    post:
+      operationId: submitSupportRequest
+      tags: [contact]
+      summary: Submit an app support request
+      description: Used by native mobile apps (e.g. Nexus Plus, Geeta Nexus) and the website to raise a support ticket.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupportRequestInput"
+      responses:
+        "201":
+          description: Support request received
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportRequest"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/google:
+    post:
+      operationId: googleSignIn
+      tags: [auth]
+      summary: Google Sign-In via Credential Manager
+      description: Verify a Google ID token from Android Credential Manager and create or return a user session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoogleSignInInput"
+      responses:
+        "200":
+          description: Successful sign-in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid Google token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current authenticated user
+      description: Returns the currently logged-in user profile based on the session token.
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      summary: List all notifications
+      description: Returns all notifications ordered by newest first.
+      responses:
+        "200":
+          description: List of notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+    post:
+      operationId: createNotification
+      tags: [notifications]
+      summary: Create a new notification
+      description: Creates a notification. When created, it is automatically broadcast to the target app channel via WebSocket.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NotificationInput"
+      responses:
+        "201":
+          description: Notification created and broadcast
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /ws/notifications:
+    get:
+      operationId: getWsUrl
+      tags: [notifications]
+      summary: Get WebSocket notification endpoint info
+      description: Returns the WebSocket URL and supported channels for real-time notifications.
+      responses:
+        "200":
+          description: WebSocket connection info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationSocketInfo"
+  /blog-posts:
+    get:
+      operationId: listBlogPosts
+      tags: [blog]
+      summary: List blog posts
+      description: Returns published blog posts ordered by newest first.
+      responses:
+        "200":
+          description: List of blog posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BlogPost"
+    post:
+      operationId: createBlogPost
+      tags: [blog]
+      summary: Create a blog post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogPostInput"
+      responses:
+        "201":
+          description: Blog post created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /blog-posts/{slug}:
+    get:
+      operationId: getBlogPostBySlug
+      tags: [blog]
+      summary: Get a single blog post by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Blog post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /admin/contact-messages:
+    get:
+      operationId: adminListContactMessages
+      tags: [admin]
+      summary: Admin — list all contact messages
+      description: Returns all contact messages ordered by newest first.
+      responses:
+        "200":
+          description: List of contact messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContactMessage"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /admin/support-requests:
+    get:
+      operationId: adminListSupportRequests
+      tags: [admin]
+      summary: Admin — list all support requests
+      description: Returns all support requests ordered by newest first.
+      responses:
+        "200":
+          description: List of support requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportRequest"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    AppInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        packageId:
+          type: string
+        description:
+          type: string
+      required:
+        - id
+        - name
+        - packageId
+        - description
+    PublicConfig:
+      type: object
+      properties:
+        companyName:
+          type: string
+        tagline:
+          type: string
+        contactEmail:
+          type: string
+        apps:
+          type: array
+          items:
+            $ref: "#/components/schemas/AppInfo"
+      required:
+        - companyName
+        - tagline
+        - contactEmail
+        - apps
+    ContactMessageInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+        subject:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
+      required:
+        - firstName
+        - lastName
+        - email
+        - subject
+        - message
+    ContactMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - subject
+        - message
+        - createdAt
+    SupportRequestInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+        appId:
+          type: string
+          minLength: 1
+          description: "Identifier of the app raising the request, e.g. nexus-plus or geeta-nexus"
+        subject:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
+      required:
+        - name
+        - email
+        - appId
+        - subject
+        - message
+    SupportRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        appId:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - email
+        - appId
+        - subject
+        - message
+        - status
+        - createdAt
+    GoogleSignInInput:
+      type: object
+      properties:
+        idToken:
+          type: string
+          description: "ID token from Android Credential Manager"
+      required:
+        - idToken
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        token:
+          type: string
+          description: "JWT session token"
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            email:
+              type: string
+            name:
+              type: string
+            picture:
+              type: string
+            isAdmin:
+              type: boolean
+          required:
+            - id
+            - email
+            - isAdmin
+      required:
+        - success
+        - token
+        - user
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        picture:
+          type: string
+        isAdmin:
+          type: boolean
+      required:
+        - id
+        - email
+        - isAdmin
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        targetChannel:
+          type: string
+          description: "nexus_plus or geeta_nexus"
+        title:
+          type: string
+        message:
+          type: string
+        actionUrl:
+          type: string
+        broadcastType:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - targetChannel
+        - title
+        - message
+        - broadcastType
+        - createdAt
+    NotificationInput:
+      type: object
+      properties:
+        targetChannel:
+          type: string
+          description: "nexus_plus or geeta_nexus"
+        title:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
+        actionUrl:
+          type: string
+        broadcastType:
+          type: string
+          default: website_news
+      required:
+        - targetChannel
+        - title
+        - message
+    NotificationSocketInfo:
+      type: object
+      properties:
+        wsUrl:
+          type: string
+        channels:
+          type: array
+          items:
+            type: string
+      required:
+        - wsUrl
+        - channels
+    BlogPost:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        content:
+          type: string
+        excerpt:
+          type: string
+        category:
+          type: string
+        published:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - slug
+        - content
+        - published
+        - createdAt
+        - updatedAt
+    BlogPostInput:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+        slug:
+          type: string
+          minLength: 1
+        content:
+          type: string
+          minLength: 1
+        excerpt:
+          type: string
+        category:
+          type: string
+        published:
+          type: boolean
+          default: true
+      required:
+        - title
+        - slug
+        - content
