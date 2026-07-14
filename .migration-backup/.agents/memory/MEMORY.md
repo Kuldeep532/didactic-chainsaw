@@ -1,5 +1,0 @@
-- [Auth architecture](auth-architecture.md) — custom JWT + bcrypt (not Clerk/Firebase); email+password + Google OAuth; googleSub nullable for email-only users
-- [DB vector storage approach](db-vector-storage.md) — pgvector NOT used; embeddings stored as JSON float arrays; cosine similarity in Node.js
-- [Admin route protection pattern](admin-route-protection.md) — per-route middleware tuple `[attachAuth, requireAdmin]`, NOT router.use() (blanket middleware intercepts all routes)
-- [Zod in api-server](zod-api-server.md) — must add zod directly to api-server/package.json; importing from zod/v4 works once added; use plain z.record(z.string(), z.unknown()) not z.record(z.unknown()) (v3 compat)
-- [DATABASE_URL](database-url.md) — runtime-managed by Replit; do not set manually; always available in shell and workflows
