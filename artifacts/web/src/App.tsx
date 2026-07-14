@@ -40,6 +40,7 @@ const queryClient = new QueryClient({
  * After every route change it moves focus to the first heading on the new page
  * (h1, then h2, then main) so keyboard users and screen readers land on the new
  * content instead of staying at the previous page's position.
+ * This ensures accessibility compliance for keyboard navigation and screen readers.
  */
 function FocusRouter() {
   const [location] = useLocation();
@@ -49,20 +50,27 @@ function FocusRouter() {
     if (location === previousLocation.current) return;
     previousLocation.current = location;
 
-    // Small delay to allow the new route to render
+    // Delay to allow the new route to render and DOM to settle
     const timer = setTimeout(() => {
       const target =
-        document.querySelector("h1") as HTMLElement | null ??
-        document.querySelector("h2") as HTMLElement | null ??
+        (document.querySelector("h1") as HTMLElement | null) ??
+        (document.querySelector("h2") as HTMLElement | null) ??
         document.getElementById("main-content");
 
       if (target) {
+        // Make element focusable and move focus to it
         target.setAttribute("tabindex", "-1");
-        target.focus({ preventScroll: true });
-        // Clean up tabindex so it does not stay in the tab sequence
-        setTimeout(() => target.removeAttribute("tabindex"), 1000);
+        target.focus({ preventScroll: false });
+        
+        // Scroll the focused element into view smoothly
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        
+        // Clean up tabindex after focus is applied so it doesn't stay in tab sequence
+        setTimeout(() => {
+          target.removeAttribute("tabindex");
+        }, 100);
       }
-    }, 0);
+    }, 50);
 
     return () => clearTimeout(timer);
   }, [location]);
