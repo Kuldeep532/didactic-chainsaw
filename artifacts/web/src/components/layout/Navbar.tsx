@@ -55,13 +55,6 @@ export default function Navbar() {
           : "border-border/30 bg-background/70 backdrop-blur-md"
       }`}
     >
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:text-sm font-medium"
-      >
-        Skip to main content
-      </a>
-
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between mx-auto px-4 md:px-8">
         <Link href="/" className="flex items-center space-x-2 group" aria-label="Nexus Wave Technologies Home">
           <Hexagon className="h-7 w-7 text-primary group-hover:rotate-12 transition-transform duration-300" aria-hidden="true" strokeWidth={2.5} />
