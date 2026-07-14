@@ -55,69 +55,68 @@ export default function Login() {
   return (
     <div className="min-h-[calc(100vh-80px)] flex">
       {/* Left panel — benefits (desktop only) */}
-      <div className="hidden lg:flex lg:w-[45%] xl:w-[40%] bg-gradient-to-br from-primary/5 via-primary/10 to-blue-600/10 border-r border-border flex-col justify-between p-12">
-        <Link href="/" className="flex items-center gap-2.5 group w-fit" aria-label="Nexus Wave Technologies Home">
-          <Hexagon className="h-9 w-9 text-primary group-hover:rotate-12 transition-transform duration-300" strokeWidth={2.5} aria-hidden="true" />
-          <span className="font-bold text-xl text-foreground">Nexus Wave</span>
+      <div className="hidden lg:flex lg:w-[45%] xl:w-[40%] bg-muted border-r border-border flex-col justify-between p-12">
+        <Link href="/" className="flex items-center gap-3 group w-fit" aria-label="Nexus Wave Technologies Home">
+          <Hexagon className="h-8 w-8 text-foreground group-hover:rotate-90 transition-transform duration-500" strokeWidth={1} aria-hidden="true" />
+          <span className="font-bold text-xl tracking-tight text-foreground">Nexus Wave</span>
         </Link>
 
         <div>
-          <h2 className="text-3xl font-bold mb-3 leading-snug">
-            One account.<br />
-            The entire <span className="text-primary">Nexus Wave</span> ecosystem.
+          <h2 className="text-4xl font-bold tracking-tight mb-6 leading-tight">
+            Centralized Authentication.
           </h2>
-          <p className="text-muted-foreground mb-10 leading-relaxed">
-            Sign in to access the admin panel, manage your apps, and experience the full platform.
+          <p className="text-lg text-muted-foreground mb-12 leading-relaxed">
+            Secure entry to the Nexus Wave system. Administrator and engineering access portal.
           </p>
 
-          <div className="space-y-5">
+          <div className="space-y-6">
             {BENEFITS.map((b) => (
               <div key={b.title} className="flex items-start gap-4">
-                <div className="shrink-0 p-2 bg-primary/10 rounded-lg text-primary">{b.icon}</div>
-                <div>
-                  <p className="font-semibold text-sm">{b.title}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{b.desc}</p>
+                <div className="shrink-0 p-2 border border-border bg-background text-foreground">{b.icon}</div>
+                <div className="pt-1">
+                  <p className="font-semibold text-sm tracking-tight mb-1">{b.title}</p>
+                  <p className="text-sm text-muted-foreground">{b.desc}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <p className="text-xs text-muted-foreground/60">
-          &copy; {new Date().getFullYear()} Nexus Wave Technologies · info@nexusweb.co.in
+        <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
+          SYS_ID: NW-AUTH-01
         </p>
       </div>
 
       {/* Right panel — form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-16">
+      <div className="flex-1 flex items-center justify-center px-6 py-16 bg-background">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <div className="lg:hidden text-center mb-8">
-            <Link href="/" className="inline-flex flex-col items-center gap-2 group">
-              <Hexagon className="h-10 w-10 text-primary group-hover:rotate-12 transition-transform duration-300" strokeWidth={2.5} aria-hidden="true" />
-              <span className="font-bold text-lg text-foreground">Nexus Wave Technologies</span>
+          <div className="lg:hidden text-center mb-10">
+            <Link href="/" className="inline-flex flex-col items-center gap-3 group">
+              <Hexagon className="h-10 w-10 text-foreground group-hover:rotate-90 transition-transform duration-500" strokeWidth={1} aria-hidden="true" />
+              <span className="font-bold text-xl tracking-tight text-foreground">Nexus Wave</span>
             </Link>
           </div>
 
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
-            <p className="text-muted-foreground text-sm mt-1">Sign in to your account to continue.</p>
+          <div className="mb-10">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">Access Portal</h1>
+            <p className="text-muted-foreground">Provide credentials to initialize session.</p>
           </div>
 
           {!isFirebaseConfigured && (
-            <div className="flex gap-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-6 text-sm text-amber-800 dark:text-amber-400">
-              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+            <div className="flex gap-3 bg-muted border border-border p-4 mb-8 text-sm">
+              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-destructive" />
               <div>
-                <p className="font-semibold">Authentication not configured</p>
-                <p className="text-xs mt-0.5 opacity-80">Set the <code className="font-mono">VITE_FIREBASE_*</code> environment variables to enable login.</p>
+                <p className="font-semibold mb-1">Unconfigured Environment</p>
+                <p className="text-xs text-muted-foreground">Set the <code className="font-mono bg-background border border-border px-1">VITE_FIREBASE_*</code> environment variables to enable login.</p>
               </div>
             </div>
           )}
 
-          <Tabs defaultValue="login">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">Sign In</TabsTrigger>
-              <TabsTrigger value="register">Create Account</TabsTrigger>
+          <Tabs defaultValue="login" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-8 rounded-none border border-border bg-muted p-1">
+              <TabsTrigger value="login" className="rounded-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none font-medium">Sign In</TabsTrigger>
+              <TabsTrigger value="register" className="rounded-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none font-medium">Create Node</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
@@ -128,10 +127,10 @@ export default function Login() {
             </TabsContent>
           </Tabs>
 
-          <p className="text-xs text-center text-muted-foreground mt-8">
-            By continuing, you agree to our{" "}
-            <Link href="/legal/terms" className="underline hover:text-foreground">Terms of Service</Link>{" "}
-            and{" "}
+          <p className="text-xs text-center text-muted-foreground mt-10">
+            By authenticating, you accept our{" "}
+            <Link href="/legal/terms" className="underline hover:text-foreground">Terms</Link>
+            {" "}and{" "}
             <Link href="/legal/privacy" className="underline hover:text-foreground">Privacy Policy</Link>.
           </p>
         </div>
@@ -176,25 +175,25 @@ function LoginForm({ onSuccess }: { onSuccess: (firebaseToken: string) => Promis
       )}
 
       <div className="space-y-1.5">
-        <Label htmlFor="login-email">Email address</Label>
+        <Label htmlFor="login-email" className="text-xs uppercase tracking-wider font-mono text-muted-foreground">Email address</Label>
         <Input
           id="login-email"
           type="email"
           autoComplete="email"
-          placeholder="you@example.com"
+          placeholder="IDENTIFIER"
           value={form.email}
           onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
           required
           disabled={loading}
-          className="h-11"
+          className="h-12 rounded-none border-border focus-visible:ring-0 focus-visible:border-foreground"
         />
       </div>
 
       <div className="space-y-1.5">
         <div className="flex justify-between items-center">
-          <Label htmlFor="login-password">Password</Label>
-          <button type="button" className="text-xs text-muted-foreground hover:text-primary transition-colors" tabIndex={-1}>
-            Forgot password?
+          <Label htmlFor="login-password" className="text-xs uppercase tracking-wider font-mono text-muted-foreground">Password</Label>
+          <button type="button" className="text-xs text-muted-foreground hover:text-foreground transition-colors font-mono" tabIndex={-1}>
+            RESET_KEY
           </button>
         </div>
         <div className="relative">
@@ -202,12 +201,12 @@ function LoginForm({ onSuccess }: { onSuccess: (firebaseToken: string) => Promis
             id="login-password"
             type={showPass ? "text" : "password"}
             autoComplete="current-password"
-            placeholder="Enter your password"
+            placeholder="CREDENTIAL"
             value={form.password}
             onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
             required
             disabled={loading}
-            className="h-11 pr-10"
+            className="h-12 pr-10 rounded-none border-border focus-visible:ring-0 focus-visible:border-foreground"
           />
           <button
             type="button"
@@ -220,9 +219,9 @@ function LoginForm({ onSuccess }: { onSuccess: (firebaseToken: string) => Promis
         </div>
       </div>
 
-      <Button type="submit" className="w-full h-11 font-semibold" disabled={loading || !isFirebaseConfigured}>
+      <Button type="submit" className="w-full h-12 font-medium rounded-none text-base mt-2" disabled={loading || !isFirebaseConfigured}>
         {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-        Sign In
+        Authenticate
         {!loading && <ArrowRight className="h-4 w-4 ml-2" />}
       </Button>
 
@@ -263,42 +262,42 @@ function RegisterForm({ onSuccess }: { onSuccess: (firebaseToken: string) => Pro
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-4">
+    <form onSubmit={handleSubmit} noValidate className="space-y-5">
       {error && (
-        <div className="flex items-start gap-2 bg-destructive/10 border border-destructive/30 rounded-xl p-3 text-sm text-destructive">
+        <div className="flex items-start gap-3 border border-destructive bg-destructive/10 p-3 text-sm text-destructive font-medium">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       <div className="space-y-1.5">
-        <Label htmlFor="reg-email">Email address</Label>
+        <Label htmlFor="reg-email" className="text-xs uppercase tracking-wider font-mono text-muted-foreground">Email address</Label>
         <Input
           id="reg-email"
           type="email"
           autoComplete="email"
-          placeholder="you@example.com"
+          placeholder="IDENTIFIER"
           value={form.email}
           onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
           required
           disabled={loading}
-          className="h-11"
+          className="h-12 rounded-none border-border focus-visible:ring-0 focus-visible:border-foreground"
         />
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="reg-password">Password</Label>
+        <Label htmlFor="reg-password" className="text-xs uppercase tracking-wider font-mono text-muted-foreground">Password</Label>
         <div className="relative">
           <Input
             id="reg-password"
             type={showPass ? "text" : "password"}
             autoComplete="new-password"
-            placeholder="At least 8 characters"
+            placeholder="MIN 8 CHARS"
             value={form.password}
             onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
             required
             disabled={loading}
-            className="h-11 pr-10"
+            className="h-12 pr-10 rounded-none border-border focus-visible:ring-0 focus-visible:border-foreground"
           />
           <button
             type="button"
@@ -313,27 +312,27 @@ function RegisterForm({ onSuccess }: { onSuccess: (firebaseToken: string) => Pro
           <div className="mt-1.5">
             <div className="flex gap-1 mb-1">
               {[0, 1, 2, 3].map((i) => (
-                <div key={i} className={`h-1 flex-1 rounded-full transition-all ${i < strength.score ? strength.color : "bg-muted"}`} />
+                <div key={i} className={`h-1 flex-1 transition-colors ${i < strength.score ? strength.color : "bg-muted"}`} />
               ))}
             </div>
-            <p className="text-xs text-muted-foreground">{strength.label}</p>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{strength.label}</p>
           </div>
         )}
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="reg-confirm">Confirm password</Label>
+        <Label htmlFor="reg-confirm" className="text-xs uppercase tracking-wider font-mono text-muted-foreground">Verify Password</Label>
         <div className="relative">
           <Input
             id="reg-confirm"
             type={showPass ? "text" : "password"}
             autoComplete="new-password"
-            placeholder="Repeat your password"
+            placeholder="VERIFY CREDENTIAL"
             value={form.confirmPassword}
             onChange={(e) => setForm((f) => ({ ...f, confirmPassword: e.target.value }))}
             required
             disabled={loading}
-            className={`h-11 pr-10 ${form.confirmPassword && form.password !== form.confirmPassword ? "border-destructive" : form.confirmPassword && form.password === form.confirmPassword ? "border-green-500" : ""}`}
+            className={`h-12 pr-10 rounded-none focus-visible:ring-0 ${form.confirmPassword && form.password !== form.confirmPassword ? "border-destructive focus-visible:border-destructive" : form.confirmPassword && form.password === form.confirmPassword ? "border-green-500 focus-visible:border-green-500" : "border-border focus-visible:border-foreground"}`}
           />
           {form.confirmPassword && (
             <span className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -345,9 +344,9 @@ function RegisterForm({ onSuccess }: { onSuccess: (firebaseToken: string) => Pro
         </div>
       </div>
 
-      <Button type="submit" className="w-full h-11 font-semibold" disabled={loading || !isFirebaseConfigured}>
+      <Button type="submit" className="w-full h-12 font-medium rounded-none text-base mt-2" disabled={loading || !isFirebaseConfigured}>
         {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Lock className="h-4 w-4 mr-2" />}
-        Create Account
+        Initialize Node
       </Button>
 
       <GoogleSignInButton onSuccess={onSuccess} />
@@ -377,15 +376,15 @@ function GoogleSignInButton({ onSuccess }: { onSuccess: (token: string) => Promi
 
   return (
     <>
-      <div className="relative flex items-center my-4">
+      <div className="relative flex items-center my-6">
         <div className="flex-1 border-t border-border" />
-        <span className="px-3 text-xs text-muted-foreground bg-background">OR</span>
+        <span className="px-4 text-[10px] font-mono uppercase tracking-widest text-muted-foreground bg-background">ALT_AUTH</span>
         <div className="flex-1 border-t border-border" />
       </div>
       <Button
         type="button"
         variant="outline"
-        className="w-full h-11 font-medium"
+        className="w-full h-12 font-medium rounded-none"
         onClick={handleClick}
         disabled={loading || !isFirebaseConfigured}
       >
@@ -399,7 +398,7 @@ function GoogleSignInButton({ onSuccess }: { onSuccess: (token: string) => Promi
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
           </svg>
         )}
-        Continue with Google
+        Authenticate with Google
       </Button>
     </>
   );

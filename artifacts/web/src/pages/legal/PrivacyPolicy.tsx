@@ -1,43 +1,48 @@
 export default function PrivacyPolicy() {
   return (
-    <div className="container mx-auto px-4 md:px-8 max-w-screen-md py-20 prose dark:prose-invert">
-      <h1>Privacy Policy</h1>
-      <p className="lead">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+    <div className="container mx-auto px-4 md:px-8 max-w-screen-md py-24">
+      <div className="mb-12 border-b border-border pb-8">
+        <h1 className="text-4xl font-bold tracking-tight mb-4">Privacy Policy</h1>
+        <p className="text-muted-foreground font-mono text-sm uppercase tracking-wider">
+          Effective Date: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </p>
+      </div>
 
-      <p>Nexus Wave Technologies ("we," "our," or "us") respects your privacy and is committed to protecting your personal data. This Privacy Policy informs you about how we look after your personal data when you visit our website or use our applications (including Nexus Plus and Geeta Nexus).</p>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="text-lg leading-relaxed text-muted-foreground mb-8">
+          Nexus Wave Technologies ("we," "our," or "us") respects your privacy and is committed to protecting your personal data. This policy details our processing mechanisms when you interact with our software and infrastructure.
+        </p>
 
-      <h2>1. Information We Collect</h2>
-      <p>We may collect, use, store, and transfer different kinds of personal data about you:</p>
-      <ul>
-        <li><strong>Identity Data</strong> includes first name, last name, username or similar identifier.</li>
-        <li><strong>Contact Data</strong> includes email address and telephone numbers.</li>
-        <li><strong>Technical Data</strong> includes internet protocol (IP) address, browser type and version, time zone setting and location, operating system and platform, and other technology on the devices you use to access our systems.</li>
-        <li><strong>Usage Data</strong> includes information about how you use our website, products, and services.</li>
-      </ul>
+        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">1. Data Collection</h2>
+        <p className="text-muted-foreground">We restrict data collection to the absolute minimum required for operational functionality:</p>
+        <ul className="list-disc pl-6 space-y-2 mt-4 text-muted-foreground">
+          <li><strong>Identity Data:</strong> Basic identifiers such as name and username.</li>
+          <li><strong>Contact Data:</strong> Communication vectors like email addresses.</li>
+          <li><strong>Technical Data:</strong> Anonymized metrics including IP addresses, browser specifications, and platform details.</li>
+        </ul>
 
-      <h2>2. How We Use Your Personal Data</h2>
-      <p>We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:</p>
-      <ul>
-        <li>Where we need to perform the contract we are about to enter into or have entered into with you.</li>
-        <li>Where it is necessary for our legitimate interests and your interests and fundamental rights do not override those interests.</li>
-        <li>Where we need to comply with a legal obligation.</li>
-      </ul>
+        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">2. Processing Rationale</h2>
+        <p className="text-muted-foreground">Processing occurs exclusively under the following jurisdictions:</p>
+        <ul className="list-disc pl-6 space-y-2 mt-4 text-muted-foreground">
+          <li>Contractual necessity for service delivery.</li>
+          <li>Legitimate operational interests that do not infringe upon fundamental rights.</li>
+          <li>Compliance with statutory legal obligations.</li>
+        </ul>
 
-      <h2>3. App Permissions</h2>
-      <p>Our mobile applications may request certain device permissions. Below we explain why each permission is needed:</p>
-      <ul>
-        <li><strong>Location Permission:</strong> Used by the Emergency Guardian feature to enable location-based safety alerts and notify trusted contacts in case of an emergency. Location data is processed locally on your device and shared only with contacts you explicitly designate.</li>
-        <li><strong>Media / File Manager Permission:</strong> Used to allow the app to save files, documents, and media content (such as downloaded scriptures or saved notes) to your device's storage. This permission is essential for offline functionality.</li>
-      </ul>
+        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">3. System Permissions</h2>
+        <p className="text-muted-foreground">Our client applications request hardware access strictly for local operations. We do not exfiltrate this data:</p>
+        <ul className="list-disc pl-6 space-y-2 mt-4 text-muted-foreground">
+          <li><strong>Location Access:</strong> Exclusively for the Emergency Guardian feature to dispatch local safety alerts. Processed on-device.</li>
+          <li><strong>Storage Access:</strong> Required to serialize offline data, downloaded materials, and user-generated configurations.</li>
+        </ul>
 
-      <h2>4. Data Security</h2>
-      <p>We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used, or accessed in an unauthorized way, altered, or disclosed.</p>
+        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">4. Security Infrastructure</h2>
+        <p className="text-muted-foreground">We deploy industry-standard cryptographic and structural measures to prevent unauthorized data ingress, alteration, or exposure.</p>
 
-      <h2>5. Your Legal Rights</h2>
-      <p>Under certain circumstances, you have rights under data protection laws in relation to your personal data, including the right to request access, correction, erasure, restriction, transfer, to object to processing, to portability of data, and (where the lawful ground of processing is consent) to withdraw consent.</p>
-
-      <h2>6. Contact Us</h2>
-      <p>If you have any questions about this Privacy Policy, please contact us at <strong>info@nexusweb.co.in</strong>.</p>
+        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">5. Inquiries</h2>
+        <p className="text-muted-foreground">Direct all privacy-related correspondence to our compliance channel:</p>
+        <p className="font-mono text-sm mt-4 p-4 bg-muted border border-border inline-block text-foreground">info@nexusweb.co.in</p>
+      </div>
     </div>
   );
 }

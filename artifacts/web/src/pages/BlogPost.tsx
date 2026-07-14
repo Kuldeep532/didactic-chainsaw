@@ -107,16 +107,16 @@ function RelatedPosts({ currentSlug }: { currentSlug: string }) {
 
   return (
     <div className="mt-16">
-      <h3 className="text-xl font-bold mb-6">Related Articles</h3>
+      <h3 className="text-xl font-bold tracking-tight mb-6">Related Documents</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {related.map((post) => (
-          <Card key={post.id} className="group border-border/50 hover:border-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-            <CardContent className="p-5">
-              {post.category && <Badge variant="secondary" className="mb-2 text-xs">{post.category}</Badge>}
-              <h4 className="font-semibold text-sm mb-2 group-hover:text-primary transition-colors line-clamp-2">
+          <Card key={post.id} className="group border-border bg-background rounded-none hover:border-foreground transition-colors duration-300">
+            <CardContent className="p-6">
+              {post.category && <span className="inline-block px-2 py-1 bg-muted border border-border font-mono text-[10px] uppercase tracking-wider mb-3">{post.category}</span>}
+              <h4 className="font-semibold text-base mb-3 group-hover:text-primary transition-colors line-clamp-2">
                 <Link href={`/blog/${post.slug}`}>{post.title}</Link>
               </h4>
-              <span className="text-xs text-muted-foreground flex items-center gap-1">
+              <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
                 {new Date(post.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
               </span>
@@ -143,7 +143,7 @@ function ScrollToTop() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="fixed bottom-6 right-6 z-40 w-10 h-10 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center"
+      className="fixed bottom-8 right-8 z-40 w-10 h-10 bg-foreground text-background shadow-none border border-foreground hover:bg-background hover:text-foreground transition-all flex items-center justify-center rounded-none"
       aria-label="Scroll to top"
     >
       <ChevronUp className="h-5 w-5" />
@@ -159,18 +159,18 @@ export default function BlogPost() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <Hexagon className="h-8 w-8 text-primary animate-spin" aria-hidden="true" strokeWidth={2.5} />
+        <Hexagon className="h-8 w-8 text-foreground animate-spin" aria-hidden="true" strokeWidth={1} />
       </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="container mx-auto px-4 md:px-8 max-w-screen-md py-20 text-center">
-        <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
-        <p className="text-muted-foreground mb-6">The blog post you are looking for does not exist.</p>
-        <Button asChild variant="outline">
-          <Link href="/blog">Back to Blog</Link>
+      <div className="container mx-auto px-4 md:px-8 max-w-screen-md py-24 text-center border border-border my-12 bg-card">
+        <h1 className="text-3xl font-bold tracking-tight mb-4">Document Not Found</h1>
+        <p className="text-muted-foreground mb-8">The requested technical document does not exist.</p>
+        <Button asChild variant="outline" className="rounded-none">
+          <Link href="/blog">Return to Log</Link>
         </Button>
       </div>
     );
@@ -187,26 +187,25 @@ export default function BlogPost() {
 
       <div className="flex flex-col w-full pb-20">
         {/* Hero */}
-        <section className="bg-gradient-to-br from-muted/40 to-background py-12 border-b border-border/50">
-          <div className="container mx-auto px-4 md:px-8 max-w-screen-lg">
-            <Button asChild variant="ghost" size="sm" className="mb-6 group">
+        <section className="bg-background py-16 md:py-24 border-b border-border">
+          <div className="container mx-auto px-4 md:px-8 max-w-screen-md">
+            <Button asChild variant="outline" size="sm" className="mb-8 group rounded-none font-mono uppercase tracking-wider text-xs">
               <Link href="/blog">
-                <ArrowLeft className="mr-1 h-4 w-4 group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
-                Back to Blog
+                <ArrowLeft className="mr-2 h-3 w-3 group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
+                Index
               </Link>
             </Button>
 
             {post.category && (
-              <Badge className="mb-3 text-sm px-3 py-1">
-                <Hash className="h-3 w-3 mr-1" />
+              <span className="inline-block px-2 py-1 mb-4 border border-border bg-muted font-mono uppercase tracking-wider text-[10px]">
                 {post.category}
-              </Badge>
+              </span>
             )}
 
-            <h1 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">{post.title}</h1>
+            <h1 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight leading-tight">{post.title}</h1>
 
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
+            <div className="flex flex-wrap items-center gap-6 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              <span className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" aria-hidden="true" />
                 {new Date(post.createdAt).toLocaleDateString(undefined, {
                   year: "numeric",
@@ -214,7 +213,7 @@ export default function BlogPost() {
                   day: "numeric",
                 })}
               </span>
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-2">
                 <Clock className="h-4 w-4" aria-hidden="true" />
                 {readTime} min read
               </span>
@@ -223,28 +222,28 @@ export default function BlogPost() {
         </section>
 
         {/* Content */}
-        <section className="py-12">
-          <div className="container mx-auto px-4 md:px-8 max-w-screen-lg">
-            <article className="prose dark:prose-invert max-w-none">
+        <section className="py-16 md:py-24 bg-card">
+          <div className="container mx-auto px-4 md:px-8 max-w-screen-md">
+            <article className="prose prose-neutral dark:prose-invert max-w-none">
               {post.content.split("\n").map((line, i) => {
-                if (line.startsWith("# ")) return <h1 key={i} className="text-3xl font-bold mt-8 mb-4">{line.slice(2)}</h1>;
-                if (line.startsWith("## ")) return <h2 key={i} className="text-2xl font-bold mt-6 mb-3">{line.slice(3)}</h2>;
-                if (line.startsWith("### ")) return <h3 key={i} className="text-xl font-bold mt-5 mb-2">{line.slice(4)}</h3>;
-                if (line.startsWith("- ")) return <li key={i} className="ml-6 list-disc">{line.slice(2)}</li>;
+                if (line.startsWith("# ")) return <h1 key={i} className="text-3xl font-bold mt-10 mb-4 tracking-tight">{line.slice(2)}</h1>;
+                if (line.startsWith("## ")) return <h2 key={i} className="text-2xl font-bold mt-8 mb-4 tracking-tight">{line.slice(3)}</h2>;
+                if (line.startsWith("### ")) return <h3 key={i} className="text-xl font-bold mt-6 mb-3 tracking-tight">{line.slice(4)}</h3>;
+                if (line.startsWith("- ")) return <li key={i} className="ml-6 mb-2 list-disc pl-2">{line.slice(2)}</li>;
                 if (line.trim() === "") return <br key={i} />;
                 if (line.startsWith("*") && line.endsWith("*") && line.includes("Source:")) {
                   return (
-                    <p key={i} className="text-sm text-muted-foreground italic mt-8 pt-4 border-t border-border/50">
+                    <p key={i} className="text-sm font-mono text-muted-foreground mt-8 pt-4 border-t border-border">
                       {line.replace(/\*/g, "")}
                     </p>
                   );
                 }
-                return <p key={i} className="mb-4 leading-relaxed">{line}</p>;
+                return <p key={i} className="mb-5 leading-relaxed text-foreground/90 text-lg">{line}</p>;
               })}
             </article>
 
             {/* Share */}
-            <div className="mt-10 pt-6 border-t border-border/50">
+            <div className="mt-16 pt-8 border-t border-border">
               <SocialShare title={post.title} slug={post.slug} />
             </div>
 
@@ -252,11 +251,11 @@ export default function BlogPost() {
             <RelatedPosts currentSlug={post.slug} />
 
             {/* Back to blog CTA */}
-            <div className="mt-16 text-center">
-              <Button asChild variant="outline" size="lg">
+            <div className="mt-20 border-t border-border pt-12">
+              <Button asChild variant="outline" className="w-full h-12 rounded-none font-medium text-base">
                 <Link href="/blog">
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Browse all articles
+                  Return to Archive
                 </Link>
               </Button>
             </div>

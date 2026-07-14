@@ -372,26 +372,26 @@ export default function Resources() {
   return (
     <div className="flex flex-col w-full pb-20">
       {/* Hero */}
-      <section className="bg-muted/30 py-20 border-b border-border/50">
+      <section className="bg-background pt-24 pb-16 border-b border-border">
         <div className="container mx-auto px-4 md:px-8 max-w-screen-xl text-center">
-          <div className="inline-flex items-center rounded-full border border-border px-3 py-1 text-sm font-medium mb-4 bg-background text-muted-foreground">
-            <Star className="w-3.5 h-3.5 mr-2 text-primary" />
-            Curated by Nexus Wave Technologies
+          <div className="inline-flex items-center border border-border px-3 py-1 text-[10px] font-mono uppercase tracking-wider mb-6 bg-muted text-foreground">
+            <Star className="w-3.5 h-3.5 mr-2 text-foreground" />
+            Curated by Nexus Wave
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-            Resources & References
+            Reference Directory
           </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            A curated collection of tools, documentation, guides, and learning materials
-            for developers, designers, and accessibility advocates.
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+            A structured directory of tools, documentation, guides, and learning materials
+            for engineers and operators.
           </p>
           <div className="max-w-md mx-auto relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              placeholder="Search resources..."
+              placeholder="Search reference index..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="pl-9"
+              className="pl-12 h-12 rounded-none border-border focus-visible:ring-0 focus-visible:border-foreground"
               aria-label="Search resources"
             />
           </div>
@@ -400,13 +400,13 @@ export default function Resources() {
 
       {/* Featured */}
       {!query && activeCategory === "all" && (
-        <section className="py-12 border-b border-border/50">
+        <section className="py-16 border-b border-border bg-card">
           <div className="container mx-auto px-4 md:px-8 max-w-screen-xl">
-            <h2 className="text-lg font-semibold mb-6 flex items-center gap-2">
-              <Star className="w-4 h-4 text-primary" aria-hidden="true" />
-              Featured Resources
+            <h2 className="text-sm font-mono uppercase tracking-wider mb-6 flex items-center gap-2 text-muted-foreground">
+              <Star className="w-4 h-4 text-foreground" aria-hidden="true" />
+              Featured References
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {featured.map((r) => {
                 const cat = getCategoryMeta(
                   CATEGORIES.find((c) => c.resources.includes(
@@ -419,22 +419,22 @@ export default function Resources() {
                     href={r.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex flex-col gap-3 p-5 border border-border rounded-xl bg-card hover:border-primary/40 hover:shadow-md transition-all duration-200"
+                    className="group flex flex-col p-6 border border-border bg-background hover:border-foreground transition-colors duration-300"
                   >
-                    <div className="flex items-start justify-between">
-                      <div className={`flex items-center gap-2 text-sm font-medium px-2 py-1 rounded-md ${cat?.color}`}>
+                    <div className="flex items-start justify-between mb-4">
+                      <div className={`flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-muted-foreground`}>
                         {cat?.icon}
                         <span>{cat?.label}</span>
                       </div>
-                      <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
                     </div>
                     <div>
-                      <h3 className="font-semibold group-hover:text-primary transition-colors">{r.title}</h3>
-                      <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{r.description}</p>
+                      <h3 className="font-bold text-lg mb-2 text-foreground group-hover:underline">{r.title}</h3>
+                      <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{r.description}</p>
                     </div>
-                    <div className="flex gap-1.5 flex-wrap mt-auto">
+                    <div className="flex gap-2 flex-wrap mt-6">
                       {r.tags.slice(0, 2).map((t) => (
-                        <Badge key={t} variant="secondary" className="text-xs">{t}</Badge>
+                        <span key={t} className="px-2 py-1 bg-muted border border-border text-[10px] font-mono uppercase tracking-wider">{t}</span>
                       ))}
                     </div>
                   </a>
@@ -446,40 +446,40 @@ export default function Resources() {
       )}
 
       {/* Main content */}
-      <section className="py-12">
+      <section className="py-16 bg-background">
         <div className="container mx-auto px-4 md:px-8 max-w-screen-xl">
-          <div className="flex flex-col md:flex-row gap-8">
+          <div className="flex flex-col md:flex-row gap-12">
             {/* Sidebar */}
-            <aside className="md:w-56 shrink-0">
+            <aside className="md:w-64 shrink-0">
               <nav aria-label="Resource categories">
                 <ul className="space-y-1">
                   <li>
                     <button
                       onClick={() => setActiveCategory("all")}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors border ${
                         activeCategory === "all"
-                          ? "bg-primary text-primary-foreground"
-                          : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                          ? "bg-foreground text-background border-foreground"
+                          : "bg-background border-transparent hover:border-border hover:bg-muted text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       <Globe className="w-4 h-4" />
-                      All Resources
-                      <span className="ml-auto text-xs opacity-70">{allResources.length}</span>
+                      All References
+                      <span className="ml-auto text-xs opacity-70 font-mono">{allResources.length}</span>
                     </button>
                   </li>
                   {CATEGORIES.map((cat) => (
                     <li key={cat.id}>
                       <button
                         onClick={() => setActiveCategory(cat.id)}
-                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors border ${
                           activeCategory === cat.id
-                            ? "bg-primary text-primary-foreground"
-                            : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                            ? "bg-foreground text-background border-foreground"
+                            : "bg-background border-transparent hover:border-border hover:bg-muted text-muted-foreground hover:text-foreground"
                         }`}
                       >
                         {cat.icon}
                         {cat.label}
-                        <span className="ml-auto text-xs opacity-70">{cat.resources.length}</span>
+                        <span className="ml-auto text-xs opacity-70 font-mono">{cat.resources.length}</span>
                       </button>
                     </li>
                   ))}
@@ -490,42 +490,36 @@ export default function Resources() {
             {/* Grid */}
             <div className="flex-1 min-w-0">
               {filtered.length === 0 ? (
-                <div className="text-center py-20 text-muted-foreground">
-                  <Search className="w-10 h-10 mx-auto mb-4 opacity-30" />
-                  <p className="font-medium">No resources found</p>
-                  <p className="text-sm mt-1">Try a different search term or category.</p>
+                <div className="text-center py-24 border border-border bg-card">
+                  <Search className="w-10 h-10 mx-auto mb-4 text-muted-foreground" strokeWidth={1} />
+                  <p className="font-bold text-lg mb-1">Zero Results</p>
+                  <p className="text-sm text-muted-foreground">Adjust your query or category selection.</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {filtered.map((r) => {
-                    const catMeta = getCategoryMeta(r.category);
                     return (
                       <a
                         key={r.title + r.url}
                         href={r.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex flex-col gap-3 p-5 border border-border rounded-xl bg-card hover:border-primary/40 hover:shadow-md transition-all duration-200"
+                        className="group flex flex-col p-6 border border-border bg-card hover:border-foreground transition-colors duration-300"
                       >
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <h3 className="font-semibold group-hover:text-primary transition-colors leading-snug">
-                              {r.featured && (
-                                <Star className="inline w-3.5 h-3.5 text-yellow-500 mr-1 mb-0.5" />
-                              )}
-                              {r.title}
-                            </h3>
-                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{r.description}</p>
-                          </div>
-                          <ExternalLink className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                          <h3 className="font-bold text-lg leading-snug group-hover:underline text-foreground">
+                            {r.title}
+                          </h3>
+                          <ExternalLink className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5 group-hover:text-foreground transition-colors" />
                         </div>
+                        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed mb-6 flex-1">{r.description}</p>
                         <div className="flex items-center gap-2 flex-wrap mt-auto">
-                          <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${catMeta?.color}`}>
+                          <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider px-2 py-1 bg-muted border border-border text-foreground">
                             {TYPE_ICONS[r.type]}
                             {TYPE_LABEL[r.type]}
                           </span>
                           {r.tags.slice(0, 2).map((t) => (
-                            <Badge key={t} variant="outline" className="text-xs">{t}</Badge>
+                            <span key={t} className="text-[10px] font-mono uppercase tracking-wider px-2 py-1 border border-border text-muted-foreground">{t}</span>
                           ))}
                         </div>
                       </a>
@@ -539,17 +533,17 @@ export default function Resources() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 border-t border-border/50">
+      <section className="py-20 border-t border-border bg-muted">
         <div className="container mx-auto px-4 md:px-8 max-w-screen-xl text-center">
-          <h2 className="text-2xl font-bold mb-3">Missing something?</h2>
-          <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-            Have a resource you'd like to see added? Reach out and we'll consider adding it to the list.
+          <h2 className="text-2xl font-bold tracking-tight mb-4">Request Addition</h2>
+          <p className="text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed">
+            If a crucial engineering reference is absent from the directory, submit a proposal for inclusion.
           </p>
           <a
             href="/contact"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 bg-foreground text-background font-medium px-8 py-3 hover:opacity-90 transition-opacity rounded-none"
           >
-            Suggest a Resource
+            Submit Proposal
             <ChevronRight className="w-4 h-4" />
           </a>
         </div>

@@ -1,81 +1,90 @@
 import { Button } from "@/components/ui/button";
-import { Layers, Sparkles, ExternalLink, Shield, Zap, Download, Star, Hexagon } from "lucide-react";
+import { Layers, Hexagon, ArrowDown } from "lucide-react";
 import SmartDownloadButton from "@/components/SmartDownloadButton";
 
 export default function Apps() {
   return (
     <div className="flex flex-col w-full pb-20">
-      <section className="bg-muted/30 py-20 border-b border-border/50">
+      <section className="bg-background pt-24 pb-16 border-b border-border">
         <div className="container mx-auto px-4 md:px-8 max-w-screen-xl text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Our Apps</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Two focused apps built by a single developer. Available as direct APK downloads.
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Software Releases</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-light">
+            Focused applications built for performance and accessibility. Available directly via APK.
           </p>
         </div>
       </section>
 
-      <section className="py-24">
-        <div className="container mx-auto px-4 md:px-8 max-w-screen-lg space-y-32">
+      <section className="py-24 bg-card border-b border-border">
+        <div className="container mx-auto px-4 md:px-8 max-w-screen-lg space-y-24">
 
           {/* Nexus Plus */}
           <div id="nexus-plus" className="scroll-mt-32">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <div className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium mb-6">
-                  <Layers className="w-4 h-4" aria-hidden="true" />
-                  <span>Nexus Plus</span>
-                </div>
-                <h2 className="text-4xl font-bold mb-2">Nexus Plus</h2>
-                <p className="font-mono text-sm text-muted-foreground mb-4">com.nexuswavetech.nexusplus</p>
-                <p className="text-lg text-muted-foreground mb-6">
-                  Enhanced productivity with seamless integration. Your personal command center for everyday tasks.
-                </p>
-                <ul className="space-y-3 text-sm text-muted-foreground mb-8">
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-primary mr-3"></div> Lightweight & battery-friendly</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-primary mr-3"></div> Works offline where possible</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-primary mr-3"></div> Accessible for all users</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-primary mr-3"></div> No unnecessary permissions</li>
-                </ul>
-                <SmartDownloadButton app="nexus_plus" />
+            <div className="grid md:grid-cols-12 gap-12 items-start">
+              <div className="md:col-span-4">
+                 <div className="aspect-square bg-background border border-border flex items-center justify-center p-8 relative overflow-hidden group">
+                   <div className="absolute inset-0 bg-muted/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                   <Hexagon className="w-full h-full text-foreground/20 group-hover:text-foreground/40 transition-colors" strokeWidth={0.5} />
+                 </div>
               </div>
-              <div className="bg-card border border-border rounded-2xl p-8 shadow-sm aspect-square flex flex-col justify-center items-center text-center relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-                <div className="transition-transform duration-500 group-hover:scale-110">
-                  <Hexagon className="w-24 h-24 text-primary/80 mb-6" aria-hidden="true" strokeWidth={1.5} />
+              <div className="md:col-span-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <h2 className="text-3xl font-bold tracking-tight">Nexus Plus</h2>
+                  <span className="px-2 py-1 bg-muted text-xs font-mono border border-border">v1.0</span>
                 </div>
-                <h3 className="text-2xl font-bold">Nexus Plus</h3>
-                <p className="text-muted-foreground mt-2">Productivity & Integration</p>
+                <p className="font-mono text-xs text-muted-foreground mb-6 uppercase tracking-wider">com.nexuswavetech.nexusplus</p>
+                <p className="text-lg text-foreground mb-8 leading-relaxed">
+                  A comprehensive productivity suite with seamless system integration. Serves as a personal command center to orchestrate daily tasks with absolute minimal friction.
+                </p>
+                
+                <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                  <div className="p-5 border border-border bg-background">
+                    <h4 className="font-semibold text-sm mb-2">Efficiency</h4>
+                    <p className="text-muted-foreground text-sm leading-relaxed">Lightweight footprint, strictly optimized for battery preservation.</p>
+                  </div>
+                  <div className="p-5 border border-border bg-background">
+                    <h4 className="font-semibold text-sm mb-2">Autonomy</h4>
+                    <p className="text-muted-foreground text-sm leading-relaxed">Functions completely offline. No mandatory cloud tethering.</p>
+                  </div>
+                </div>
+
+                <SmartDownloadButton app="nexus_plus" />
               </div>
             </div>
           </div>
 
+          {/* Divider */}
+          <hr className="border-border" />
+
           {/* Geeta Nexus */}
           <div id="geeta-nexus" className="scroll-mt-32">
-            <div className="grid md:grid-cols-2 gap-12 items-center flex-row-reverse">
-              <div className="order-2 md:order-1 bg-card border border-border rounded-2xl p-8 shadow-sm aspect-square flex flex-col justify-center items-center text-center relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent pointer-events-none" />
-                <div className="transition-transform duration-500 group-hover:scale-110">
-                  <Sparkles className="w-24 h-24 text-blue-500/80 mb-6" aria-hidden="true" />
-                </div>
-                <h3 className="text-2xl font-bold">Geeta Nexus</h3>
-                <p className="text-muted-foreground mt-2">Spiritual Wisdom, Modern UI</p>
+            <div className="grid md:grid-cols-12 gap-12 items-start">
+              <div className="md:col-span-4">
+                 <div className="aspect-square bg-background border border-border flex items-center justify-center p-8 relative overflow-hidden group">
+                   <div className="absolute inset-0 bg-muted/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                   <Layers className="w-full h-full text-foreground/20 group-hover:text-foreground/40 transition-colors" strokeWidth={0.5} />
+                 </div>
               </div>
-              <div className="order-1 md:order-2">
-                <div className="inline-flex items-center space-x-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-sm font-medium mb-6">
-                  <Sparkles className="w-4 h-4" aria-hidden="true" />
-                  <span>Geeta Nexus</span>
+              <div className="md:col-span-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <h2 className="text-3xl font-bold tracking-tight">Geeta Nexus</h2>
+                  <span className="px-2 py-1 bg-muted text-xs font-mono border border-border">v1.2</span>
                 </div>
-                <h2 className="text-4xl font-bold mb-2">Geeta Nexus</h2>
-                <p className="font-mono text-sm text-muted-foreground mb-4">com.nexuswavetech.geetanexus</p>
-                <p className="text-lg text-muted-foreground mb-6">
-                  A clean, accessible reader for the Bhagavad Gita. Multiple languages, screen-reader friendly, and works offline.
+                <p className="font-mono text-xs text-muted-foreground mb-6 uppercase tracking-wider">com.nexuswavetech.geetanexus</p>
+                <p className="text-lg text-foreground mb-8 leading-relaxed">
+                  A deeply accessible, multi-lingual reader for the Bhagavad Gita. Combines ancient spiritual text with rigorous modern accessibility standards.
                 </p>
-                <ul className="space-y-3 text-sm text-muted-foreground mb-8">
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-3"></div> Multi-language text with clear typography</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-3"></div> Screen-reader and TalkBack optimized</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-3"></div> Offline-first — works without internet</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-3"></div> No ads, no tracking, no bloat</li>
-                </ul>
+                
+                <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                  <div className="p-5 border border-border bg-background">
+                    <h4 className="font-semibold text-sm mb-2">Accessibility</h4>
+                    <p className="text-muted-foreground text-sm leading-relaxed">Optimized for TalkBack and screen readers with meticulous labeling.</p>
+                  </div>
+                  <div className="p-5 border border-border bg-background">
+                    <h4 className="font-semibold text-sm mb-2">Integrity</h4>
+                    <p className="text-muted-foreground text-sm leading-relaxed">Zero advertisements. Zero tracking. Pure, uninterrupted reading.</p>
+                  </div>
+                </div>
+
                 <SmartDownloadButton app="geeta_nexus" />
               </div>
             </div>
@@ -84,26 +93,18 @@ export default function Apps() {
         </div>
       </section>
 
-      {/* Download Banner */}
-      <section className="bg-muted/30 py-16 border-y border-border/50">
-        <div className="container mx-auto px-4 md:px-8 max-w-screen-lg text-center">
-          <div className="inline-flex items-center space-x-2 bg-background border border-border rounded-full px-5 py-2 text-sm font-medium mb-6">
-            <Star className="w-4 h-4 text-yellow-500" aria-hidden="true" />
-            <span>Direct APK Download</span>
-          </div>
-          <h2 className="text-3xl font-bold mb-4">Get Our Apps</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Both apps are available as direct APK downloads from our GitHub releases page.
-            The smart download button above will automatically route your device to the right source.
+      {/* Download Direct */}
+      <section className="bg-background py-16 border-b border-border">
+        <div className="container mx-auto px-4 md:px-8 max-w-screen-md text-center">
+          <h2 className="text-2xl font-bold tracking-tight mb-4">Manual Installation</h2>
+          <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
+            All applications are distributed directly as signed APKs via our GitHub repository. This circumvents app store restrictions and ensures rapid update delivery.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <Button asChild size="lg" className="rounded-sm font-medium">
             <a href="https://github.com/Kuldeep532/refactored-octo-couscous/releases" target="_blank" rel="noopener noreferrer">
-              <Button size="lg">
-                <Zap className="w-4 h-4 mr-2" aria-hidden="true" />
-                GitHub Releases
-              </Button>
+              <ArrowDown className="w-4 h-4 mr-2" /> View All Releases
             </a>
-          </div>
+          </Button>
         </div>
       </section>
     </div>

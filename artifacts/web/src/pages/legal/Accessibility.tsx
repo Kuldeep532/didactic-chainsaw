@@ -1,39 +1,36 @@
 export default function Accessibility() {
   return (
-    <div className="container mx-auto px-4 md:px-8 max-w-screen-md py-20 prose dark:prose-invert">
-      <h1>Accessibility Statement</h1>
-      <p className="lead">At Nexus Wave Technologies, accessibility is not a feature; it is a core architectural requirement.</p>
-      
-      <p>Our tagline is "High-efficiency barrier-free utilities for everyone." We are deeply committed to ensuring digital accessibility for people with disabilities. We continually improve the user experience for everyone and apply the relevant accessibility standards to all our platforms, including our website, Nexus Plus, and Geeta Nexus.</p>
-      
-      <h2>1. Measures to Support Accessibility</h2>
-      <p>Nexus Wave Technologies takes the following measures to ensure accessibility:</p>
-      <ul>
-        <li>Integrate accessibility into our engineering and design practices.</li>
-        <li>Assign clear accessibility goals and responsibilities within our development teams.</li>
-        <li>Employ formal accessibility quality assurance methods during CI/CD pipelines.</li>
-        <li>Ensure sufficient color contrast, semantic HTML, and full keyboard navigability across all interfaces.</li>
-      </ul>
+    <div className="container mx-auto px-4 md:px-8 max-w-screen-md py-24">
+      <div className="mb-12 border-b border-border pb-8">
+        <h1 className="text-4xl font-bold tracking-tight mb-4">Accessibility Statement</h1>
+        <p className="text-muted-foreground font-mono text-sm uppercase tracking-wider">
+          Effective Date: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </p>
+      </div>
 
-      <h2>2. Conformance Status</h2>
-      <p>The Web Content Accessibility Guidelines (WCAG) defines requirements for designers and developers to improve accessibility for people with disabilities. It defines three levels of conformance: Level A, Level AA, and Level AAA. Nexus Wave Technologies is partially conformant with WCAG 2.1 level AA. Partially conformant means that some parts of the content may not fully conform to the accessibility standard, though we are actively working to remediate any identified issues.</p>
+      <div className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground">
+        <p className="text-lg leading-relaxed mb-8 text-foreground">
+          At Nexus Wave Technologies, accessibility is not a compliance checklist; it is an engineering baseline. We are committed to ensuring our digital utilities are usable by everyone, regardless of physical or cognitive ability.
+        </p>
 
-      <h2>3. Technical Specifications</h2>
-      <p>Accessibility of Nexus Wave Technologies relies on the following technologies to work with the particular combination of web browser and any assistive technologies or plugins installed on your computer:</p>
-      <ul>
-        <li>HTML</li>
-        <li>WAI-ARIA</li>
-        <li>CSS</li>
-        <li>JavaScript</li>
-      </ul>
-      <p>These technologies are relied upon for conformance with the accessibility standards used.</p>
+        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">1. Technical Standards</h2>
+        <p>We aim to conform to the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA for our web infrastructure, and equivalent material standards for our Android binaries.</p>
 
-      <h2>4. Feedback</h2>
-      <p>We welcome your feedback on the accessibility of our products. If you encounter accessibility barriers on any Nexus Wave Technologies platform, please let us know immediately so we can prioritize a fix:</p>
-      <ul>
-        <li>E-mail: <strong>info@nexusweb.co.in</strong></li>
-      </ul>
-      <p>We try to respond to feedback within 2 business days.</p>
+        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">2. Core Features</h2>
+        <ul className="list-disc pl-6 space-y-2 mt-4">
+          <li><strong>Screen Reader Optimization:</strong> Comprehensive labeling and ARIA utilization across all interfaces.</li>
+          <li><strong>Keyboard Navigation:</strong> Complete system traversability without reliance on pointing devices.</li>
+          <li><strong>Contrast & Legibility:</strong> Strict adherence to contrast ratios and scalable typography.</li>
+          <li><strong>Motion Control:</strong> Respect for `prefers-reduced-motion` system directives.</li>
+        </ul>
+
+        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">3. Continuous Iteration</h2>
+        <p>Accessibility is a moving target. We actively audit our codebase and integrate user feedback to refine our implementations.</p>
+
+        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">4. Feedback Channel</h2>
+        <p>If you encounter a barrier while using our software, please file a report so we can engineer a solution:</p>
+        <p className="font-mono text-sm mt-4 p-4 bg-muted border border-border inline-block text-foreground">info@nexusweb.co.in</p>
+      </div>
     </div>
   );
 }

@@ -18,18 +18,21 @@ export default function Preloader() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background pointer-events-none ${fadeOut ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background pointer-events-none transition-opacity duration-300 ${fadeOut ? "opacity-0" : "opacity-100"}`}
     >
-      <div className="relative">
-        <Hexagon
-          className="h-16 w-16 text-primary animate-pulse"
-          strokeWidth={2.5}
-        />
-        <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl animate-ping" />
+      <Hexagon
+        className="h-12 w-12 text-foreground mb-4"
+        strokeWidth={1}
+      />
+      <div className="h-[1px] w-24 bg-border overflow-hidden">
+        <div className="h-full bg-foreground w-1/2 animate-[progress_1s_ease-in-out_infinite]" />
       </div>
-      <p className="mt-6 text-sm text-muted-foreground font-medium tracking-wide animate-pulse">
-        Nexus Wave Technologies
-      </p>
+      <style>{`
+        @keyframes progress {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(200%); }
+        }
+      `}</style>
     </div>
   );
 }

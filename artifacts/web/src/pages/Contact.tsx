@@ -1,152 +1,144 @@
-import { useState } from "react";
+import { Mail, MessageCircle, MapPin, Hexagon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Mail, MapPin, CheckCircle2, Send } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useSubmitContactMessage } from "@workspace/api-client-react";
+import { useToast } from "@/hooks/use-toast";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+
+const contactSchema = z.object({
+  firstName: z.string().min(1, "Required"),
+  lastName: z.string().min(1, "Required"),
+  email: z.string().email("Invalid email address"),
+  subject: z.string().min(1, "Required"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
 
 export default function Contact() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isPending, setIsPending] = useState(false);
+  const { toast } = useToast();
+  const form = useForm<z.infer<typeof contactSchema>>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: { firstName: "", lastName: "", email: "", subject: "", message: "" },
+  });
+  
+  const submitMessage = useSubmitContactMessage();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsPending(true);
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-
-    // Cloudflare Email Routing: use FormSubmit with hidden fields
-    // This sends directly to the Cloudflare email route
-    const data = {
-      firstName: String(formData.get("firstName") ?? ""),
-      lastName: String(formData.get("lastName") ?? ""),
-      email: String(formData.get("email") ?? ""),
-      subject: String(formData.get("subject") ?? ""),
-      message: String(formData.get("message") ?? ""),
-    };
-
-    // Use a simple form submission via fetch to FormSubmit (free, no backend needed)
-    fetch("https://formsubmit.co/info@nexusweb.co.in", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({
-        name: `${data.firstName} ${data.lastName}`,
-        email: data.email,
-        subject: `[Website Contact] ${data.subject}`,
-        message: data.message,
-        _captcha: "false",
-        _template: "box",
-      }),
-    })
-      .then(() => {
-        setIsSubmitted(true);
-        setIsPending(false);
-        form.reset();
-      })
-      .catch(() => {
-        setIsPending(false);
-      });
+  const onSubmit = (data: z.infer<typeof contactSchema>) => {
+    submitMessage.mutate(
+      { data },
+      {
+        onSuccess: () => {
+          toast({ title: "Message dispatched", description: "We will respond shortly." });
+          form.reset();
+        },
+        onError: () => {
+          toast({ title: "Dispatch failed", description: "Please try again or email us directly.", variant: "destructive" });
+        },
+      }
+    );
   };
 
   return (
     <div className="flex flex-col w-full pb-20">
-      <section className="bg-muted/30 py-20 border-b border-border/50">
-        <div className="container mx-auto px-4 md:px-8 max-w-screen-xl text-center">
+      <section className="bg-background pt-24 pb-16 border-b border-border">
+        <div className="container mx-auto px-4 md:px-8 max-w-screen-md text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Contact Us</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Get in touch with the team at Nexus Wave Technologies.
+          <p className="text-xl text-muted-foreground font-light">
+            Direct communication lines to our engineering and support channels.
           </p>
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-24 bg-card border-b border-border">
         <div className="container mx-auto px-4 md:px-8 max-w-screen-lg">
-          <div className="grid md:grid-cols-5 gap-12">
-
-            <div className="md:col-span-2 space-y-8">
+          <div className="grid md:grid-cols-12 gap-16">
+            <div className="md:col-span-5 space-y-12">
               <div>
-                <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
-                <p className="text-muted-foreground mb-8">
-                  Whether you have a question about our apps, need support for Nexus Plus or Geeta Nexus,
-                  or want to discuss a partnership, our team is ready to help.
-                </p>
-              </div>
-
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <Mail className="w-6 h-6 text-primary mt-1 mr-4 shrink-0" aria-hidden="true" />
-                  <div>
-                    <h3 className="font-semibold text-lg">Email</h3>
-                    <p className="text-muted-foreground mb-1">Our primary channel for support and inquiries.</p>
-                    <a href="mailto:info@nexusweb.co.in" className="text-primary hover:underline font-mono">info@nexusweb.co.in</a>
+                <h2 className="text-2xl font-bold tracking-tight mb-8">Channels</h2>
+                <div className="space-y-6">
+                  <div className="flex items-start">
+                    <div className="p-3 border border-border bg-background mr-4">
+                      <Mail className="h-5 w-5 text-foreground" strokeWidth={1.5} />
+                    </div>
+                    <div className="pt-1">
+                      <p className="font-semibold text-sm uppercase tracking-wider mb-1">Email Protocol</p>
+                      <p className="text-muted-foreground text-sm font-mono">info@nexusweb.co.in</p>
+                    </div>
                   </div>
-                </div>
-
-                <div className="flex items-start">
-                  <MapPin className="w-6 h-6 text-primary mt-1 mr-4 shrink-0" aria-hidden="true" />
-                  <div>
-                    <h3 className="font-semibold text-lg">Location</h3>
-                    <p className="text-muted-foreground">
-                      India • Serving users worldwide
-                    </p>
+                  <div className="flex items-start">
+                    <div className="p-3 border border-border bg-background mr-4">
+                      <MessageCircle className="h-5 w-5 text-foreground" strokeWidth={1.5} />
+                    </div>
+                    <div className="pt-1">
+                      <p className="font-semibold text-sm uppercase tracking-wider mb-1">Community Discord</p>
+                      <a href="https://discord.gg/3yp8MMwJe" className="text-sm font-mono text-primary hover:underline">Join Server</a>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="p-3 border border-border bg-background mr-4">
+                      <MapPin className="h-5 w-5 text-foreground" strokeWidth={1.5} />
+                    </div>
+                    <div className="pt-1">
+                      <p className="font-semibold text-sm uppercase tracking-wider mb-1">Location</p>
+                      <p className="text-muted-foreground text-sm">India<br/>Global operations.</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="md:col-span-3">
-              <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
-                {isSubmitted ? (
-                  <div className="flex flex-col items-center justify-center text-center py-12">
-                    <CheckCircle2 className="w-16 h-16 text-green-500 mb-6" aria-hidden="true" />
-                    <h3 className="text-2xl font-bold mb-2">Message Received</h3>
-                    <p className="text-muted-foreground mb-8">
-                      Thank you for contacting Nexus Wave Technologies. We will review your message and respond shortly.
-                    </p>
-                    <Button onClick={() => setIsSubmitted(false)} variant="outline">
-                      Send Another Message
-                    </Button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="md:col-span-7">
+              <div className="border border-border bg-background p-8 lg:p-10">
+                <h3 className="text-xl font-bold tracking-tight mb-8">Dispatch Message</h3>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName">First Name</Label>
-                        <Input id="firstName" name="firstName" required aria-required="true" />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName">Last Name</Label>
-                        <Input id="lastName" name="lastName" required aria-required="true" />
-                      </div>
+                      <FormField control={form.control} name="firstName" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs uppercase tracking-wider font-mono text-muted-foreground">First Name</FormLabel>
+                          <FormControl><Input {...field} className="rounded-none border-border focus-visible:ring-0 focus-visible:border-foreground" /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                      <FormField control={form.control} name="lastName" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs uppercase tracking-wider font-mono text-muted-foreground">Last Name</FormLabel>
+                          <FormControl><Input {...field} className="rounded-none border-border focus-visible:ring-0 focus-visible:border-foreground" /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Work Email</Label>
-                      <Input id="email" name="email" type="email" required aria-required="true" />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="subject">Subject</Label>
-                      <Input id="subject" name="subject" required aria-required="true" />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="message">Message</Label>
-                      <Textarea id="message" name="message" rows={5} required aria-required="true" className="resize-none" />
-                    </div>
-
-                    <Button type="submit" className="w-full" disabled={isPending}>
-                      <Send className="w-4 h-4 mr-2" aria-hidden="true" />
-                      {isPending ? "Sending..." : "Send Message"}
+                    <FormField control={form.control} name="email" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs uppercase tracking-wider font-mono text-muted-foreground">Email Address</FormLabel>
+                        <FormControl><Input type="email" {...field} className="rounded-none border-border focus-visible:ring-0 focus-visible:border-foreground" /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={form.control} name="subject" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs uppercase tracking-wider font-mono text-muted-foreground">Subject</FormLabel>
+                        <FormControl><Input {...field} className="rounded-none border-border focus-visible:ring-0 focus-visible:border-foreground" /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={form.control} name="message" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs uppercase tracking-wider font-mono text-muted-foreground">Payload</FormLabel>
+                        <FormControl><Textarea rows={5} {...field} className="rounded-none border-border focus-visible:ring-0 focus-visible:border-foreground resize-none" /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <Button type="submit" disabled={submitMessage.isPending} className="w-full rounded-none h-12 text-base font-medium mt-4">
+                      {submitMessage.isPending ? "Transmitting..." : "Send Payload"}
                     </Button>
-                    <p className="text-xs text-muted-foreground text-center mt-4">
-                      By submitting this form, you agree to our Privacy Policy regarding the processing of your data.
-                    </p>
                   </form>
-                )}
+                </Form>
               </div>
             </div>
-
           </div>
         </div>
       </section>
