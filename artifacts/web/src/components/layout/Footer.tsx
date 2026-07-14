@@ -38,7 +38,6 @@ export default function Footer() {
               <li><Link href="/about" className="hover:underline hover:text-foreground focus-visible:outline-primary">About Us</Link></li>
               <li><Link href="/apps" className="hover:underline hover:text-foreground focus-visible:outline-primary">Our Apps</Link></li>
               <li><Link href="/blog" className="hover:underline hover:text-foreground focus-visible:outline-primary">Blog</Link></li>
-              <li><Link href="/tools" className="hover:underline hover:text-foreground focus-visible:outline-primary">Tools</Link></li>
               <li><Link href="/resources" className="hover:underline hover:text-foreground focus-visible:outline-primary">Resources</Link></li>
               <li><Link href="/contact" className="hover:underline hover:text-foreground focus-visible:outline-primary">Contact</Link></li>
             </ul>

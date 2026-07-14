@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, Globe, Zap, Hexagon, Code2, Sparkles } from "lucide-react";
+import { ArrowRight, Hexagon, Code2, Sparkles, Rocket, Heart, Users } from "lucide-react";
 
 export default function Home() {
   return (
@@ -44,31 +44,44 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Grid */}
+      {/* Story */}
       <section className="py-20 bg-muted/30 border-y border-border/50">
         <div className="container mx-auto px-4 md:px-8 max-w-screen-2xl">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Story</h2>
+            <p className="text-muted-foreground">
+              Nexus Wave was born from a simple belief: one focused builder can make technology that feels effortless for everyone.
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div className="group flex flex-col items-start p-6 bg-background rounded-xl border border-border/50 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 hover:-translate-y-1">
               <div className="p-3 bg-primary/10 rounded-lg mb-4 text-primary transition-transform duration-300 group-hover:scale-110">
-                <ShieldCheck className="h-6 w-6" aria-hidden="true" />
+                <Rocket className="h-6 w-6" aria-hidden="true" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Security-Obsessed</h3>
-              <p className="text-muted-foreground">Engineering-grade security protocols built into every layer of our infrastructure.</p>
+              <h3 className="text-xl font-bold mb-2">Started with a spark</h3>
+              <p className="text-muted-foreground">Kuldeep Kumar Yadav launched Nexus Wave as a sole proprietorship to build practical, fast, and accessible software without the bloat of a big studio.</p>
             </div>
             <div className="group flex flex-col items-start p-6 bg-background rounded-xl border border-border/50 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 hover:-translate-y-1">
               <div className="p-3 bg-primary/10 rounded-lg mb-4 text-primary transition-transform duration-300 group-hover:scale-110">
-                <Globe className="h-6 w-6" aria-hidden="true" />
+                <Heart className="h-6 w-6" aria-hidden="true" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Genuinely Accessible</h3>
-              <p className="text-muted-foreground">Barrier-free by design. Our products are fully accessible for all users, including those using assistive technologies.</p>
+              <h3 className="text-xl font-bold mb-2">Accessible by design</h3>
+              <p className="text-muted-foreground">We design for screen readers, low bandwidth, and real-world users first. Accessibility is not a checklist — it is the foundation.</p>
             </div>
             <div className="group flex flex-col items-start p-6 bg-background rounded-xl border border-border/50 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 hover:-translate-y-1">
               <div className="p-3 bg-primary/10 rounded-lg mb-4 text-primary transition-transform duration-300 group-hover:scale-110">
-                <Zap className="h-6 w-6" aria-hidden="true" />
+                <Users className="h-6 w-6" aria-hidden="true" />
               </div>
-              <h3 className="text-xl font-bold mb-2">High Performance</h3>
-              <p className="text-muted-foreground">Fast, reliable software with seamless integration and consistently high-efficiency performance.</p>
+              <h3 className="text-xl font-bold mb-2">Shaped by you</h3>
+              <p className="text-muted-foreground">Our roadmap is driven by feedback from Discord, WhatsApp, GitHub, and email. When you speak, the next update listens.</p>
             </div>
+          </div>
+          <div className="mt-12 text-center">
+            <Button asChild variant="outline">
+              <Link href="/about">
+                Read the full story <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

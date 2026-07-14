@@ -25,7 +25,6 @@ const NAV_LINKS = [
   { href: "/about", label: "About" },
   { href: "/apps", label: "Apps" },
   { href: "/blog", label: "Blog" },
-  { href: "/tools", label: "Tools" },
   { href: "/resources", label: "Resources" },
   { href: "/contact", label: "Contact" },
 ];

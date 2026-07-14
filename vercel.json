@@ -6,29 +6,8 @@
   "outputDirectory": "artifacts/web/dist/public",
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "/api/index"
-    },
-    {
       "source": "/:path*",
       "destination": "/index.html"
-    }
-  ],
-  "functions": {
-    "api/index.ts": {
-      "maxDuration": 30,
-      "includeFiles": "artifacts/api-server/src/**,lib/db/src/**,lib/api-zod/src/**,lib/api-spec/src/**"
-    }
-  },
-  "headers": [
-    {
-      "source": "/api/:path*",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
-        }
-      ]
     }
   ]
 }
