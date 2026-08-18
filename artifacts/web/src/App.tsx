@@ -19,6 +19,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Login from "./pages/Login";
 import Resources from "./pages/Resources";
+import NexusAIWorkforce from "./pages/NexusAIWorkforce";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import Terms from "./pages/legal/Terms";
 import RefundPolicy from "./pages/legal/RefundPolicy";
@@ -34,13 +35,6 @@ const queryClient = new QueryClient({
   },
 });
 
-/**
- * Focus Router.
- * After every route change it moves focus to the first heading on the new page
- * (h1, then h2, then main) so keyboard users and screen readers land on the new
- * content instead of staying at the previous page's position.
- * This ensures accessibility compliance for keyboard navigation and screen readers.
- */
 function FocusRouter() {
   const [location] = useLocation();
   const previousLocation = useRef(location);
@@ -49,7 +43,6 @@ function FocusRouter() {
     if (location === previousLocation.current) return;
     previousLocation.current = location;
 
-    // Delay to allow the new route to render and DOM to settle
     const timer = setTimeout(() => {
       const target =
         (document.querySelector("h1") as HTMLElement | null) ??
@@ -57,17 +50,10 @@ function FocusRouter() {
         document.getElementById("main-content");
 
       if (target) {
-        // Make element focusable and move focus to it
         target.setAttribute("tabindex", "-1");
         target.focus({ preventScroll: false });
-        
-        // Scroll the focused element into view smoothly
         target.scrollIntoView({ behavior: "smooth", block: "start" });
-        
-        // Clean up tabindex after focus is applied so it doesn't stay in tab sequence
-        setTimeout(() => {
-          target.removeAttribute("tabindex");
-        }, 100);
+        setTimeout(() => target.removeAttribute("tabindex"), 100);
       }
     }, 50);
 
@@ -75,25 +61,24 @@ function FocusRouter() {
   }, [location]);
 
   return (
-    <Layout>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/about" component={About} />
-        <Route path="/apps" component={Apps} />
-        <Route path="/contact" component={Contact} />
-        <Route path="/blog" component={Blog} />
-        <Route path="/blog/:slug" component={BlogPost} />
-        <Route path="/login" component={Login} />
-        <Route path="/admin" component={Admin} />
-        <Route path="/resources" component={Resources} />
-        <Route path="/legal/privacy" component={PrivacyPolicy} />
-        <Route path="/legal/terms" component={Terms} />
-        <Route path="/legal/refund" component={RefundPolicy} />
-        <Route path="/legal/disclaimer" component={Disclaimer} />
-        <Route path="/legal/accessibility" component={Accessibility} />
-        <Route component={NotFound} />
-      </Switch>
-    </Layout>
+    <Switch>
+      <Route path="/nexus" component={NexusAIWorkforce} />
+      <Route path="/" component={() => <Layout><Home /></Layout>} />
+      <Route path="/about" component={() => <Layout><About /></Layout>} />
+      <Route path="/apps" component={() => <Layout><Apps /></Layout>} />
+      <Route path="/contact" component={() => <Layout><Contact /></Layout>} />
+      <Route path="/blog" component={() => <Layout><Blog /></Layout>} />
+      <Route path="/blog/:slug" component={() => <Layout><BlogPost /></Layout>} />
+      <Route path="/login" component={() => <Layout><Login /></Layout>} />
+      <Route path="/admin" component={() => <Layout><Admin /></Layout>} />
+      <Route path="/resources" component={() => <Layout><Resources /></Layout>} />
+      <Route path="/legal/privacy" component={() => <Layout><PrivacyPolicy /></Layout>} />
+      <Route path="/legal/terms" component={() => <Layout><Terms /></Layout>} />
+      <Route path="/legal/refund" component={() => <Layout><RefundPolicy /></Layout>} />
+      <Route path="/legal/disclaimer" component={() => <Layout><Disclaimer /></Layout>} />
+      <Route path="/legal/accessibility" component={() => <Layout><Accessibility /></Layout>} />
+      <Route component={NotFound} />
+    </Switch>
   );
 }
 
