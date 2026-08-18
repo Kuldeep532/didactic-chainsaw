@@ -19,7 +19,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Login from "./pages/Login";
 import Resources from "./pages/Resources";
-import NexusAIWorkforce from "./pages/NexusAIWorkforce";
+import NexusDashboard from "./pages/NexusDashboard";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import Terms from "./pages/legal/Terms";
 import RefundPolicy from "./pages/legal/RefundPolicy";
@@ -35,13 +35,6 @@ const queryClient = new QueryClient({
   },
 });
 
-/**
- * Focus Router.
- * After every route change it moves focus to the first heading on the new page
- * (h1, then h2, then main) so keyboard users and screen readers land on the new
- * content instead of staying at the previous page's position.
- * This ensures accessibility compliance for keyboard navigation and screen readers.
- */
 function FocusRouter() {
   const [location] = useLocation();
   const previousLocation = useRef(location);
@@ -60,9 +53,7 @@ function FocusRouter() {
         target.setAttribute("tabindex", "-1");
         target.focus({ preventScroll: false });
         target.scrollIntoView({ behavior: "smooth", block: "start" });
-        setTimeout(() => {
-          target.removeAttribute("tabindex");
-        }, 100);
+        setTimeout(() => target.removeAttribute("tabindex"), 100);
       }
     }, 50);
 
@@ -73,7 +64,7 @@ function FocusRouter() {
     <Layout>
       <Switch>
         <Route path="/" component={Home} />
-        <Route path="/nexus" component={NexusAIWorkforce} />
+        <Route path="/nexus" component={NexusDashboard} />
         <Route path="/about" component={About} />
         <Route path="/apps" component={Apps} />
         <Route path="/contact" component={Contact} />
