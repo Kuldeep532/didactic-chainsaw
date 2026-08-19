@@ -1,112 +1,31 @@
-import { Link } from "wouter";
+import { useMemo, useState } from "react";
+import { ArrowRight, CheckCircle2, Command, Download, FileText, Image as ImageIcon, LayoutGrid, Link2, Menu, Search, Scissors, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Hexagon, Code2, Layers, Zap } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import NexusToolWorkspace, { NEXUS_TOOLS } from "@/components/NexusToolWorkspace";
+import { useLocation } from "wouter";
+
+type ToolId = (typeof NEXUS_TOOLS)[number]["id"];
+const categories = ["All tools", "Audio", "Documents", "Images", "Writing", "Utilities"];
 
 export default function Home() {
-  return (
-    <div className="flex flex-col w-full">
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-background pt-24 pb-20 lg:pt-36 lg:pb-32 border-b border-border">
-        <div className="container mx-auto px-4 md:px-8 max-w-screen-2xl">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center border border-border px-3 py-1 text-xs font-mono mb-8 bg-muted/30 text-muted-foreground uppercase tracking-wider">
-              <span className="flex h-2 w-2 bg-foreground mr-2"></span>
-              Nexus Wave Technologies
-            </div>
-            <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter text-foreground mb-8 leading-[1.05]">
-              High-efficiency utilities.
-              <br />
-              Barrier-free access.
-            </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl font-light leading-relaxed">
-              We build accessible, high-performance digital solutions and mobile applications that respect your time and empower users of all abilities.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="rounded-sm font-medium h-12 px-8 text-base">
-                <Link href="/apps">
-                  Explore Software <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-sm font-medium h-12 px-8 text-base">
-                <Link href="/about">Company Profile</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+  const [, navigate] = useLocation();
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("All tools");
+  const [selectedTool, setSelectedTool] = useState<ToolId | null>(null);
+  const [nativeMode] = useState(() => new URLSearchParams(window.location.search).has("app") || new URLSearchParams(window.location.search).has("native"));
+  const filteredTools = useMemo(() => NEXUS_TOOLS.filter((tool) => (category === "All tools" || tool.category === category) && `${tool.name} ${tool.description}`.toLowerCase().includes(query.toLowerCase())), [category, query]);
 
-      {/* Story */}
-      <section className="py-24 bg-card border-b border-border">
-        <div className="container mx-auto px-4 md:px-8 max-w-screen-2xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-            <div className="lg:col-span-4">
-              <h2 className="text-3xl font-bold tracking-tight mb-4">The Studio</h2>
-              <p className="text-muted-foreground text-lg mb-8">
-                Nexus Wave is built on a simple premise: a single, focused builder can craft technology that feels effortless and native.
-              </p>
-              <Button asChild variant="link" className="px-0 text-foreground font-medium hover:no-underline hover:opacity-70 transition-opacity">
-                <Link href="/about" className="flex items-center">Read our principles <ArrowRight className="ml-1 h-4 w-4" /></Link>
-              </Button>
-            </div>
-            <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="p-8 border border-border bg-background flex flex-col items-start group">
-                <div className="p-3 bg-muted mb-6 text-foreground border border-transparent group-hover:border-border transition-colors">
-                  <Zap className="h-6 w-6" strokeWidth={1.5} />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Engineered for speed</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">Fast, lightweight, and battery-friendly. We do not ship bloat. Our applications respect the device they run on.</p>
-              </div>
-              <div className="p-8 border border-border bg-background flex flex-col items-start group">
-                <div className="p-3 bg-muted mb-6 text-foreground border border-transparent group-hover:border-border transition-colors">
-                  <Layers className="h-6 w-6" strokeWidth={1.5} />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Accessible by default</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">Screen-reader support, high contrast, and keyboard navigation are foundational, not an afterthought.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+  if (selectedTool) return <div className="bg-background px-4 py-10 md:px-8"><NexusToolWorkspace selectedTool={selectedTool} onClear={() => setSelectedTool(null)} /></div>;
 
-      {/* Apps Snippet */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 md:px-8 max-w-screen-2xl">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Our Software</h2>
-              <p className="text-muted-foreground text-lg">
-                Focused applications designed to solve specific problems without friction.
-              </p>
-            </div>
-            <Button asChild variant="outline" className="rounded-sm">
-              <Link href="/apps">View all releases</Link>
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="flex flex-col p-10 border border-border bg-card group hover:border-foreground transition-colors duration-300">
-              <div className="mb-10">
-                <Code2 className="w-12 h-12 text-foreground" strokeWidth={1} />
-              </div>
-              <h3 className="text-2xl font-bold tracking-tight mb-3">Nexus Plus</h3>
-              <p className="text-muted-foreground mb-8 flex-1 leading-relaxed">A personal command center for everyday tasks. Enhanced productivity through deep, seamless integration.</p>
-              <Button asChild variant="secondary" className="w-full rounded-sm">
-                <Link href="/apps#nexus-plus">Details & Download</Link>
-              </Button>
-            </div>
-            <div className="flex flex-col p-10 border border-border bg-card group hover:border-foreground transition-colors duration-300">
-              <div className="mb-10">
-                <Hexagon className="w-12 h-12 text-foreground" strokeWidth={1} />
-              </div>
-              <h3 className="text-2xl font-bold tracking-tight mb-3">Geeta Nexus</h3>
-              <p className="text-muted-foreground mb-8 flex-1 leading-relaxed">Spiritual wisdom meets rigorous engineering. An accessible, multi-language reader that works completely offline.</p>
-              <Button asChild variant="secondary" className="w-full rounded-sm">
-                <Link href="/apps#geeta-nexus">Details & Download</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+  return <div className="min-h-screen bg-background text-foreground">
+    {!nativeMode && <header className="border-b border-border"><div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:px-8"><button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center gap-3 font-bold tracking-tight"><span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground"><Command className="size-5" /></span><span>NEXUS WAVE <span className="text-muted-foreground">/ TOOLS</span></span></button><nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex"><a href="#tools" className="hover:text-foreground">Tools</a><a href="#why" className="hover:text-foreground">Why Nexus</a><a href="mailto:hello@nexuswave.in" className="hover:text-foreground">Contact</a></nav><Button variant="outline" size="sm" onClick={() => navigate("/login")}><Sparkles data-icon="inline-start" />Sign in</Button></div></header>}
+    <main>
+      <section className="mx-auto max-w-6xl px-4 pb-14 pt-16 md:px-8 md:pb-20 md:pt-24"><div className="max-w-3xl"><Badge variant="outline" className="mb-5 gap-2 border-primary/30 bg-primary/5 text-primary"><span className="size-2 rounded-full bg-primary" />Nexus Wave Technologies</Badge><h1 className="text-balance text-4xl font-bold leading-tight tracking-tight md:text-6xl">Useful tools.<br /><span className="text-primary">No friction.</span></h1><p className="mt-6 max-w-2xl text-pretty text-base leading-7 text-muted-foreground md:text-lg">Fast, private browser utilities for everyday work. Built to be accessible, lightweight, and ready when you are.</p></div><div className="mt-10 flex max-w-2xl items-center gap-3 rounded-2xl border border-border bg-card p-2 shadow-sm"><Search className="ml-3 size-5 text-muted-foreground" /><Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search tools..." className="h-11 border-0 bg-transparent shadow-none focus-visible:ring-0" /><kbd className="hidden rounded-lg bg-muted px-2 py-1 font-mono text-xs text-muted-foreground sm:block">⌘ K</kbd></div></section>
+      <section id="tools" className="border-y border-border bg-card"><div className="mx-auto max-w-6xl px-4 py-10 md:px-8"><div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-center"><div><p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">The toolkit</p><h2 className="mt-2 text-2xl font-bold">Tools that get out of the way.</h2></div><div className="flex flex-wrap gap-2">{categories.map((item) => <button key={item} onClick={() => setCategory(item)} className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${category === item ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground hover:text-foreground"}`}>{item}</button>)}</div></div><div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">{filteredTools.map((tool) => { const Icon = tool.icon; return <button key={tool.id} onClick={() => setSelectedTool(tool.id)} className="group flex min-h-52 flex-col justify-between rounded-2xl border border-border bg-background p-5 text-left transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><div className="flex items-start justify-between"><span className={`grid size-11 place-items-center rounded-xl bg-primary/10 text-primary`}><Icon className="size-5" /></span><ArrowRight className="size-5 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" /></div><div><Badge variant="secondary" className="mb-3 text-[10px] uppercase tracking-wider">{tool.category}</Badge><h3 className="font-bold">{tool.name}</h3><p className="mt-1 text-sm leading-6 text-muted-foreground">{tool.description}</p></div></button> })}</div>{filteredTools.length === 0 && <div className="rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">No tools match that search.</div>}</div></section>
+      <section id="why" className="mx-auto grid max-w-6xl gap-8 px-4 py-16 md:grid-cols-3 md:px-8 md:py-24"><div className="md:col-span-1"><p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">Why Nexus</p><h2 className="mt-3 text-3xl font-bold">Your files stay yours.</h2></div><div className="grid gap-5 md:col-span-2 md:grid-cols-3"><div><CheckCircle2 className="size-5 text-primary" /><h3 className="mt-4 font-bold">Private by default</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Core processing happens locally in your browser.</p></div><div><Download className="size-5 text-primary" /><h3 className="mt-4 font-bold">No install needed</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Open a tool, do the work, download the result.</p></div><div><LayoutGrid className="size-5 text-primary" /><h3 className="mt-4 font-bold">Made for everyone</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Keyboard-friendly, responsive, and easy to understand.</p></div></div></section>
+    </main>
+    {!nativeMode && <footer className="border-t border-border px-4 py-7 md:px-8"><div className="mx-auto flex max-w-6xl flex-col justify-between gap-3 text-xs text-muted-foreground md:flex-row"><span>© {new Date().getFullYear()} Nexus Wave Technologies</span><span>Built with care by Kuldeep Kumar Yadav</span></div></footer>}
+  </div>;
 }

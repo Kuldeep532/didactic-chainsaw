@@ -6,6 +6,9 @@ import GlobalMessageBanner from "../GlobalMessageBanner";
 import BackToTop from "../BackToTop";
 
 export default function Layout({ children }: { children: ReactNode }) {
+  const params = new URLSearchParams(window.location.search);
+  const nativeMode = params.has("app") || params.has("native");
+
   return (
     <div className="relative flex min-h-screen flex-col bg-background selection:bg-primary/20">
       {/* Skip to main content link for keyboard and screen reader users */}
@@ -15,9 +18,9 @@ export default function Layout({ children }: { children: ReactNode }) {
       >
         Skip to main content
       </a>
-      <DevotionalBanner />
-      <GlobalMessageBanner />
-      <Navbar />
+      {!nativeMode && <DevotionalBanner />}
+      {!nativeMode && <GlobalMessageBanner />}
+      {!nativeMode && <Navbar />}
       <main 
         id="main-content" 
         tabIndex={-1} 
@@ -26,8 +29,8 @@ export default function Layout({ children }: { children: ReactNode }) {
       >
         {children}
       </main>
-      <Footer />
-      <BackToTop />
+      {!nativeMode && <Footer />}
+      {!nativeMode && <BackToTop />}
     </div>
   );
 }
