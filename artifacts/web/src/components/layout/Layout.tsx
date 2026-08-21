@@ -1,8 +1,6 @@
 import { ReactNode } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import DevotionalBanner from "../DevotionalBanner";
-import GlobalMessageBanner from "../GlobalMessageBanner";
 import BackToTop from "../BackToTop";
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -15,8 +13,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       >
         Skip to main content
       </a>
-      <DevotionalBanner />
-      <GlobalMessageBanner />
       <Navbar />
       <main 
         id="main-content" 

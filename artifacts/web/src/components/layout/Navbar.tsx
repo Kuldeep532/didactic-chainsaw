@@ -80,7 +80,7 @@ export default function Navbar() {
                     ) : (
                       <User className="h-4 w-4" aria-hidden="true" />
                     )}
-                    <span className="max-w-[120px] truncate">{user.name ?? user.username ?? user.email}</span>
+                    <span className="max-w-[120px] truncate">{user.name ?? user.email}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="rounded-sm rounded-t-none border-t-0 mt-0">

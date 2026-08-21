@@ -1,130 +1,60 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
-import { getFirebaseAuth, onAuthStateChanged, signOut, isFirebaseConfigured } from "@/lib/firebase";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { supabase, isAdmin } from "@/lib/supabase";
+import type { User, Session } from "@supabase/supabase-js";
 
-export interface AuthUser {
-  id: number;
+interface AuthUser {
+  id: string;
   email: string;
   name: string | null;
   picture: string | null;
   isAdmin: boolean;
-  username: string | null;
-  firebaseUid: string | null;
 }
 
 interface AuthContextValue {
   user: AuthUser | null;
-  token: string | null;
+  session: Session | null;
   isLoading: boolean;
-  firebaseConfigured: boolean;
-  login: (token: string, user: AuthUser) => void;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const TOKEN_KEY = "nwt_auth_token";
-const USER_KEY = "nwt_auth_user";
-
-const BASE = (import.meta.env.VITE_BASE_URL as string | undefined)?.replace(/\/$/, "") ?? "";
+function mapUser(user: User, admin: boolean): AuthUser {
+  return { id: user.id, email: user.email ?? "", name: user.user_metadata?.name ?? null, picture: null, isAdmin: admin };
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
-  const [user, setUser] = useState<AuthUser | null>(() => {
-    try {
-      const stored = localStorage.getItem(USER_KEY);
-      return stored ? (JSON.parse(stored) as AuthUser) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const firebaseConfigured = isFirebaseConfigured;
 
-  const login = useCallback((newToken: string, newUser: AuthUser) => {
-    localStorage.setItem(TOKEN_KEY, newToken);
-    localStorage.setItem(USER_KEY, JSON.stringify(newUser));
-    setToken(newToken);
-    setUser(newUser);
-  }, []);
-
-  const logout = useCallback(async () => {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
-    setToken(null);
-    setUser(null);
-    if (isFirebaseConfigured) {
-      try {
-        await signOut(getFirebaseAuth());
-      } catch {
-        // ignore Firebase sign-out errors
-      }
-    }
-  }, []);
-
-  // Verify stored backend token on mount and sync Firebase auth state.
   useEffect(() => {
-    let unsubscribe: (() => void) | null = null;
-
-    const verifyToken = async () => {
-      const storedToken = localStorage.getItem(TOKEN_KEY);
-      if (!storedToken) {
-        setIsLoading(false);
-        return;
-      }
-      try {
-        const res = await fetch(`${BASE}/api/auth/me`, {
-          headers: { Authorization: `Bearer ${storedToken}` },
-        });
-        if (res.ok) {
-          const u = (await res.json()) as AuthUser;
-          setUser(u);
-          localStorage.setItem(USER_KEY, JSON.stringify(u));
-        } else {
-          throw new Error("token invalid");
-        }
-      } catch {
-        localStorage.removeItem(TOKEN_KEY);
-        localStorage.removeItem(USER_KEY);
-        setToken(null);
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    verifyToken();
-
-    if (isFirebaseConfigured) {
-      unsubscribe = onAuthStateChanged(getFirebaseAuth(), (fbUser) => {
-        if (!fbUser) {
-          // Firebase signed out; clear local session if we still had one.
-          localStorage.removeItem(TOKEN_KEY);
-          localStorage.removeItem(USER_KEY);
-          setToken(null);
-          setUser(null);
-        }
-      });
-    }
-
-    return () => {
-      unsubscribe?.();
-    };
+    let active = true;
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!active) return;
+      setSession(data.session);
+      if (data.session?.user) setUser(mapUser(data.session.user, await isAdmin(data.session.user.id)));
+      setIsLoading(false);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, nextSession) => {
+      setSession(nextSession);
+      if (nextSession?.user) setUser(mapUser(nextSession.user, await isAdmin(nextSession.user.id)));
+      else setUser(null);
+      setIsLoading(false);
+    });
+    return () => { active = false; listener.subscription.unsubscribe(); };
   }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, token, isLoading, firebaseConfigured, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const value: AuthContextValue = {
+    user, session, isLoading,
+    login: async (email, password) => { const { error } = await supabase.auth.signInWithPassword({ email, password }); if (error) throw error; },
+    register: async (email, password) => { const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/login` } }); if (error) throw error; },
+    logout: async () => { await supabase.auth.signOut(); },
+  };
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
-  return ctx;
-}
-
-export function getAuthHeaders(token: string | null): Record<string, string> {
-  if (!token) return {};
-  return { Authorization: `Bearer ${token}` };
-}
+export function useAuth() { const value = useContext(AuthContext); if (!value) throw new Error("useAuth must be used within AuthProvider"); return value; }
+export function getAuthHeaders(session: Session | null) { return session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}; }
