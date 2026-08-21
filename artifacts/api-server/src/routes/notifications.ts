@@ -2,7 +2,11 @@ import { Router, type IRouter, type Request, type Response } from "express";
 import { CreateNotificationBody } from "@workspace/api-zod";
 import { db, notificationsTable } from "@workspace/db";
 import { desc } from "drizzle-orm";
-import { attachAuth, requireAdmin } from "../middlewares/require-auth";
+import { attachAuth, requireAuth, requireAdmin } from "../middlewares/require-auth";
+import { z } from "zod/v4";
+import { userDevicesTable } from "@workspace/db";
+import { dispatchNotification, removeDeviceToken } from "../lib/notification-service";
+import { eq } from "drizzle-orm";
 
 type SseClient = { res: Response; channel: string | null };
 const sseClients: SseClient[] = [];
@@ -81,6 +85,39 @@ router.post("/notifications", attachAuth, requireAdmin, async (req: Request, res
     "Notification created and broadcast"
   );
   res.status(201).json(created);
+});
+
+const deviceSchema = z.object({
+  appId: z.enum(["web", "geeta_nexus", "nexus_plus"]),
+  platform: z.enum(["web", "ios", "android"]),
+  pushToken: z.string().min(10).max(512),
+  origin: z.string().max(512).optional(),
+});
+
+router.get("/v1/app/config", async (req: Request, res: Response) => {
+  res.json({ apiVersion: "v1", appId: req.query.appId ?? "web", notifications: { stream: "/api/notifications/stream", polling: "/api/v1/notifications" } });
+});
+
+router.post("/v1/devices", attachAuth, requireAuth, async (req: Request, res: Response) => {
+  const parsed = deviceSchema.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: "Invalid device registration" }); return; }
+  const [existing] = await db.select().from(userDevicesTable).where(eq(userDevicesTable.pushToken, parsed.data.pushToken));
+  const values = { ...parsed.data, userId: req.auth!.userId, lastSeenAt: new Date(), updatedAt: new Date() };
+  const device = existing ? (await db.update(userDevicesTable).set(values).where(eq(userDevicesTable.id, existing.id)).returning())[0] : (await db.insert(userDevicesTable).values(values).returning())[0];
+  res.status(existing ? 200 : 201).json({ deviceId: device?.id });
+});
+
+router.delete("/v1/devices/:token", attachAuth, requireAuth, async (req: Request, res: Response) => {
+  const token = Array.isArray(req.params.token) ? req.params.token[0] : req.params.token;
+  if (token) await removeDeviceToken(decodeURIComponent(token));
+  res.status(204).send();
+});
+
+const dispatchSchema = z.object({ appId: z.enum(["web", "geeta_nexus", "nexus_plus"]), title: z.string().min(1).max(120), body: z.string().min(1).max(1000), actionUrl: z.string().url().optional(), data: z.record(z.string(), z.unknown()).optional(), audience: z.object({ userIds: z.array(z.number().int()).optional(), pushTokens: z.array(z.string()).optional() }).optional() });
+router.post("/v1/notifications/send", attachAuth, requireAdmin, async (req: Request, res: Response) => {
+  const parsed = dispatchSchema.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: "Invalid notification payload" }); return; }
+  try { const result = await dispatchNotification(parsed.data); broadcastNotification(parsed.data.appId, result.notification); res.status(201).json(result); } catch (error) { req.log.error({ error }, "Notification dispatch failed"); res.status(502).json({ error: "Notification delivery failed" }); }
 });
 
 export default router;

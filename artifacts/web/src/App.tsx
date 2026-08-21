@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "./components/ThemeProvider";
@@ -39,5 +40,6 @@ function FocusRouter() {
 }
 
 export default function App() {
-  return <ThemeProvider><AuthProvider><QueryClientProvider client={queryClient}><TooltipProvider><Preloader /><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}><FocusRouter /></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider></AuthProvider></ThemeProvider>;
+  const googleClientId = import.meta.env.VITE_GOOGLE_WEB_CLIENT_ID ?? "";
+  return <GoogleOAuthProvider clientId={googleClientId}><ThemeProvider><AuthProvider><QueryClientProvider client={queryClient}><TooltipProvider><Preloader /><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}><FocusRouter /></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider></AuthProvider></ThemeProvider></GoogleOAuthProvider>;
 }

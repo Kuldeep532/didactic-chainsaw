@@ -15,6 +15,7 @@ interface AuthContextValue {
   session: Session | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  googleLogin: (idToken: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -50,6 +51,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value: AuthContextValue = {
     user, session, isLoading,
     login: async (email, password) => { const { error } = await supabase.auth.signInWithPassword({ email, password }); if (error) throw error; },
+    googleLogin: async (idToken) => {
+      const response = await fetch("/api/v1/auth/google", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ idToken, appId: "web", platform: "web", origin: window.location.origin }) });
+      if (!response.ok) throw new Error("Google sign-in failed.");
+      const data = await response.json();
+      if (data.token) sessionStorage.setItem("backend_session", data.token);
+      const { error } = await supabase.auth.signInWithIdToken({ provider: "google", token: idToken });
+      if (error) throw error;
+    },
     register: async (email, password) => { const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/login` } }); if (error) throw error; },
     logout: async () => { await supabase.auth.signOut(); },
   };
