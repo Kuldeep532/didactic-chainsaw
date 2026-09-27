@@ -1,0 +1,162 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Women Safety Center — Nexus Wave Technologies" description="Women Safety Center for respectful reporting, campaign participation and community support.">
+  <section class="hero">
+    <div class="container hero-shell">
+      <div>
+        <p class="eyebrow">Women Safety Center</p>
+        <h1>Safety, dignity, respect and practical support.</h1>
+        <p class="lead">A central place to report a concern, learn how to respond safely, participate in women-safety initiatives and connect with a respectful community.</p>
+        <div class="actions">
+          <a class="button primary" href="#report">Report a concern</a>
+          <a class="button" href="#campaign">Join the campaign</a>
+          <a class="button" href="/community">Community</a>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <h2>Important safety note</h2>
+        <p class="muted">Nexus Wave Technologies is an independent technology initiative. This center does not replace emergency services, police, medical care or professional legal support.</p>
+        <p class="note">For immediate danger, contact the appropriate local emergency service first. Share only information you are comfortable sharing.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="report">
+    <div class="container grid-2">
+      <article class="card">
+        <p class="eyebrow">01 · Safe Reporting</p>
+        <h2>Tell us what kind of support you need.</h2>
+        <p class="muted">The reporting flow is designed to become a reusable integration for Nexus Plus and Geeta Nexus. The website should collect only the information needed for the selected support pathway.</p>
+        <ul class="feature-list">
+          <li>Optional identity details instead of unnecessary personal information</li>
+          <li>Concern category and a clear description</li>
+          <li>Optional evidence reference or attachment path</li>
+          <li>Preferred follow-up method</li>
+          <li>Consent and safety acknowledgement</li>
+        </ul>
+      </article>
+      <article class="card">
+        <form id="safety-report-form" class="form">
+          <label>How can we describe the concern?
+            <select name="category" required>
+              <option value="">Select one</option>
+              <option>Harassment</option>
+              <option>Threat or intimidation</option>
+              <option>Online abuse</option>
+              <option>Unsafe workplace or public place</option>
+              <option>Domestic or relationship concern</option>
+              <option>Other safety concern</option>
+            </select>
+          </label>
+          <label>Your message
+            <textarea name="message" minlength="20" placeholder="Share only the details needed to explain the concern." required></textarea>
+          </label>
+          <label>Preferred follow-up email
+            <input type="email" name="email" autocomplete="email" placeholder="Optional" />
+          </label>
+          <label class="checkbox-row"><input type="checkbox" name="consent" required /> <span>I understand this is a support channel, not an emergency service, and I consent to the submitted information being reviewed for support.</span></label>
+          <button class="button primary" type="submit">Submit report</button>
+          <p id="report-status" class="note" aria-live="polite">Reports are not considered submitted until Supabase is connected and the form confirms success.</p>
+        </form>
+      </article>
+    </div>
+  </section>
+
+  <section class="section surface-soft" id="campaign">
+    <div class="container">
+      <div class="section-head">
+        <div><p class="eyebrow">02 · Women Safety Campaign</p><h2>Help create a safer community.</h2></div>
+      </div>
+      <div class="grid-3">
+        <article class="card"><h3>Join</h3><p class="muted">Participate in awareness, education, bystander support and respectful community initiatives.</p><a class="button primary" href="#campaign-signup">Join the campaign</a></article>
+        <article class="card"><h3>Share verified work</h3><p class="muted">Campaign contributions can include real activities or outcomes, but submissions should be truthful, relevant and supported by evidence where a claim depends on evidence.</p></article>
+        <article class="card"><h3>Protect privacy</h3><p class="muted">Do not publish a survivor’s identity, private documents, location or other sensitive information without appropriate consent.</p></article>
+      </div>
+      <div id="campaign-signup" class="section-card" style="margin-top:1rem">
+        <form id="campaign-form" class="form">
+          <div class="grid-2">
+            <label>Name<input name="name" required autocomplete="name" /></label>
+            <label>Email<input name="email" type="email" required autocomplete="email" /></label>
+          </div>
+          <label>How would you like to help?
+            <select name="role" required>
+              <option value="">Select one</option>
+              <option>Awareness and education</option>
+              <option>Community support</option>
+              <option>Accessibility support</option>
+              <option>Verified campaign volunteering</option>
+              <option>Content and outreach</option>
+            </select>
+          </label>
+          <label>What can you contribute?
+            <textarea name="message" minlength="10" required></textarea>
+          </label>
+          <label class="checkbox-row"><input type="checkbox" name="truth" required /> <span>I confirm that the information I submit is truthful to the best of my knowledge and that I will not upload fabricated evidence or impersonate another person.</span></label>
+          <button class="button primary" type="submit">Join Women Safety Campaign</button>
+          <p id="campaign-status" class="note" aria-live="polite">Campaign participation will be connected to Supabase in the next backend integration step.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="standards">
+    <div class="container grid-3">
+      <article class="card"><h3>Evidence matters</h3><p class="muted">A campaign story or proof submission should be truthful. Claims may be reviewed before publication, and unverifiable material can be withheld.</p></article>
+      <article class="card"><h3>No hate or targeting</h3><p class="muted">Women-safety discussion must not become a channel for hate, threats, doxxing, harassment or attacks on protected groups.</p></article>
+      <article class="card"><h3>Support, not judgment</h3><p class="muted">The platform can listen, organize information and connect people to resources, but it should not pressure a survivor to disclose more than they choose.</p></article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><div><p class="eyebrow">Reusable integration</p><h2>One safety workflow across the Nexus ecosystem.</h2></div></div>
+      <div class="grid-3">
+        <article class="card"><h3>Nexus Space</h3><p class="muted">The reporting and campaign modules can be embedded into Nexus Space with the same backend contract.</p></article>
+        <article class="card"><h3>Geeta Nexus</h3><p class="muted">The same safety entry points can be placed inside Geeta Nexus without creating a separate data model for every app.</p></article>
+        <article class="card"><h3>Website</h3><p class="muted">This page becomes the public web entry point and can provide the same accessible forms, moderation rules and status messages.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import { requireSupabase } from "../lib/supabase";
+    const client = (() => { try { return requireSupabase(); } catch { return null; } })();
+
+    const reportForm = document.getElementById("safety-report-form");
+    const reportStatus = document.getElementById("report-status");
+    reportForm?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!client) { reportStatus.textContent = "Safety reporting is not configured yet. The interface is ready for Supabase integration."; return; }
+      const form = new FormData(reportForm);
+      const { error } = await client.from("women_safety_reports").insert({
+        category: form.get("category"),
+        message: form.get("message"),
+        contact_email: form.get("email") || null,
+        consent_given: form.get("consent") === "on",
+        status: "new"
+      });
+      reportStatus.textContent = error ? "The report could not be submitted. Please try again later." : "Your report was submitted for review.";
+      if (!error) reportForm.reset();
+    });
+
+    const campaignForm = document.getElementById("campaign-form");
+    const campaignStatus = document.getElementById("campaign-status");
+    campaignForm?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!client) { campaignStatus.textContent = "Campaign registration is not configured yet. The interface is ready for Supabase integration."; return; }
+      const form = new FormData(campaignForm);
+      const { error } = await client.from("women_safety_campaign_members").insert({
+        name: form.get("name"),
+        email: form.get("email"),
+        role: form.get("role"),
+        message: form.get("message"),
+        truth_confirmed: form.get("truth") === "on",
+        status: "pending"
+      });
+      campaignStatus.textContent = error ? "We could not save the campaign registration. Please try again later." : "Your campaign registration was received for review.";
+      if (!error) campaignForm.reset();
+    });
+  </script>
+</Layout>
