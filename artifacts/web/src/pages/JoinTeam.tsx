@@ -55,7 +55,7 @@ export default function JoinTeam() {
 
   return <div className="flex w-full flex-col pb-20">
     <section className="border-b border-border bg-background px-4 pb-16 pt-24 md:px-8"><div className="mx-auto max-w-4xl text-center">
-      <p className="mb-3 text-sm font-medium text-muted-foreground">Nexus Wave community</p>
+      <p className="mb-3 text-sm font-medium text-muted-foreground">Nexus Web Technology community</p>
       <h1 className="mb-5 text-4xl font-bold tracking-tight md:text-5xl">Join Our Team</h1>
       <p className="mx-auto max-w-3xl text-lg leading-relaxed text-muted-foreground">Join Geeta Nexus as a contributor, teacher, translator, audio creator, volunteer or community member.</p>
     </div></section>
@@ -70,12 +70,12 @@ export default function JoinTeam() {
       <div className="space-y-5">
         <Card><CardHeader><CardTitle>Volunteer conditions and responsibilities</CardTitle></CardHeader><CardContent className="space-y-3 text-sm leading-relaxed text-muted-foreground">
           <p>Volunteering is voluntary and does not guarantee payment, employment or a fixed role.</p>
-          <p>Contributors must communicate respectfully, protect private user information, follow content standards and never promise outcomes on behalf of Nexus Wave.</p>
-          <p>Spiritual contributions should be respectful and clearly distinguish the contributor's interpretation from official Nexus Wave statements.</p>
-          <p>Promotion volunteers may share official Geeta Nexus and Nexus Plus information and links, but must not impersonate Nexus Wave or use deceptive marketing.</p>
+          <p>Contributors must communicate respectfully, protect private user information, follow content standards and never promise outcomes on behalf of Nexus Web Technology.</p>
+          <p>Spiritual contributions should be respectful and clearly distinguish the contributor's interpretation from official Nexus Web Technology statements.</p>
+          <p>Promotion volunteers may share official Geeta Nexus and Nexus Plus information and links, but must not impersonate Nexus Web Technology or use deceptive marketing.</p>
           <p>Teachers may use both Geeta Nexus and Nexus Plus as teaching aids. Teaching accuracy, context and classroom conduct remain the teacher's responsibility.</p>
         </CardContent></Card>
-        <Card><CardHeader><CardTitle>Founder</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">Nexus Wave is developed by <strong className="text-foreground">Kuldeep</strong>.</CardContent></Card>
+        <Card><CardHeader><CardTitle>Founder</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">Nexus Web Technology is developed by <strong className="text-foreground">Kuldeep</strong>.</CardContent></Card>
       </div>
 
       <Card><CardHeader><CardTitle>Apply through your Nexus account</CardTitle></CardHeader><CardContent>
