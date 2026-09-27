@@ -1,4 +1,3 @@
-import { Link } from "wouter";
 import { ArrowRight, BookOpen, Check, Hexagon, ShieldCheck, Sparkles, Wand2 } from "lucide-react";
 
 const nexusHighlights = [
@@ -8,14 +7,9 @@ const nexusHighlights = [
   "Voice, media, file and productivity tools",
 ];
 
-function ActionLink({ href, children }: { href: string; children: React.ReactNode }) {
+function ActionLink({ children }: { children: React.ReactNode }) {
   return (
-    <Link
-      href={href}
-      className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-foreground px-6 py-3 text-sm font-medium text-background no-underline"
-    >
-      {children}
-    </Link>
+    <button type="button" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-foreground px-6 py-3 text-sm font-medium text-background no-underline">{children}</button>
   );
 }
 
@@ -24,15 +18,11 @@ export default function Home() {
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-5 md:px-8">
-          <Link href="/" className="flex items-center gap-3 font-bold no-underline">
+          <div className="flex items-center gap-3 font-bold">
             <Hexagon className="h-6 w-6" aria-hidden="true" />
             <span>Nexus Web Technology</span>
           </Link>
-          <nav aria-label="Primary" className="hidden gap-6 text-sm md:flex">
-            <Link href="/about" className="no-underline hover:underline">About</Link>
-            <Link href="/apps" className="no-underline hover:underline">Apps</Link>
-            <Link href="/utilities" className="no-underline hover:underline">Utilities</Link>
-          </nav>
+
         </div>
       </header>
 
@@ -47,8 +37,8 @@ export default function Home() {
               Accessible digital products for everyday productivity, AI, media and spiritual learning.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
-              <ActionLink href="/apps">Explore Nexus apps <ArrowRight className="h-4 w-4" aria-hidden="true" /></ActionLink>
-              <Link href="/utilities" className="inline-flex min-h-10 items-center justify-center rounded-md border border-border px-6 py-3 text-sm font-medium no-underline">Open free utilities</Link>
+              <ActionLink>Explore Nexus apps <ArrowRight className="h-4 w-4" aria-hidden="true" /></ActionLink>
+              <button type="button" className="inline-flex min-h-10 items-center justify-center rounded-md border border-border px-6 py-3 text-sm font-medium">Open free utilities</button>
             </div>
           </div>
         </section>
@@ -105,7 +95,7 @@ export default function Home() {
                 <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
                   {nexusHighlights.map((item) => <li key={item} className="flex gap-3"><Check className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /><span>{item}</span></li>)}
                 </ul>
-                <div className="mt-8"><ActionLink href="/apps">See Nexus Plus</ActionLink></div>
+                <div className="mt-8"><ActionLink>See Nexus Plus</ActionLink></div>
               </article>
               <article className="rounded-2xl border border-border p-7 md:p-9">
                 <Hexagon className="mb-6 h-6 w-6" aria-hidden="true" />
@@ -116,7 +106,7 @@ export default function Home() {
                 <p className="mt-6 rounded-xl border border-border p-4 text-sm text-muted-foreground">
                   Sanskrit verses with Hindi and English reading support.
                 </p>
-                <div className="mt-8"><Link href="/apps" className="inline-flex min-h-10 items-center rounded-md border border-border px-6 py-3 text-sm font-medium no-underline">See Geeta Nexus</Link></div>
+                <div className="mt-8"><button type="button" className="inline-flex min-h-10 items-center rounded-md border border-border px-6 py-3 text-sm font-medium">See Geeta Nexus</button></div>
               </article>
             </div>
           </div>
