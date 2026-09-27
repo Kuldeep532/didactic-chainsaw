@@ -1,7 +1,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { Link } from "wouter";
-import { BookOpen, Heart, Loader2, PenLine, Send, Sparkles, Users } from "lucide-react";
+import { BookOpen, Heart, Loader2, PenLine, Send, Sparkles, Users, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,10 +21,21 @@ type Post = {
   created_at: string;
 };
 
+function speakPost(post: Post) {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const text = `${post.title}. ${post.content}`;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = /[\\u0900-\\u097F]/.test(text) ? "hi-IN" : "en-IN";
+  utterance.rate = 0.95;
+  window.speechSynthesis.speak(utterance);
+}
+
 const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.replace(/\/+$/, "") ?? "";
 const SUPABASE_KEY = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) ?? "";
 
 async function request(path: string, token: string | null, init?: RequestInit) {
+  if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Community service is not configured.");
   const response = await fetch(SUPABASE_URL + path, {
     ...init,
     headers: {
@@ -96,7 +107,7 @@ export default function Community() {
           post_type: form.postType,
           app_scope: form.appScope,
           status: "pending",
-          is_free: spiritual,
+          is_free: true,
         }),
       });
       toast({ title: "Post submitted", description: "Your post is waiting for admin review." });
@@ -124,8 +135,8 @@ export default function Community() {
       <section className="border-b border-border bg-card py-10">
         <div className="mx-auto grid max-w-screen-xl gap-5 px-4 md:grid-cols-3 md:px-8">
           <Info icon={<BookOpen className="h-5 w-5" />} title="Geeta Nexus">Bhagavad Gita, spiritual learning and teaching content. Spiritual posts are free.</Info>
-          <Info icon={<Sparkles className="h-5 w-5" />} title="Nexus Plus">Product updates, practical guides and community information for Nexus Plus.</Info>
-          <Info icon={<Heart className="h-5 w-5" />} title="Free spiritual posts">Spiritual content for Geeta Nexus is always published as free community content.</Info>
+          <Info icon={<Sparkles className="h-5 w-5" />} title="Nexus Plus">Product updates, practical guides and community information for Nexus Plus. Community posts are free.</Info>
+          <Info icon={<Heart className="h-5 w-5" />} title="Listen to posts">Every approved community post includes a built-in listen button.</Info>
         </div>
       </section>
 
@@ -148,7 +159,17 @@ export default function Community() {
                       </div>
                       <CardTitle className="text-xl">{post.title}</CardTitle>
                     </CardHeader>
-                    <CardContent><p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{post.content}</p></CardContent>
+                    <CardContent>
+                      <div className="mb-4 flex flex-wrap items-center gap-2">
+                        <Button type="button" variant="outline" size="sm" onClick={() => speakPost(post)} aria-label={`Listen to ${post.title}`}>
+                          <Volume2 className="mr-2 h-4 w-4" aria-hidden="true" />Listen
+                        </Button>
+                        <Button type="button" variant="ghost" size="sm" onClick={() => window.speechSynthesis?.cancel()} aria-label="Stop listening">
+                          Stop
+                        </Button>
+                      </div>
+                      <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{post.content}</p>
+                    </CardContent>
                   </Card>
                 ))}
               </div>
