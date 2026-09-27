@@ -67,14 +67,14 @@ export default function Navbar() {
                   <div className="px-2 py-1.5 text-xs text-muted-foreground">{user.email}</div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/nexus"><User className="mr-2 h-4 w-4" aria-hidden="true" /> My account</Link>
+                    <Link href="/account"><User className="mr-2 h-4 w-4" aria-hidden="true" /> My account</Link>
                   </DropdownMenuItem>
                   {user.isAdmin && (
                     <DropdownMenuItem asChild>
                       <Link href="/admin"><Settings className="mr-2 h-4 w-4" aria-hidden="true" /> Admin</Link>
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem onClick={() => void handleLogout}>
+                  <DropdownMenuItem onClick={() => void handleLogout()}>
                     <LogOut className="mr-2 h-4 w-4" aria-hidden="true" /> Sign out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -118,7 +118,7 @@ export default function Navbar() {
                   {user ? (
                     <div className="space-y-4">
                       <p className="truncate text-sm text-muted-foreground">{user.email}</p>
-                      <SheetClose asChild><Link href="/nexus" className="text-sm font-medium">My account</Link></SheetClose>
+                      <SheetClose asChild><Link href="/account" className="text-sm font-medium">My account</Link></SheetClose>
                       {user.isAdmin && <SheetClose asChild><Link href="/admin" className="block text-sm font-medium">Admin</Link></SheetClose>}
                       <button onClick={() => void handleLogout()} className="flex items-center gap-2 text-sm font-medium">
                         <LogOut className="h-4 w-4" aria-hidden="true" /> Sign out
