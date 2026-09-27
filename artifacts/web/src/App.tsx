@@ -12,12 +12,12 @@ import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Apps from "./pages/Apps";
+import Account from "./pages/Account";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Login from "./pages/Login";
 import Utilities from "./pages/Utilities";
-import NexusDashboard from "./pages/NexusDashboard";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import Terms from "./pages/legal/Terms";
 import RefundPolicy from "./pages/legal/RefundPolicy";
@@ -62,7 +62,7 @@ function FocusRouter() {
     <Layout>
       <Switch>
         <Route path="/" component={Home} />
-        <Route path="/nexus" component={NexusDashboard} />
+        <Route path="/account" component={Account} />
         <Route path="/about" component={About} />
         <Route path="/apps" component={Apps} />
         <Route path="/utilities" component={Utilities} />
