@@ -7,7 +7,7 @@ interface SEOProps {
 
 export default function SEO({ title, description }: SEOProps) {
   useEffect(() => {
-    document.title = `${title} — Nexus Wave Technologies`;
+    document.title = `${title} — Nexus Web Technology`;
 
     if (description) {
       let metaDesc = document.querySelector('meta[name="description"]');
