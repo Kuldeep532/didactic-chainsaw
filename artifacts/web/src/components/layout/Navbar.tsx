@@ -1,53 +1,42 @@
-import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, Hexagon, User, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetClose,
+  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose,
 } from "@/components/ui/sheet";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import DarkModeToggle from "../DarkModeToggle";
 import { useAuth } from "@/context/AuthContext";
 
 const NAV_LINKS = [
-  { href: "/about", label: "Company" },
-  { href: "/apps", label: "Software" },
-  { href: "/blog", label: "Log" },
-  { href: "/resources", label: "Resources" },
+  { href: "/about", label: "About" },
+  { href: "/apps", label: "Apps" },
+  { href: "/utilities", label: "Utilities" },
+  { href: "/blog", label: "Updates" },
   { href: "/contact", label: "Contact" },
 ];
 
 export default function Navbar() {
   const [location, navigate] = useLocation();
-  const [mobileOpen, setMobileOpen] = useState(false);
   const { user, logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate("/");
   };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
-      <div className="container flex h-16 max-w-screen-2xl items-center justify-between mx-auto px-4 md:px-8">
-        <Link href="/" className="flex items-center space-x-3 group" aria-label="Nexus Wave Technologies Home">
-          <Hexagon className="h-6 w-6 text-foreground group-hover:rotate-90 transition-transform duration-500" aria-hidden="true" strokeWidth={1.5} />
-          <span className="font-bold text-foreground tracking-tight">Nexus Wave</span>
+      <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4 md:px-8">
+        <Link href="/" className="group flex items-center space-x-3" aria-label="Nexus Wave Technologies Home">
+          <Hexagon className="h-6 w-6 transition-transform duration-500 group-hover:rotate-90" aria-hidden="true" strokeWidth={1.5} />
+          <span className="font-bold tracking-tight">Nexus Wave</span>
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-8 text-sm font-medium" aria-label="Primary navigation">
+        <nav className="hidden items-center space-x-8 text-sm font-medium md:flex" aria-label="Primary navigation">
           {NAV_LINKS.map((link) => {
             const isActive = location === link.href;
             return (
@@ -55,10 +44,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 aria-current={isActive ? "page" : undefined}
-                className={cn(
-                  "relative transition-colors hover:text-foreground",
-                  isActive ? "text-foreground" : "text-muted-foreground",
-                )}
+                className={cn("transition-colors hover:text-foreground", isActive ? "text-foreground" : "text-muted-foreground")}
               >
                 {link.label}
               </Link>
@@ -66,70 +52,54 @@ export default function Navbar() {
           })}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <DarkModeToggle />
-
-          {/* Auth buttons — desktop */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden items-center gap-2 md:flex">
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-2 rounded-sm" aria-label={`Account menu for ${user.name ?? user.email}`}>
-                    {user.picture ? (
-                      <img src={user.picture} alt="" className="h-5 w-5 rounded-sm" aria-hidden="true" />
-                    ) : (
-                      <User className="h-4 w-4" aria-hidden="true" />
-                    )}
-                    <span className="max-w-[120px] truncate">{user.name ?? user.username ?? user.email}</span>
+                  <Button variant="ghost" size="sm" className="gap-2 rounded-sm" aria-label="Account menu">
+                    {user.picture ? <img src={user.picture} alt="" className="h-5 w-5 rounded-full" aria-hidden="true" /> : <User className="h-4 w-4" aria-hidden="true" />}
+                    <span className="max-w-[160px] truncate">{user.name ?? user.email}</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="rounded-sm rounded-t-none border-t-0 mt-0">
-                  <div className="px-2 py-1.5 text-xs text-muted-foreground font-mono truncate">{user.email}</div>
+                <DropdownMenuContent align="end">
+                  <div className="px-2 py-1.5 text-xs text-muted-foreground">{user.email}</div>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/nexus"><User className="mr-2 h-4 w-4" aria-hidden="true" /> My account</Link>
+                  </DropdownMenuItem>
                   {user.isAdmin && (
-                    <DropdownMenuItem asChild className="rounded-sm cursor-pointer">
-                      <Link href="/admin">
-                        <Settings className="h-4 w-4 mr-2" aria-hidden="true" />
-                        Admin Panel
-                      </Link>
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin"><Settings className="mr-2 h-4 w-4" aria-hidden="true" /> Admin</Link>
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem onClick={handleLogout} className="rounded-sm cursor-pointer">
-                    <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
-                    Sign Out
+                  <DropdownMenuItem onClick={() => void handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" aria-hidden="true" /> Sign out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button asChild size="sm" variant="secondary" className="rounded-sm">
-                <Link href="/login">Authenticate</Link>
+              <Button asChild size="sm" className="rounded-sm">
+                <Link href="/login">Sign in</Link>
               </Button>
             )}
           </div>
 
-          {/* Mobile menu */}
-          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <Sheet>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden rounded-sm"
-                aria-label="Open menu"
-                aria-expanded={mobileOpen}
-              >
+              <Button variant="ghost" size="icon" className="rounded-sm md:hidden" aria-label="Open menu">
                 <Menu className="h-5 w-5" aria-hidden="true" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-full sm:w-80 rounded-none border-l border-border bg-background p-0">
-              <SheetHeader className="p-6 border-b border-border text-left">
-                <SheetTitle>
-                  <span className="flex items-center space-x-3">
-                    <Hexagon className="h-6 w-6 text-foreground" aria-hidden="true" strokeWidth={1.5} />
-                    <span className="tracking-tight">Nexus Wave</span>
-                  </span>
+            <SheetContent side="right" className="w-full rounded-none border-l border-border bg-background sm:w-80">
+              <SheetHeader className="border-b border-border pb-4 text-left">
+                <SheetTitle className="flex items-center gap-3">
+                  <Hexagon className="h-6 w-6" aria-hidden="true" />
+                  Nexus Wave
                 </SheetTitle>
               </SheetHeader>
-              <nav className="flex flex-col p-4" aria-label="Mobile navigation">
+              <nav className="flex flex-col pt-4" aria-label="Mobile navigation">
                 {NAV_LINKS.map((link) => {
                   const isActive = location === link.href;
                   return (
@@ -137,42 +107,27 @@ export default function Navbar() {
                       <Link
                         href={link.href}
                         aria-current={isActive ? "page" : undefined}
-                        className={cn(
-                          "px-4 py-3 text-lg font-medium transition-colors border-b border-border/50",
-                          isActive ? "text-foreground" : "text-muted-foreground",
-                        )}
+                        className={cn("border-b border-border/50 px-4 py-3 text-lg font-medium", isActive ? "text-foreground" : "text-muted-foreground")}
                       >
                         {link.label}
                       </Link>
                     </SheetClose>
                   );
                 })}
-                <div className="mt-8 space-y-4 px-4">
+                <div className="mt-6 px-4">
                   {user ? (
-                    <>
-                      <div className="font-mono text-xs text-muted-foreground truncate mb-4">{user.email}</div>
-                      {user.isAdmin && (
-                        <SheetClose asChild>
-                          <Link href="/admin" className="flex items-center gap-2 text-sm font-medium hover:text-foreground/80 transition-colors">
-                            <Settings className="h-4 w-4" aria-hidden="true" />
-                            Admin Panel
-                          </Link>
-                        </SheetClose>
-                      )}
-                      <SheetClose asChild>
-                        <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center gap-2 text-sm font-medium text-left hover:text-foreground/80 transition-colors"
-                        >
-                          <LogOut className="h-4 w-4" aria-hidden="true" />
-                          Sign Out
-                        </button>
-                      </SheetClose>
-                    </>
+                    <div className="space-y-4">
+                      <p className="truncate text-sm text-muted-foreground">{user.email}</p>
+                      <SheetClose asChild><Link href="/nexus" className="text-sm font-medium">My account</Link></SheetClose>
+                      {user.isAdmin && <SheetClose asChild><Link href="/admin" className="block text-sm font-medium">Admin</Link></SheetClose>}
+                      <button onClick={() => void handleLogout()} className="flex items-center gap-2 text-sm font-medium">
+                        <LogOut className="h-4 w-4" aria-hidden="true" /> Sign out
+                      </button>
+                    </div>
                   ) : (
                     <SheetClose asChild>
-                      <Link href="/login" className="block w-full text-center border border-border bg-primary text-primary-foreground py-3 text-sm font-medium">
-                        Authenticate
+                      <Link href="/login" className="block w-full rounded-sm bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground">
+                        Sign in or create account
                       </Link>
                     </SheetClose>
                   )}
