@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import NotFound from "@/pages/not-found";
-import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Apps from "./pages/Apps";
@@ -19,32 +18,9 @@ import JoinTeam from "./pages/JoinTeam";
 import TeamAdmin from "./pages/TeamAdmin";
 
 function FocusRouter() {
-  const [location] = useLocation();
-  const previousLocation = useRef(location);
-
-  useEffect(() => {
-    if (location === previousLocation.current) return;
-    previousLocation.current = location;
-
-    const timer = setTimeout(() => {
-      const target =
-        (document.querySelector("h1") as HTMLElement | null) ??
-        (document.querySelector("h2") as HTMLElement | null) ??
-        document.getElementById("main-content");
-
-      if (target) {
-        target.setAttribute("tabindex", "-1");
-        target.focus({ preventScroll: false });
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-        setTimeout(() => target.removeAttribute("tabindex"), 100);
-      }
-    }, 50);
-
-    return () => clearTimeout(timer);
-  }, [location]);
 
   return (
-    <Layout>
+    <main id="main-content">
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/account" component={Account} />
@@ -63,7 +39,7 @@ function FocusRouter() {
         <Route path="/legal/accessibility" component={Accessibility} />
         <Route component={NotFound} />
       </Switch>
-    </Layout>
+    </main>
   );
 }
 
