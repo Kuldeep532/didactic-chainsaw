@@ -33,7 +33,11 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
     <div class="grid-2"><article class="card"><h3>Join through the Nexus team</h3><p class="muted">Women Safety Campaign volunteers use the same Join Our Team review process, so one application can cover campaign work and other approved Nexus roles.</p>
       <form id="campaign-form" class="form">
         <label>Name<input id="campaign-name" autocomplete="name" required /></label><label>Email<input id="campaign-email" type="email" autocomplete="email" required /></label>
-        <label>Campaign role<select id="campaign-role" required><option>Women Safety Campaign Volunteer</option><option>Safety Content & Poetry</option><option>Community & Forum Organizer</option></select></label>
+        <label>Campaign role<select id="campaign-role" required>
+          <option value="women_safety_campaign">Women Safety Campaign Volunteer</option>
+          <option value="safety_content_poetry">Safety Content & Poetry</option>
+          <option value="community_forum_organizer">Community & Forum Organizer</option>
+        </select></label>
         <label>How would you like to help?<textarea id="campaign-help" minlength="10" required></textarea></label>
         <label>Proof or evidence link (optional)<input id="campaign-proof" type="url" placeholder="https://…" /></label>
         <p class="note">Proof should show genuine contribution. Do not upload private, intimate or identifying material belonging to another person.</p>
@@ -61,5 +65,6 @@ GET  /functions/v1/women-safety-guidance</code></pre></div>
     if(!r.ok) throw new Error("request-failed"); return r.json().catch(()=>({}));
   }
   reportForm?.addEventListener("submit",async e=>{e.preventDefault();reportStatus.textContent="Submitting your safety report…";try{await callFunction("women-safety-report",{name:document.getElementById("report-name").value.trim()||null,email:document.getElementById("report-email").value.trim()||null,type:document.getElementById("report-type").value,message:document.getElementById("report-message").value.trim(),followup:document.getElementById("report-followup").value});reportStatus.textContent="Your report was submitted.";reportForm.reset()}catch{reportStatus.textContent="The Supabase safety endpoint is not connected yet. The integration-ready form is in place."}});
-  campaignForm?.addEventListener("submit",async e=>{e.preventDefault();campaignStatus.textContent="Submitting campaign application…";try{await callFunction("women-safety-campaign",{name:document.getElementById("campaign-name").value.trim(),email:document.getElementById("campaign-email").value.trim(),campaign_role:document.getElementById("campaign-role").value,contribution:document.getElementById("campaign-help").value.trim(),proof_url:document.getElementById("campaign-proof").value.trim()||null});campaignStatus.textContent="Campaign application submitted for review.";campaignForm.reset()}catch{campaignStatus.textContent="The Supabase campaign endpoint is not connected yet. The integration-ready application is in place."}});
+  campaignForm?.addEventListener("submit",async e=>{e.preventDefault();campaignStatus.textContent="Submitting campaign application…";try{const role=document.getElementById("campaign-role").value;
+await callFunction("women-safety-campaign",{name:document.getElementById("campaign-name").value.trim(),email:document.getElementById("campaign-email").value.trim(),campaign_role:role,application_type:role,contribution:document.getElementById("campaign-help").value.trim(),proof_url:document.getElementById("campaign-proof").value.trim()||null});campaignStatus.textContent="Campaign application submitted for review.";campaignForm.reset()}catch{campaignStatus.textContent="The Supabase campaign endpoint is not connected yet. The integration-ready application is in place."}});
 </script>
