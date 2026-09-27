@@ -4,5 +4,8 @@
   "installCommand": "cd artifacts/web && npm install --no-package-lock",
   "buildCommand": "cd artifacts/web && npm run build",
   "outputDirectory": "artifacts/web/dist",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "git": {
+    "deploymentEnabled": false
+  }
 }
