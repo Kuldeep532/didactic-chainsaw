@@ -10,18 +10,9 @@ interface DailyShloka {
   chapter: string;
 }
 
-const BASE = (import.meta.env.VITE_BASE_URL as string | undefined)?.replace(/\/$/, "") ?? "";
-
 export default function DevotionalBanner() {
   const [shloka, setShloka] = useState<DailyShloka | null>(null);
   const [error, setError] = useState(false);
-
-  useEffect(() => {
-    fetch(`${BASE}/api/shloka/daily`)
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((data: DailyShloka) => setShloka(data))
-      .catch(() => setError(true));
-  }, []);
 
   if (error || !shloka) return null;
 
