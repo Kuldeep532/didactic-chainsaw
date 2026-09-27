@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title="My Friends — Nexus Community" description="Manage accepted friends and pending friend requests.">
+  <section class="hero"><div class="container"><p class="eyebrow">Community · My Friends</p><h1>People you have chosen to connect with.</h1><p class="lead">Your friends list is separate from community posts and chat history. Adding someone as a friend does not automatically grant them access to private information.</p></div></section>
+  <section class="section"><div class="container grid-2">
+    <article class="card"><p class="eyebrow">My Friends</p><h2>Friends list</h2><div id="friends-list" class="stack-list"><div class="note">Friend relationships will appear here after Supabase friends relations are connected.</div></div></article>
+    <article class="card"><p class="eyebrow">Requests</p><h2>Friend requests</h2><div id="requests-list" class="stack-list"><div class="note">Pending requests will appear here.</div></div></article>
+  </div></section>
+</Layout>
