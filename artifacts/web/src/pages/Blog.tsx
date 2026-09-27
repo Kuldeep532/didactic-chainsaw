@@ -1,6 +1,5 @@
 import { useState, useMemo, useRef, type FormEvent } from "react";
 import { Link } from "wouter";
-import { useListBlogPosts, type BlogPost } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,6 +23,20 @@ import {
 
 /* ─── constants ─── */
 const POSTS_PER_PAGE = 6;
+
+// Vercel frontend has no legacy /api server dependency. Blog data is optional.
+// Keep the page build-safe and show an empty state until a Supabase-backed blog source is wired.
+interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt?: string;
+  category?: string;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 const CATEGORIES = ["All", "News", "Updates", "Technology", "Security", "Tutorials"];
 
 /* ─── utils ─── */
@@ -275,7 +288,9 @@ function Newsletter() {
 
 /* ─── main page ─── */
 export default function Blog() {
-  const { data: posts, isLoading, error } = useListBlogPosts();
+  const posts: BlogPost[] = [];
+  const isLoading = false;
+  const error = null;
   const searchRef = useRef<HTMLDivElement>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
