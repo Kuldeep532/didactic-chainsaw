@@ -1,5 +1,4 @@
 import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen, Check, Hexagon, ShieldCheck, Sparkles, Wand2 } from "lucide-react";
 
 const nexusHighlights = [
@@ -9,126 +8,126 @@ const nexusHighlights = [
   "Voice, media, file and productivity tools",
 ];
 
+function ActionLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-foreground px-6 py-3 text-sm font-medium text-background no-underline"
+    >
+      {children}
+    </Link>
+  );
+}
+
 export default function Home() {
   return (
-    <div className="flex w-full flex-col">
-      <section className="border-b border-border bg-background px-4 pb-20 pt-24 lg:pb-28 lg:pt-36 md:px-8">
-        <div className="mx-auto max-w-screen-2xl">
-          <div className="max-w-4xl">
-            <div className="mb-8 inline-flex items-center border border-border bg-muted/30 px-3 py-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              <span className="mr-2 h-2 w-2 bg-foreground" aria-hidden="true" />
-              Nexus Web Technology
-            </div>
-            <h1 className="mb-8 text-5xl font-bold leading-[1.05] tracking-tighter text-foreground md:text-7xl lg:text-[5.5rem]">
-              User-friendly software.
-              <br />
-              Built for real life.
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="border-b border-border">
+        <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-5 md:px-8">
+          <Link href="/" className="flex items-center gap-3 font-bold no-underline">
+            <Hexagon className="h-6 w-6" aria-hidden="true" />
+            <span>Nexus Web Technology</span>
+          </Link>
+          <nav aria-label="Primary" className="hidden gap-6 text-sm md:flex">
+            <Link href="/about" className="no-underline hover:underline">About</Link>
+            <Link href="/apps" className="no-underline hover:underline">Apps</Link>
+            <Link href="/utilities" className="no-underline hover:underline">Utilities</Link>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <section className="border-b border-border px-4 py-20 md:px-8 md:py-28">
+          <div className="mx-auto max-w-screen-2xl">
+            <p className="mb-6 text-sm font-medium uppercase tracking-widest text-muted-foreground">Nexus Web Technology</p>
+            <h1 className="max-w-5xl text-5xl font-bold leading-tight tracking-tight md:text-7xl">
+              User-friendly software.<br />Built for real life.
             </h1>
-            <p className="mb-12 max-w-2xl text-xl font-light leading-relaxed text-muted-foreground md:text-2xl">
-              Nexus Web Technology creates accessible digital products for everyday productivity, AI, media, and spiritual learning.
+            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+              Accessible digital products for everyday productivity, AI, media and spiritual learning.
             </p>
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <Button asChild size="lg" className="h-12 rounded-sm px-8 text-base font-medium">
-                <Link href="/apps">
-                  Explore Nexus apps <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="h-12 rounded-sm px-8 text-base font-medium">
-                <Link href="/utilities">Open free utilities</Link>
-              </Button>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <ActionLink href="/apps">Explore Nexus apps <ArrowRight className="h-4 w-4" aria-hidden="true" /></ActionLink>
+              <Link href="/utilities" className="inline-flex min-h-10 items-center justify-center rounded-md border border-border px-6 py-3 text-sm font-medium no-underline">Open free utilities</Link>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="border-b border-border bg-card py-24">
-        <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
-          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-            <div className="lg:col-span-4">
-              <p className="mb-3 text-sm font-medium text-muted-foreground">What Nexus Web Technology is about</p>
-              <h2 className="mb-5 text-3xl font-bold tracking-tight">Useful first, simple to understand.</h2>
-              <p className="leading-relaxed text-muted-foreground">
-                Nexus Web Technology is the developer identity used for software products and online services created by Kuldeep. The focus is practical software that works for people with different needs and abilities.
-              </p>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:col-span-8">
-              <div className="rounded-2xl border border-border bg-background p-7">
-                <ShieldCheck className="mb-5 h-6 w-6" aria-hidden="true" />
-                <h3 className="mb-2 text-lg font-semibold">Privacy-aware</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">Account and payment-related information is handled only where it is needed to provide the service.</p>
+        <section className="border-b border-border px-4 py-20 md:px-8">
+          <div className="mx-auto max-w-screen-2xl">
+            <div className="grid gap-12 lg:grid-cols-12">
+              <div className="lg:col-span-4">
+                <p className="mb-3 text-sm font-medium text-muted-foreground">What we build</p>
+                <h2 className="text-3xl font-bold tracking-tight">Useful first, simple to understand.</h2>
+                <p className="mt-5 leading-relaxed text-muted-foreground">
+                  Nexus Web Technology is the developer identity used for software products and online services created by Kuldeep.
+                </p>
               </div>
-              <div className="rounded-2xl border border-border bg-background p-7">
-                <Sparkles className="mb-5 h-6 w-6" aria-hidden="true" />
-                <h3 className="mb-2 text-lg font-semibold">Modern AI tools</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">Nexus Plus brings AI chat, media generation, voice, audio and content tools together in one place.</p>
-              </div>
-              <div className="rounded-2xl border border-border bg-background p-7">
-                <BookOpen className="mb-5 h-6 w-6" aria-hidden="true" />
-                <h3 className="mb-2 text-lg font-semibold">Spiritual learning</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">Geeta Nexus provides an accessible way to read and explore the Bhagavad Gita.</p>
-              </div>
-              <div className="rounded-2xl border border-border bg-background p-7">
-                <Wand2 className="mb-5 h-6 w-6" aria-hidden="true" />
-                <h3 className="mb-2 text-lg font-semibold">Small free helpers</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">The website includes a few lightweight utilities for text tasks without requiring an account.</p>
+              <div className="grid gap-4 sm:grid-cols-2 lg:col-span-8">
+                <div className="rounded-2xl border border-border p-6">
+                  <ShieldCheck className="mb-5 h-6 w-6" aria-hidden="true" />
+                  <h3 className="mb-2 text-lg font-semibold">Privacy-aware</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">Account and payment information is handled only where needed to provide the service.</p>
+                </div>
+                <div className="rounded-2xl border border-border p-6">
+                  <Sparkles className="mb-5 h-6 w-6" aria-hidden="true" />
+                  <h3 className="mb-2 text-lg font-semibold">Modern AI tools</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">Nexus Plus brings AI chat, media, audio and content tools together.</p>
+                </div>
+                <div className="rounded-2xl border border-border p-6">
+                  <BookOpen className="mb-5 h-6 w-6" aria-hidden="true" />
+                  <h3 className="mb-2 text-lg font-semibold">Spiritual learning</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">Geeta Nexus provides an accessible way to explore the Bhagavad Gita.</p>
+                </div>
+                <div className="rounded-2xl border border-border p-6">
+                  <Wand2 className="mb-5 h-6 w-6" aria-hidden="true" />
+                  <h3 className="mb-2 text-lg font-semibold">Small free helpers</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">Lightweight website utilities without requiring an account.</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="bg-background py-24">
-        <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
-          <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div>
+        <section className="px-4 py-20 md:px-8">
+          <div className="mx-auto max-w-screen-2xl">
+            <div className="mb-10">
               <p className="mb-3 text-sm font-medium text-muted-foreground">Featured products</p>
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Nexus Plus & Geeta Nexus</h2>
+              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Nexus Plus &amp; Geeta Nexus</h2>
             </div>
-            <Button asChild variant="outline" className="rounded-sm">
-              <Link href="/about">About Nexus Web Technology</Link>
-            </Button>
+            <div className="grid gap-6 md:grid-cols-2">
+              <article className="rounded-2xl border border-border p-7 md:p-9">
+                <Sparkles className="mb-6 h-6 w-6" aria-hidden="true" />
+                <h3 className="text-2xl font-bold">Nexus Plus</h3>
+                <p className="mt-4 leading-relaxed text-muted-foreground">
+                  An Android utility and AI platform with assistant features, media tools, audio editing, PDF tools, e-paper workflows and accessibility-focused features.
+                </p>
+                <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
+                  {nexusHighlights.map((item) => <li key={item} className="flex gap-3"><Check className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /><span>{item}</span></li>)}
+                </ul>
+                <div className="mt-8"><ActionLink href="/apps">See Nexus Plus</ActionLink></div>
+              </article>
+              <article className="rounded-2xl border border-border p-7 md:p-9">
+                <Hexagon className="mb-6 h-6 w-6" aria-hidden="true" />
+                <h3 className="text-2xl font-bold">Geeta Nexus</h3>
+                <p className="mt-4 leading-relaxed text-muted-foreground">
+                  A dedicated Bhagavad Gita experience focused on clear reading, accessibility and spiritual learning.
+                </p>
+                <p className="mt-6 rounded-xl border border-border p-4 text-sm text-muted-foreground">
+                  Sanskrit verses with Hindi and English reading support.
+                </p>
+                <div className="mt-8"><Link href="/apps" className="inline-flex min-h-10 items-center rounded-md border border-border px-6 py-3 text-sm font-medium no-underline">See Geeta Nexus</Link></div>
+              </article>
+            </div>
           </div>
+        </section>
+      </main>
 
-          <div className="grid gap-8 md:grid-cols-2">
-            <article className="flex flex-col rounded-2xl border border-border bg-card p-8 md:p-10">
-              <div className="mb-7 flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-background">
-                <Sparkles className="h-6 w-6" aria-hidden="true" />
-              </div>
-              <h3 className="mb-3 text-2xl font-bold tracking-tight">Nexus Plus</h3>
-              <p className="mb-6 leading-relaxed text-muted-foreground">
-                A broad Android utility and AI platform with assistant features, media tools, audio editing, PDF tools, e-paper workflows, voice features, secure storage and accessibility-focused tools.
-              </p>
-              <ul className="mb-8 space-y-3 text-sm text-muted-foreground">
-                {nexusHighlights.map((item) => (
-                  <li key={item} className="flex gap-3">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button asChild className="mt-auto rounded-sm">
-                <Link href="/apps#nexus-plus">See Nexus Plus</Link>
-              </Button>
-            </article>
-
-            <article className="flex flex-col rounded-2xl border border-border bg-card p-8 md:p-10">
-              <div className="mb-7 flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-background">
-                <Hexagon className="h-6 w-6" aria-hidden="true" />
-              </div>
-              <h3 className="mb-3 text-2xl font-bold tracking-tight">Geeta Nexus</h3>
-              <p className="mb-6 leading-relaxed text-muted-foreground">
-                A dedicated Bhagavad Gita experience focused on clear reading, accessibility and spiritual learning, designed to work well with screen readers.
-              </p>
-              <div className="mb-8 rounded-xl border border-border bg-background p-4 text-sm text-muted-foreground">
-                Sanskrit verses with Hindi and English reading support are presented in a simple, focused experience.
-              </div>
-              <Button asChild variant="outline" className="mt-auto rounded-sm">
-                <Link href="/apps#geeta-nexus">See Geeta Nexus</Link>
-              </Button>
-            </article>
-          </div>
+      <footer className="border-t border-border px-4 py-10 md:px-8">
+        <div className="mx-auto max-w-screen-2xl text-sm text-muted-foreground">
+          © {new Date().getFullYear()} Nexus Web Technology · Accessible digital products by Kuldeep.
         </div>
-      </section>
+      </footer>
     </div>
   );
 }
