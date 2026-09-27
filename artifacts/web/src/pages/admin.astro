@@ -22,6 +22,21 @@ team_members.role IN ('team_editor','moderator','admin')</code></pre>
         <p class="note">The initial super-admin should be inserted through a one-time server-side SQL/admin migration or Supabase dashboard using an audited account. Never expose the service-role key in the website.</p>
       </section>
       <section class="section-card" style="margin-top:1rem">
+        <p class="eyebrow">Women Safety</p><h2>Private complaint access</h2>
+        <p class="muted">The private complaint recipient is configured separately from ordinary admin access. Use this control to designate exactly one trusted account.</p>
+        <label class="form">Recipient user ID<input id="private-safety-user-id" placeholder="Supabase auth user UUID" /></label>
+        <button id="save-private-safety" class="button primary" type="button">Save private complaint recipient</button>
+        <p id="private-safety-status" class="note" aria-live="polite"></p>
+      </section>
+      <section class="section-card" style="margin-top:1rem">
+        <p class="eyebrow">Contributor reports</p><h2>Live badge approvals</h2>
+        <p class="muted">Approve a contributor report before activating the user's live badge. The badge then appears wherever the community displays that user.</p>
+        <label class="form">Report ID<input id="badge-report-id" placeholder="Report UUID" /></label>
+        <label class="form">User ID<input id="badge-user-id" placeholder="Supabase auth user UUID" /></label>
+        <button id="approve-badge" class="button primary" type="button">Approve live badge</button>
+        <p id="badge-status" class="note" aria-live="polite"></p>
+      </section>
+      <section class="section-card" style="margin-top:1rem">
         <p class="eyebrow">Verification</p><h2>Privacy-preserving account verification</h2>
         <p class="muted">Use verified account identity, age/safety requirements and moderator review where needed. Do not attempt to infer a person’s gender from a face, voice or other biometric signal. For gender-specific communities, grant access according to the platform's declared membership category plus a documented review process, minimizing retained evidence.</p>
       </section>
