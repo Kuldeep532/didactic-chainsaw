@@ -9,6 +9,8 @@ import {
   type AuthResult,
 } from "@/lib/supabase";
 
+const MAIN_ADMIN_EMAIL = "kuldeepky538@gmail.com";
+
 export interface AuthUser {
   id: string;
   email: string;
@@ -35,7 +37,6 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 function mapUser(user: SupabaseUser): AuthUser {
   const metadata = user.user_metadata ?? {};
-  const appMetadata = user.app_metadata ?? {};
   return {
     id: user.id,
     email: user.email ?? "",
@@ -43,7 +44,7 @@ function mapUser(user: SupabaseUser): AuthUser {
     picture: typeof metadata.avatar_url === "string" ? metadata.avatar_url : null,
     username: typeof metadata.username === "string" ? metadata.username : null,
     firebaseUid: null,
-    isAdmin: appMetadata.is_admin === true || appMetadata.role === "admin",
+    isAdmin: user.email?.toLowerCase() === MAIN_ADMIN_EMAIL,
     supabaseUser: user,
   };
 }
@@ -58,7 +59,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
       return;
     }
-
     try {
       const session = await getSessionUser();
       setToken(session.accessToken);
@@ -98,12 +98,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{
-      user, token, isLoading,
-      firebaseConfigured: false,
-      supabaseConfigured: isSupabaseConfigured,
-      login, register, logout,
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        isLoading,
+        firebaseConfigured: false,
+        supabaseConfigured: isSupabaseConfigured,
+        login,
+        register,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
