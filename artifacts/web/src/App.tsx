@@ -6,7 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import { ThemeProvider } from "./components/ThemeProvider";
 import Preloader from "./components/Preloader";
-import ChatbotWidget from "./components/ChatbotWidget";
 import { AuthProvider } from "./context/AuthContext";
 import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
@@ -89,7 +88,6 @@ function App() {
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
-            <Preloader />
             <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
               <FocusRouter />
             </WouterRouter>
