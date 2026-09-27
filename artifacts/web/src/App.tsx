@@ -18,15 +18,6 @@ import Accessibility from "./pages/legal/Accessibility";
 import JoinTeam from "./pages/JoinTeam";
 import TeamAdmin from "./pages/TeamAdmin";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      staleTime: 30_000,
-    },
-  },
-});
-
 function FocusRouter() {
   const [location] = useLocation();
   const previousLocation = useRef(location);
