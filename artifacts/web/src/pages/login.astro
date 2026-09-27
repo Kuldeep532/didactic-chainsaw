@@ -1,5 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
 <Layout title="Sign in — Nexus Web Technology">
   <section class="hero"><div class="container"><p class="eyebrow">Nexus account</p><h1>Sign in or create an account.</h1><p class="lead">Authentication is handled directly by Supabase Auth. No Express or Firebase authentication service is used by this website.</p></div></section>
@@ -8,24 +10,26 @@ import Layout from "../layouts/Layout.astro";
       <label>Email<input id="email" type="email" autocomplete="email" required /></label>
       <label>Password<input id="password" type="password" autocomplete="current-password" minlength="6" required /></label>
       <div class="actions"><button id="sign-in" class="button primary" type="submit">Sign in</button><button id="sign-up" class="button" type="button">Create account</button></div>
-      <p id="auth-message" class="note" aria-live="polite"></p>
+      <p id="auth-message" class="note" aria-live="polite">Enter your account details.</p>
     </form>
   </div></div></section>
-  <script is:inline>
-    const url = "https://cpbwiarqlvtlnwbkmpws.supabase.co";
-    const key = "REPLACE_WITH_VITE_SUPABASE_PUBLISHABLE_KEY";
+  <script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
+    const url = supabaseUrl;
+    const key = supabaseKey;
     const form=document.getElementById('auth-form'), msg=document.getElementById('auth-message');
     async function auth(mode){
-      if(!url||!key||key.startsWith('REPLACE_')){msg.textContent='Supabase sign-in is not configured yet.';return;}
+      if(!url||!key){msg.textContent='Supabase sign-in is not configured yet.';return;}
       const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;
       msg.textContent='Please wait…';
-      const endpoint=mode==='signup'?url+'/auth/v1/signup':url+'/auth/v1/token?grant_type=password';
-      const response=await fetch(endpoint,{method:'POST',headers:{apikey:key,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
-      const data=await response.json().catch(()=>({}));
-      if(!response.ok){msg.textContent=data.error_description||data.msg||'Authentication request failed.';return;}
-      if(data.access_token)localStorage.setItem('nexus_access_token',data.access_token);
-      if(data.refresh_token)localStorage.setItem('nexus_refresh_token',data.refresh_token);
-      msg.textContent=mode==='signup'&&!data.access_token?'Check your email to confirm your account.':'Signed in successfully. You can now open Nexus Plus or Geeta Nexus.';
+      try {
+        const endpoint=mode==='signup'?url+'/auth/v1/signup':url+'/auth/v1/token?grant_type=password';
+        const response=await fetch(endpoint,{method:'POST',headers:{apikey:key,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+        const data=await response.json().catch(()=>({}));
+        if(!response.ok){msg.textContent=data.error_description||data.msg||'Authentication request failed.';return;}
+        if(data.access_token)localStorage.setItem('nexus_access_token',data.access_token);
+        if(data.refresh_token)localStorage.setItem('nexus_refresh_token',data.refresh_token);
+        msg.textContent=mode==='signup'&&!data.access_token?'Check your email to confirm your account.':'Signed in successfully. You can now open Nexus Plus or Geeta Nexus.';
+      } catch { msg.textContent='Could not connect to Supabase. Please try again.'; }
     }
     form?.addEventListener('submit',e=>{e.preventDefault();void auth('signin')});
     document.getElementById('sign-up')?.addEventListener('click',()=>void auth('signup'));
