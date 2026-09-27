@@ -1,14 +1,23 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
-import { getFirebaseAuth, onAuthStateChanged, signOut, isFirebaseConfigured } from "@/lib/firebase";
+import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
+import {
+  getSessionUser,
+  isSupabaseConfigured,
+  signInWithPassword,
+  signUpWithPassword,
+  signOutFromSupabase,
+  type SupabaseUser,
+  type AuthResult,
+} from "@/lib/supabase";
 
 export interface AuthUser {
-  id: number;
+  id: string;
   email: string;
   name: string | null;
   picture: string | null;
   isAdmin: boolean;
   username: string | null;
   firebaseUid: string | null;
+  supabaseUser: SupabaseUser;
 }
 
 interface AuthContextValue {
@@ -16,103 +25,85 @@ interface AuthContextValue {
   token: string | null;
   isLoading: boolean;
   firebaseConfigured: boolean;
-  login: (token: string, user: AuthUser) => void;
-  logout: () => void;
+  supabaseConfigured: boolean;
+  login: (email: string, password: string) => Promise<AuthResult>;
+  register: (email: string, password: string) => Promise<AuthResult>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const TOKEN_KEY = "nwt_auth_token";
-const USER_KEY = "nwt_auth_user";
-
-const BASE = (import.meta.env.VITE_BASE_URL as string | undefined)?.replace(/\/$/, "") ?? "";
+function mapUser(user: SupabaseUser): AuthUser {
+  const metadata = user.user_metadata ?? {};
+  const appMetadata = user.app_metadata ?? {};
+  return {
+    id: user.id,
+    email: user.email ?? "",
+    name: typeof metadata.full_name === "string" ? metadata.full_name : typeof metadata.name === "string" ? metadata.name : null,
+    picture: typeof metadata.avatar_url === "string" ? metadata.avatar_url : null,
+    username: typeof metadata.username === "string" ? metadata.username : null,
+    firebaseUid: null,
+    isAdmin: appMetadata.is_admin === true || appMetadata.role === "admin",
+    supabaseUser: user,
+  };
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
-  const [user, setUser] = useState<AuthUser | null>(() => {
-    try {
-      const stored = localStorage.getItem(USER_KEY);
-      return stored ? (JSON.parse(stored) as AuthUser) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const firebaseConfigured = isFirebaseConfigured;
 
-  const login = useCallback((newToken: string, newUser: AuthUser) => {
-    localStorage.setItem(TOKEN_KEY, newToken);
-    localStorage.setItem(USER_KEY, JSON.stringify(newUser));
-    setToken(newToken);
-    setUser(newUser);
+  const syncSession = useCallback(async () => {
+    if (!isSupabaseConfigured) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const session = await getSessionUser();
+      setToken(session.accessToken);
+      setUser(session.user ? mapUser(session.user) : null);
+    } catch {
+      setToken(null);
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void syncSession();
+    const timer = window.setInterval(() => void syncSession(), 10 * 60 * 1000);
+    return () => window.clearInterval(timer);
+  }, [syncSession]);
+
+  const login = useCallback(async (email: string, password: string) => {
+    const result = await signInWithPassword(email, password);
+    setToken(result.accessToken);
+    setUser(mapUser(result.user));
+    return result;
+  }, []);
+
+  const register = useCallback(async (email: string, password: string) => {
+    const result = await signUpWithPassword(email, password);
+    setToken(result.accessToken);
+    setUser(result.accessToken ? mapUser(result.user) : null);
+    return result;
   }, []);
 
   const logout = useCallback(async () => {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    await signOutFromSupabase();
     setToken(null);
     setUser(null);
-    if (isFirebaseConfigured) {
-      try {
-        await signOut(getFirebaseAuth());
-      } catch {
-        // ignore Firebase sign-out errors
-      }
-    }
-  }, []);
-
-  // Verify stored backend token on mount and sync Firebase auth state.
-  useEffect(() => {
-    let unsubscribe: (() => void) | null = null;
-
-    const verifyToken = async () => {
-      const storedToken = localStorage.getItem(TOKEN_KEY);
-      if (!storedToken) {
-        setIsLoading(false);
-        return;
-      }
-      try {
-        const res = await fetch(`${BASE}/api/auth/me`, {
-          headers: { Authorization: `Bearer ${storedToken}` },
-        });
-        if (res.ok) {
-          const u = (await res.json()) as AuthUser;
-          setUser(u);
-          localStorage.setItem(USER_KEY, JSON.stringify(u));
-        } else {
-          throw new Error("token invalid");
-        }
-      } catch {
-        localStorage.removeItem(TOKEN_KEY);
-        localStorage.removeItem(USER_KEY);
-        setToken(null);
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    verifyToken();
-
-    if (isFirebaseConfigured) {
-      unsubscribe = onAuthStateChanged(getFirebaseAuth(), (fbUser) => {
-        if (!fbUser) {
-          // Firebase signed out; clear local session if we still had one.
-          localStorage.removeItem(TOKEN_KEY);
-          localStorage.removeItem(USER_KEY);
-          setToken(null);
-          setUser(null);
-        }
-      });
-    }
-
-    return () => {
-      unsubscribe?.();
-    };
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, firebaseConfigured, login, logout }}>
+    <AuthContext.Provider value={{
+      user, token, isLoading,
+      firebaseConfigured: false,
+      supabaseConfigured: isSupabaseConfigured,
+      login, register, logout,
+    }}>
       {children}
     </AuthContext.Provider>
   );
