@@ -45,7 +45,7 @@ export default function Home() {
         <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-4">
-              <p className="mb-3 text-sm font-medium text-muted-foreground">What Nexus Wave is about</p>
+              <p className="mb-3 text-sm font-medium text-muted-foreground">What Nexus Web Technology is about</p>
               <h2 className="mb-5 text-3xl font-bold tracking-tight">Useful first, simple to understand.</h2>
               <p className="leading-relaxed text-muted-foreground">
                 Nexus Web Technology is the developer identity used for software products and online services created by Kuldeep. The focus is practical software that works for people with different needs and abilities.
@@ -85,7 +85,7 @@ export default function Home() {
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Nexus Plus & Geeta Nexus</h2>
             </div>
             <Button asChild variant="outline" className="rounded-sm">
-              <Link href="/about">About Nexus Wave</Link>
+              <Link href="/about">About Nexus Web Technology</Link>
             </Button>
           </div>
 
