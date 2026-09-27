@@ -3,13 +3,13 @@ import Layout from "../layouts/Layout.astro";
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
-<Layout title="Community — Nexus Wave Technologies" description="One unified Nexus community feed for official and approved member posts.">
+<Layout title="Forum — Nexus Wave Technologies" description="Category-based Nexus forum for approved community discussions.">
   <section class="section community-shell">
     <div class="container">
       <div class="community-appbar">
         <div>
           <p class="eyebrow">Nexus Community</p>
-          <h1 class="community-title">Community</h1>
+          <h1 class="community-title">Forum</h1>
           <p class="muted">One feed for Nexus updates and approved member posts.</p>
         </div>
         <div class="community-actions">
@@ -108,27 +108,53 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
     }catch{}
   }
 
-  async function loadPosts(){
-    if(!supabaseUrl||!supabaseKey){
-      grid.innerHTML='<div class="card"><h3>Community is not configured</h3><p class="muted">Supabase public configuration is missing.</p></div>';return;
-    }
+  let selectedCategory="";
+  const categoryList=document.getElementById("category-list");
+  const selectedTitle=document.getElementById("selected-category-title");
+  const audienceFilter=document.getElementById("audience-filter");
+
+  async function loadForumCategories(){
     try{
-      const r=await fetch(supabaseUrl+"/rest/v1/posts?select=title,content,published_at,author_display_name,post_type,status&status=eq.published&order=published_at.desc",{headers:apiHeaders()});
+      const r=await fetch(supabaseUrl+"/rest/v1/forum_categories?select=id,name,description&active=eq.true&order=name",{headers:apiHeaders()});
       const data=await r.json().catch(()=>[]);
       if(!r.ok||!Array.isArray(data)) throw 0;
-      grid.innerHTML=data.length?data.map((p,i)=>{
-        const type=(p.post_type||"community").toLowerCase();
-        const label=type==="official" ? "Official team post" : "Community post";
-        const author=p.author_display_name || (type==="official" ? "Nexus Team" : "Verified member");
-        return '<article class="card"><p class="eyebrow">'+esc(label)+'</p><h3>'+esc(p.title||"Nexus update")+'</h3><p class="muted">'+esc(p.content||"")+'</p><p class="gita-ref">'+esc(author)+'</p><button class="button" type="button" data-listen="'+i+'">Listen</button></article>';
-      }).join(""):'<div class="card"><h3>No posts yet.</h3><p class="muted">Published Nexus updates and approved member posts will appear here.</p></div>';
-      data.forEach((p,i)=>document.querySelector('[data-listen="'+i+'"]')?.addEventListener("click",()=>speak((p.title||"Nexus update")+". "+(p.content||""))));
+      categoryList.innerHTML=data.map(c=>'<button class="forum-category-card" type="button" data-category="'+esc(c.id)+'"><strong>'+esc(c.name)+'</strong><span>'+esc(c.description||"")+'</span></button>').join("");
+      data.forEach(c=>document.querySelector('[data-category="'+c.id+'"]')?.addEventListener("click",()=>selectForumCategory(c)));
+      if(data[0]) await selectForumCategory(data[0]);
     }catch{
-      grid.innerHTML='<div class="card"><h3>Community posts are temporarily unavailable.</h3><p class="muted">Please try again later.</p></div>';
+      categoryList.innerHTML='<div class="card"><h3>Forum categories are temporarily unavailable.</h3><p class="muted">Please try again later.</p></div>';
     }
   }
 
-  addPostButton.addEventListener("click",()=>{
+  async function selectForumCategory(category){
+    selectedCategory=category.id;
+    selectedTitle.textContent=category.name;
+    document.querySelectorAll(".forum-category-card").forEach(el=>el.classList.toggle("selected",el.dataset.category===selectedCategory));
+    await loadForumPosts();
+  }
+
+  async function loadForumPosts(){
+    if(!selectedCategory) return;
+    try{
+      let url=supabaseUrl+"/rest/v1/forum_posts?select=id,title,content,created_at,post_source,audience&status=eq.approved&category_id=eq."+encodeURIComponent(selectedCategory)+"&order=created_at.desc";
+      const audience=audienceFilter?.value||"all";
+      if(audience!=="all") url+="&audience=in.(all,"+audience+")";
+      const r=await fetch(url,{headers:apiHeaders()});
+      const data=await r.json().catch(()=>[]);
+      if(!r.ok||!Array.isArray(data)) throw 0;
+      grid.innerHTML=data.length?data.map((p,i)=>{
+        const source=p.post_source==="official"?"Official":"Member";
+        const who=p.audience==="female"?"Women":p.audience==="male"?"Men":"Everyone";
+        return '<article class="card"><p class="eyebrow">'+esc(source)+' · '+esc(who)+'</p><h3>'+esc(p.title||"Forum discussion")+'</h3><p class="muted">'+esc(p.content||"")+'</p><button class="button" type="button" data-forum-listen="'+i+'">Listen</button></article>';
+      }).join(""):'<div class="card"><h3>No approved discussions yet.</h3><p class="muted">Approved posts in this category will appear here.</p></div>';
+      data.forEach((p,i)=>document.querySelector('[data-forum-listen="'+i+'"]')?.addEventListener("click",()=>speak((p.title||"Forum discussion")+". "+(p.content||""))));
+    }catch{
+      grid.innerHTML='<div class="card"><h3>Forum discussions are temporarily unavailable.</h3><p class="muted">Please try again later.</p></div>';
+    }
+  }
+
+  audienceFilter?.addEventListener("change",()=>void loadForumPosts());
+    addPostButton.addEventListener("click",()=>{
     if(addPostButton.disabled) return;
     postPanel.hidden=false;
     document.getElementById("user-title")?.focus();
