@@ -1,42 +1,44 @@
 ---
 import Layout from "../layouts/Layout.astro";
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
-<Layout title="Admin — Nexus Wave Technologies" description="Nexus Wave Technologies administration workspace.">
-  <section class="section">
-    <div class="container">
-      <div class="page-title-row">
-        <div><p class="eyebrow">Workspace</p><h1 class="page-title">Admin</h1><p class="lead">A Supabase-connected administrative shell that keeps privileged operations in browser-safe boundaries.</p></div>
-        <a class="button" href="/dashboard">Back to dashboard</a>
-      </div>
+<Layout title="Admin — Nexus Wave Technologies" description="Restricted administration and verification controls.">
+  <section class="section"><div class="container">
+    <div class="page-title-row"><div><p class="eyebrow">Restricted workspace</p><h1 class="page-title">Admin Control Center</h1><p class="lead">Verification, moderation, team authorization and community safety controls.</p></div><a class="button" href="/dashboard">Dashboard</a></div>
+    <div id="admin-gate" class="card"><p class="muted">Checking administrator access…</p></div>
+    <div id="admin-console" hidden>
       <div class="admin-grid">
-        <article class="card"><p class="eyebrow">Authentication</p><h3 id="admin-user">Checking session…</h3><p class="muted" id="admin-auth">Reading the current Supabase session.</p></article>
-        <article class="card"><p class="eyebrow">Data</p><h3>Supabase-first</h3><p class="muted">Public website reads should use browser-safe tables, views, storage and edge functions instead of legacy API-server calls.</p></article>
-        <article class="card"><p class="eyebrow">Deployment</p><h3>Astro static</h3><p class="muted">This frontend contains no Express, Firebase Admin or server-process requirement.</p></article>
+        <article class="card"><p class="eyebrow">Verification</p><h3>Pending reviews</h3><p class="muted">Approve or reject account verification requests.</p><button class="button primary" type="button" data-action="verification">Open queue</button></article>
+        <article class="card"><p class="eyebrow">Moderation</p><h3>Community safety</h3><p class="muted">Review reports, hateful content and user submissions before publication.</p><button class="button" type="button" data-action="moderation">Open moderation</button></article>
+        <article class="card"><p class="eyebrow">Team</p><h3>Authorized publishers</h3><p class="muted">Only approved team roles can publish official blog posts or other official content.</p><button class="button" type="button" data-action="team">Manage team</button></article>
       </div>
-      <div class="section-card">
-        <div class="section-head"><div><p class="eyebrow">Safety</p><h2>Administration boundary</h2></div></div>
-        <div class="note">Privileged mutations should be exposed through Supabase Row Level Security and Edge Functions. Never place a Supabase service-role key or other secret in browser-exposed Astro variables.</div>
-      </div>
+      <section class="section-card" style="margin-top:1rem">
+        <p class="eyebrow">Role model</p><h2>How to define an admin</h2>
+        <p class="muted">Create a server-controlled profile role such as <code>admin</code> and protect every privileged query and mutation with RLS or an Edge Function. Do not rely on a client-side flag, hidden menu or email address check alone.</p>
+        <pre class="code-block"><code>profiles.role = 'admin'
+profiles.verification_status = 'verified'
+team_members.role IN ('team_editor','moderator','admin')</code></pre>
+        <p class="note">The initial super-admin should be inserted through a one-time server-side SQL/admin migration or Supabase dashboard using an audited account. Never expose the service-role key in the website.</p>
+      </section>
+      <section class="section-card" style="margin-top:1rem">
+        <p class="eyebrow">Verification</p><h2>Privacy-preserving account verification</h2>
+        <p class="muted">Use verified account identity, age/safety requirements and moderator review where needed. Do not attempt to infer a person’s gender from a face, voice or other biometric signal. For gender-specific communities, grant access according to the platform's declared membership category plus a documented review process, minimizing retained evidence.</p>
+      </section>
     </div>
-  </section>
+  </div></section>
 </Layout>
-<script>
-  const init = async () => {
-    const user = document.querySelector("#admin-user");
-    const auth = document.querySelector("#admin-auth");
-    try {
-      const { requireSupabase } = await import("../lib/supabase.js");
-      const { data } = await requireSupabase().auth.getUser();
-      if (!data.user) {
-        user.textContent = "Signed out";
-        auth.textContent = "Sign in before using administrative screens.";
-        return;
-      }
-      user.textContent = data.user.user_metadata?.full_name || data.user.email || "Authenticated user";
-      auth.textContent = "Authenticated through Supabase Auth.";
-    } catch (error) {
-      auth.textContent = error instanceof Error ? error.message : "Unable to connect to Supabase.";
-    }
-  };
-  init();
+<script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
+  const gate=document.getElementById("admin-gate"), consolePanel=document.getElementById("admin-console");
+  async function check(){
+    if(!supabaseUrl||!supabaseKey){gate.innerHTML='<p class="note">Supabase is not configured.</p>';return}
+    try{
+      const r=await fetch(supabaseUrl+"/rest/v1/profiles?select=id,role,verification_status&limit=1",{headers:{apikey:supabaseKey,Authorization:"Bearer "+supabaseKey}});
+      if(!r.ok) throw 0;
+      const rows=await r.json(); const profile=rows[0];
+      if(profile?.role!=="admin"){gate.innerHTML='<h2>Access restricted</h2><p class="muted">This workspace is available only to administrators.</p>';return}
+      gate.innerHTML='<h2>Administrator access confirmed</h2><p class="muted">Privileged console unlocked.</p>';consolePanel.hidden=false;
+    }catch{gate.innerHTML='<p class="note">Administrator verification is not connected yet. Keep privileged access server-enforced in Supabase.</p>'}
+  }
+  check();
 </script>
