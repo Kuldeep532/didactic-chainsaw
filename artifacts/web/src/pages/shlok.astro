@@ -1,0 +1,138 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="श्लोक — Geeta Nexus" description="भगवद्गीता के श्लोक संस्कृत, हिंदी अर्थ और सुनने की सुविधा के साथ पढ़ें।">
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Geeta Nexus</p>
+      <h1>श्लोक पढ़ें और सुनें।</h1>
+      <p class="lead">भगवद्गीता के श्लोक अध्याय के अनुसार खोजें, संस्कृत पाठ पढ़ें, हिंदी अर्थ देखें और सुनने की सुविधा का उपयोग करें।</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="reader-toolbar">
+        <label>
+          अध्याय
+          <select id="chapter-select" aria-label="भगवद्गीता अध्याय">
+            <option value="all">सभी अध्याय</option>
+          </select>
+        </label>
+        <label class="search-field">
+          खोजें
+          <input id="shlok-search" type="search" placeholder="श्लोक, अर्थ या transliteration खोजें" autocomplete="off" />
+        </label>
+      </div>
+      <p id="reader-status" class="note" aria-live="polite">श्लोक लोड हो रहे हैं…</p>
+      <div id="shlok-list" class="gita-list" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <script is:inline>
+    const fallbackVerses = [
+      {chapter_number:2,verse_number:47,text:"कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।",transliteration:"karmaṇyev ādhikāras te mā phaleṣu kadācana",translation:"कर्म करने में ही तुम्हारा अधिकार है, उसके फल पर कभी नहीं।"},
+      {chapter_number:2,verse_number:48,text:"योगस्थः कुरु कर्माणि सङ्गं त्यक्त्वा धनञ्जय।",transliteration:"yogasthaḥ kuru karmāṇi saṅgaṁ tyaktvā dhanañjaya",translation:"हे धनंजय, आसक्ति छोड़कर समत्व-बुद्धि से कर्म करो।"},
+      {chapter_number:4,verse_number:7,text:"यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।",transliteration:"yadā yadā hi dharmasya glānir bhavati bhārata",translation:"हे भारत, जब-जब धर्म की हानि और अधर्म की वृद्धि होती है।"},
+      {chapter_number:4,verse_number:8,text:"परित्राणाय साधूनां विनाशाय च दुष्कृताम्।",transliteration:"paritrāṇāya sādhūnāṁ vināśāya ca duṣkṛtām",translation:"सज्जनों की रक्षा और दुष्कर्मियों के विनाश के लिए।"},
+      {chapter_number:18,verse_number:66,text:"सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज।",transliteration:"sarva-dharmān parityajya mām ekaṁ śaraṇaṁ vraja",translation:"सभी प्रकार के आश्रयों को छोड़कर केवल मेरी शरण में आओ।"}
+    ];
+    const allVerses = [];
+    const state = { verses: [], filtered: [], chapter: "all", query: "" };
+
+    const list = document.getElementById("shlok-list");
+    const status = document.getElementById("reader-status");
+    const chapterSelect = document.getElementById("chapter-select");
+    const search = document.getElementById("shlok-search");
+
+    const speak = (verse) => {
+      const text = `भगवद्गीता अध्याय ${verse.chapter_number}, श्लोक ${verse.verse_number}. ${verse.text} ${verse.translation || ""}`;
+      if (window.NexusSpeak) window.NexusSpeak(text);
+    };
+
+    const normalizeVerse = (verse, chapterNumber) => ({
+      chapter_number: Number(verse.chapter_number ?? chapterNumber),
+      verse_number: Number(verse.verse_number ?? verse.verse ?? verse.id ?? 0),
+      text: verse.text ?? verse.slok ?? verse.sanskrit ?? "",
+      transliteration: verse.transliteration ?? "",
+      translation: verse.translation ?? verse.hindi_translation ?? verse.meaning ?? ""
+    });
+
+    function render() {
+      const query = state.query.trim().toLowerCase();
+      state.filtered = state.verses.filter(v => {
+        const chapterMatch = state.chapter === "all" || String(v.chapter_number) === state.chapter;
+        const haystack = [v.text, v.transliteration, v.translation, v.chapter_number + "." + v.verse_number].join(" ").toLowerCase();
+        return chapterMatch && (!query || haystack.includes(query));
+      });
+      if (!state.filtered.length) {
+        list.innerHTML = '<div class="card"><h2>कोई श्लोक नहीं मिला</h2><p class="muted">अध्याय या खोज बदलकर फिर प्रयास करें।</p></div>';
+      } else {
+        list.innerHTML = state.filtered.slice(0, 80).map(v => `
+          <article class="card gita-card">
+            <p class="gita-ref">भगवद्गीता ${v.chapter_number}.${v.verse_number}</p>
+            <h2 class="gita-sanskrit" lang="sa">${escapeHtml(v.text)}</h2>
+            ${v.transliteration ? `<p class="gita-translit" lang="en">${escapeHtml(v.transliteration)}</p>` : ""}
+            ${v.translation ? `<h3 class="translation-heading">हिंदी अर्थ</h3><p class="gita-meaning" lang="hi">${escapeHtml(v.translation)}</p>` : ""}
+            <div class="actions">
+              <button class="button primary speak-verse" type="button" data-chapter="${v.chapter_number}" data-verse="${v.verse_number}">सुनें</button>
+              <button class="button copy-verse" type="button" data-chapter="${v.chapter_number}" data-verse="${v.verse_number}">कॉपी करें</button>
+            </div>
+          </article>
+        `).join("");
+        document.querySelectorAll(".speak-verse").forEach(button => button.addEventListener("click", () => {
+          const v = state.verses.find(item => item.chapter_number === Number(button.dataset.chapter) && item.verse_number === Number(button.dataset.verse));
+          if (v) speak(v);
+        }));
+        document.querySelectorAll(".copy-verse").forEach(button => button.addEventListener("click", async () => {
+          const v = state.verses.find(item => item.chapter_number === Number(button.dataset.chapter) && item.verse_number === Number(button.dataset.verse));
+          if (!v) return;
+          try {
+            await navigator.clipboard.writeText(`भगवद्गीता ${v.chapter_number}.${v.verse_number}
+${v.text}
+${v.translation || ""}`.trim());
+            status.textContent = "श्लोक कॉपी हो गया।";
+          } catch {
+            status.textContent = "कॉपी नहीं हो सका।";
+          }
+        }));
+      }
+      status.textContent = `${state.filtered.length} श्लोक उपलब्ध हैं।`;
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+    }
+
+    function populateChapters() {
+      const chapters = [...new Set(state.verses.map(v => v.chapter_number))].sort((a,b) => a-b);
+      chapterSelect.innerHTML = '<option value="all">सभी अध्याय</option>' + chapters.map(n => `<option value="${n}">अध्याय ${n}</option>`).join("");
+    }
+
+    async function loadVerses() {
+      const urls = Array.from({length:18}, (_, i) => `https://raw.githubusercontent.com/gita/gita/master/data/json/chapter_${i+1}.json`);
+      try {
+        const responses = await Promise.all(urls.map(url => fetch(url)));
+        if (responses.some(r => !r.ok)) throw new Error("Remote Gita source unavailable");
+        const payloads = await Promise.all(responses.map(r => r.json()));
+        const remote = payloads.flatMap((payload, index) => {
+          const verses = Array.isArray(payload) ? payload : (payload.verses || payload.data || []);
+          return verses.map(v => normalizeVerse(v, index + 1));
+        }).filter(v => v.text);
+        if (!remote.length) throw new Error("No verses returned");
+        state.verses = remote;
+        status.textContent = `${remote.length} श्लोक लोड हो गए।`;
+      } catch {
+        state.verses = fallbackVerses;
+        status.textContent = "पूरा श्लोक संग्रह अभी उपलब्ध नहीं था, इसलिए वेबसाइट ने सुरक्षित छोटे संग्रह को दिखाया है।";
+      }
+      populateChapters();
+      render();
+    }
+
+    chapterSelect.addEventListener("change", () => { state.chapter = chapterSelect.value; render(); });
+    search.addEventListener("input", () => { state.query = search.value; render(); });
+    loadVerses();
+  </script>
+</Layout>
