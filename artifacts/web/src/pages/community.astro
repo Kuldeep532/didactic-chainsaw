@@ -170,7 +170,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
     try{
       const user=await getCurrentUser();
       if(!user?.id) throw 0;
-      const r=await fetch(supabaseUrl+"/rest/v1/posts",{
+      const r=await fetch(supabaseUrl+"/rest/v1/forum_posts",{
         method:"POST",
         headers:{...jsonHeaders(),"Prefer":"return=minimal"},
         body:JSON.stringify({
