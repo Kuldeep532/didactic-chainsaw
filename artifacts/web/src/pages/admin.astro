@@ -1,0 +1,42 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title="Admin — Nexus Wave Technologies" description="Nexus Wave Technologies administration workspace.">
+  <section class="section">
+    <div class="container">
+      <div class="page-title-row">
+        <div><p class="eyebrow">Workspace</p><h1 class="page-title">Admin</h1><p class="lead">A Supabase-connected administrative shell that keeps privileged operations in browser-safe boundaries.</p></div>
+        <a class="button" href="/dashboard">Back to dashboard</a>
+      </div>
+      <div class="admin-grid">
+        <article class="card"><p class="eyebrow">Authentication</p><h3 id="admin-user">Checking session…</h3><p class="muted" id="admin-auth">Reading the current Supabase session.</p></article>
+        <article class="card"><p class="eyebrow">Data</p><h3>Supabase-first</h3><p class="muted">Public website reads should use browser-safe tables, views, storage and edge functions instead of legacy API-server calls.</p></article>
+        <article class="card"><p class="eyebrow">Deployment</p><h3>Astro static</h3><p class="muted">This frontend contains no Express, Firebase Admin or server-process requirement.</p></article>
+      </div>
+      <div class="section-card">
+        <div class="section-head"><div><p class="eyebrow">Safety</p><h2>Administration boundary</h2></div></div>
+        <div class="note">Privileged mutations should be exposed through Supabase Row Level Security and Edge Functions. Never place a Supabase service-role key or other secret in browser-exposed Astro variables.</div>
+      </div>
+    </div>
+  </section>
+</Layout>
+<script>
+  const init = async () => {
+    const user = document.querySelector("#admin-user");
+    const auth = document.querySelector("#admin-auth");
+    try {
+      const { requireSupabase } = await import("../lib/supabase.js");
+      const { data } = await requireSupabase().auth.getUser();
+      if (!data.user) {
+        user.textContent = "Signed out";
+        auth.textContent = "Sign in before using administrative screens.";
+        return;
+      }
+      user.textContent = data.user.user_metadata?.full_name || data.user.email || "Authenticated user";
+      auth.textContent = "Authenticated through Supabase Auth.";
+    } catch (error) {
+      auth.textContent = error instanceof Error ? error.message : "Unable to connect to Supabase.";
+    }
+  };
+  init();
+</script>
