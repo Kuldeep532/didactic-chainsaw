@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title="User Profile — Nexus Community" description="Community user profile, posts and friendship controls.">
+  <section class="hero"><div class="container hero-shell">
+    <div><p class="eyebrow">Community profile</p><h1 id="profile-name">User profile</h1><p id="profile-bio" class="lead">Loading profile…</p>
+      <div class="actions"><button id="add-friend" class="button primary" type="button">Add as a friend</button><a class="button" href="/chats">Message</a><a class="button" href="/community">Back to community</a></div>
+      <p id="profile-status" class="note" aria-live="polite"></p>
+    </div>
+    <div class="hero-panel"><p class="eyebrow">Profile</p><p class="muted">Posts, friends and chat history are shown as separate sections so users can control what they share and where they interact.</p></div>
+  </div></section>
+  <section class="section"><div class="container grid-3">
+    <article class="card"><p class="eyebrow">Posts</p><h2 id="post-count">0</h2><p class="muted">Published contributions</p><a class="button" href="#posts">View posts</a></article>
+    <article class="card"><p class="eyebrow">Friends</p><h2 id="friend-count">0</h2><p class="muted">Accepted connections</p><a class="button" href="/friends">My Friends</a></article>
+    <article class="card"><p class="eyebrow">Chats</p><h2 id="chat-count">0</h2><p class="muted">Previous conversations</p><a class="button" href="/chats">My Chats</a></article>
+  </div></section>
+  <section class="section surface-soft" id="posts"><div class="container"><div class="section-head"><div><p class="eyebrow">Posts</p><h2>This user's posts</h2></div></div><div id="profile-posts" class="grid-3"><div class="note">Posts will appear here.</div></div></div></section>
+</Layout>
+<script is:inline>
+  const params=new URLSearchParams(location.search), userId=params.get("id"),name=params.get("name");
+  document.getElementById("profile-name").textContent=name||"Community user";
+  document.getElementById("profile-bio").textContent="Public profile. Personal details are limited to what the user chooses to share.";
+  if(!userId){document.getElementById("profile-status").textContent="Open a user profile from the community to see their published posts.";}
+  document.getElementById("add-friend")?.addEventListener("click",()=>{document.getElementById("profile-status").textContent="Friend request is ready for the authenticated Supabase friends relation."});
+</script>
