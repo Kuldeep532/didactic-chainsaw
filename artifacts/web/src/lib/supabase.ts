@@ -141,7 +141,10 @@ async function refreshAccessToken(): Promise<string | null> {
 }
 
 export async function getSessionUser(): Promise<{ user: SupabaseUser | null; accessToken: string | null }> {
-  assertConfigured();
+  if (!isSupabaseConfigured) {
+    clearTokens();
+    return { user: null, accessToken: null };
+  }
 
   let accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
   if (!accessToken) return { user: null, accessToken: null };
