@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm --filter @workspace/web run build",
+  "buildCommand": "cd artifacts/web && pnpm exec vite build --config vite.config.ts",
   "outputDirectory": "artifacts/web/dist/public",
   "cleanUrls": true,
   "rewrites": [
