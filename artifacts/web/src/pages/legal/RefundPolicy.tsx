@@ -2,14 +2,14 @@ export default function RefundPolicy() {
   return (
     <div className="container mx-auto max-w-screen-md px-4 py-20 md:px-8">
       <div className="mb-12 border-b border-border pb-8">
-        <p className="mb-3 text-sm font-medium text-muted-foreground">Nexus Wave Technologies</p>
+        <p className="mb-3 text-sm font-medium text-muted-foreground">Nexus Web Technology</p>
         <h1 className="mb-4 text-4xl font-bold tracking-tight">Refund Policy</h1>
         <p className="text-sm text-muted-foreground">Last updated: September 27, 2026</p>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground">
         <p className="text-lg leading-relaxed text-foreground">
-          This Refund Policy explains how refunds, failed payments and cancellations are handled for paid Nexus Wave services, including Nexus Plus memberships and AI credit top-ups where offered.
+          This Refund Policy explains how refunds, failed payments and cancellations are handled for paid Nexus Web Technology services, including Nexus Plus memberships and AI credit top-ups where offered.
         </p>
 
         <h2 className="mt-10 text-xl font-semibold text-foreground">1. When a refund may be available</h2>
