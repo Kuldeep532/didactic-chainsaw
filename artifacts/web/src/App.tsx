@@ -14,8 +14,7 @@ import About from "./pages/About";
 import Apps from "./pages/Apps";
 import Account from "./pages/Account";
 import Contact from "./pages/Contact";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
+import Community from "./pages/Community";
 import Login from "./pages/Login";
 import Utilities from "./pages/Utilities";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
@@ -23,6 +22,8 @@ import Terms from "./pages/legal/Terms";
 import RefundPolicy from "./pages/legal/RefundPolicy";
 import Disclaimer from "./pages/legal/Disclaimer";
 import Accessibility from "./pages/legal/Accessibility";
+import JoinTeam from "./pages/JoinTeam";
+import TeamAdmin from "./pages/TeamAdmin";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -67,8 +68,9 @@ function FocusRouter() {
         <Route path="/apps" component={Apps} />
         <Route path="/utilities" component={Utilities} />
         <Route path="/contact" component={Contact} />
-        <Route path="/blog" component={Blog} />
-        <Route path="/blog/:slug" component={BlogPost} />
+        <Route path="/community" component={Community} />
+        <Route path="/join-team" component={JoinTeam} />
+        <Route path="/team-admin" component={TeamAdmin} />
         <Route path="/login" component={Login} />
         <Route path="/legal/privacy" component={PrivacyPolicy} />
         <Route path="/legal/terms" component={Terms} />
