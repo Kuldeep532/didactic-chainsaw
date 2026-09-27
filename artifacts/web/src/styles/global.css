@@ -140,3 +140,11 @@ textarea { min-height: 140px; resize: vertical; }
 .section-card { padding: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
 .admin-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; }
 @media (max-width: 700px) { .reader-toolbar { grid-template-columns: 1fr; } .page-title-row { display: block; } .admin-grid { grid-template-columns: 1fr; } }
+
+.feature-list { margin: 1rem 0 1.2rem; padding-left: 1.2rem; color: var(--muted-foreground); line-height: 1.8; }
+.feature-list li + li { margin-top: .35rem; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+.data-table { width: 100%; min-width: 760px; border-collapse: collapse; }
+.data-table th, .data-table td { padding: .9rem 1rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; line-height: 1.55; }
+.data-table th { color: var(--foreground); background: var(--surface-soft); font-weight: 800; }
+.data-table tbody tr:last-child th, .data-table tbody tr:last-child td { border-bottom: 0; }
