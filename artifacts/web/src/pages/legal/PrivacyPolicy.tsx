@@ -1,47 +1,83 @@
 export default function PrivacyPolicy() {
   return (
-    <div className="container mx-auto px-4 md:px-8 max-w-screen-md py-24">
+    <div className="container mx-auto max-w-screen-md px-4 py-20 md:px-8">
       <div className="mb-12 border-b border-border pb-8">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">Privacy Policy</h1>
-        <p className="text-muted-foreground font-mono text-sm uppercase tracking-wider">
-          Effective Date: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-        </p>
+        <p className="mb-3 text-sm font-medium text-muted-foreground">Nexus Wave Technologies</p>
+        <h1 className="mb-4 text-4xl font-bold tracking-tight">Privacy Policy</h1>
+        <p className="text-sm text-muted-foreground">Last updated: September 27, 2026</p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="text-lg leading-relaxed text-muted-foreground mb-8">
-          Nexus Wave Technologies ("we," "our," or "us") respects your privacy and is committed to protecting your personal data. This policy details our processing mechanisms when you interact with our software and infrastructure.
+      <div className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground">
+        <p className="text-lg leading-relaxed text-foreground">
+          This Privacy Policy explains how Nexus Wave uses information when you visit this website, create a Nexus account, contact us, or use connected products such as Nexus Plus and Geeta Nexus.
+        </p>
+        <p>
+          “Nexus Wave Technologies” and “Nexus Wave” are names used for software products and online services developed by Kuldeep. They are used as a developer identity and product name.
         </p>
 
-        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">1. Data Collection</h2>
-        <p className="text-muted-foreground">We restrict data collection to the absolute minimum required for operational functionality:</p>
-        <ul className="list-disc pl-6 space-y-2 mt-4 text-muted-foreground">
-          <li><strong>Identity Data:</strong> Basic identifiers such as name and username.</li>
-          <li><strong>Contact Data:</strong> Communication vectors like email addresses.</li>
-          <li><strong>Technical Data:</strong> Anonymized metrics including IP addresses, browser specifications, and platform details.</li>
+        <h2 className="mt-10 text-xl font-semibold text-foreground">1. Information we may collect</h2>
+        <ul className="list-disc space-y-2 pl-6">
+          <li><strong>Account information:</strong> email address and, where provided, profile details such as a display name or avatar.</li>
+          <li><strong>Service information:</strong> subscription status, product access, credits, transaction references and support details needed to provide paid services.</li>
+          <li><strong>Messages:</strong> information you send through contact or support forms so we can respond to you.</li>
+          <li><strong>Technical information:</strong> limited information needed for security, reliability and troubleshooting, such as device or browser information and network data.</li>
         </ul>
 
-        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">2. Processing Rationale</h2>
-        <p className="text-muted-foreground">Processing occurs exclusively under the following jurisdictions:</p>
-        <ul className="list-disc pl-6 space-y-2 mt-4 text-muted-foreground">
-          <li>Contractual necessity for service delivery.</li>
-          <li>Legitimate operational interests that do not infringe upon fundamental rights.</li>
-          <li>Compliance with statutory legal obligations.</li>
+        <h2 className="mt-10 text-xl font-semibold text-foreground">2. Authentication</h2>
+        <p>
+          Website account registration and sign-in are handled through Supabase Auth. Your password is processed by the authentication service and is not stored in this website's application code. Supabase Auth uses sessions and access tokens to keep you signed in.
+        </p>
+
+        <h2 className="mt-10 text-xl font-semibold text-foreground">3. How we use information</h2>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>Create and maintain your account.</li>
+          <li>Provide Nexus Plus, Geeta Nexus and website features.</li>
+          <li>Deliver paid memberships or credits and verify related transactions.</li>
+          <li>Respond to questions, support requests and refund requests.</li>
+          <li>Protect accounts, prevent fraud or misuse, and maintain service security.</li>
+          <li>Meet legal or regulatory requirements when applicable.</li>
         </ul>
 
-        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">3. System Permissions</h2>
-        <p className="text-muted-foreground">Our client applications request hardware access strictly for local operations. We do not exfiltrate this data:</p>
-        <ul className="list-disc pl-6 space-y-2 mt-4 text-muted-foreground">
-          <li><strong>Location Access:</strong> Exclusively for the Emergency Guardian feature to dispatch local safety alerts. Processed on-device.</li>
-          <li><strong>Storage Access:</strong> Required to serialize offline data, downloaded materials, and user-generated configurations.</li>
-        </ul>
+        <h2 className="mt-10 text-xl font-semibold text-foreground">4. Payments</h2>
+        <p>
+          When a payment provider is used, payment credentials such as card or bank details are handled by that provider under its own privacy and security controls. We may receive transaction information such as order IDs, payment references, status and amount so that we can verify a purchase, provide the service and handle support or refunds.
+        </p>
 
-        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">4. Security Infrastructure</h2>
-        <p className="text-muted-foreground">We deploy industry-standard cryptographic and structural measures to prevent unauthorized data ingress, alteration, or exposure.</p>
+        <h2 className="mt-10 text-xl font-semibold text-foreground">5. Cookies and local storage</h2>
+        <p>
+          The website may use browser storage to keep an authentication session and remember necessary preferences. These storage mechanisms are used to provide the requested service rather than to build an advertising profile.
+        </p>
 
-        <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">5. Inquiries</h2>
-        <p className="text-muted-foreground">Direct all privacy-related correspondence to our compliance channel:</p>
-        <p className="font-mono text-sm mt-4 p-4 bg-muted border border-border inline-block text-foreground">info@nexusweb.co.in</p>
+        <h2 className="mt-10 text-xl font-semibold text-foreground">6. Sharing and service providers</h2>
+        <p>
+          We may use service providers such as Supabase and payment processors to operate authentication, databases, hosting and payments. Information is shared only to the extent needed to provide the requested service, protect the platform, or comply with law.
+        </p>
+
+        <h2 className="mt-10 text-xl font-semibold text-foreground">7. Data security</h2>
+        <p>
+          We use access controls, authenticated requests, encrypted connections and other reasonable safeguards designed to protect information. No internet service can guarantee absolute security, so please use a strong, unique password for your account.
+        </p>
+
+        <h2 className="mt-10 text-xl font-semibold text-foreground">8. Data retention and deletion</h2>
+        <p>
+          Information is retained for as long as reasonably necessary to provide the service, maintain transaction records, resolve disputes, prevent abuse, or meet legal obligations. You may contact us to ask about account deletion or the information associated with your account.
+        </p>
+
+        <h2 className="mt-10 text-xl font-semibold text-foreground">9. Children's privacy</h2>
+        <p>
+          Our services are not intentionally designed to collect personal information from children without appropriate consent. Please contact us if you believe a child has provided personal information that should be removed.
+        </p>
+
+        <h2 className="mt-10 text-xl font-semibold text-foreground">10. Updates to this policy</h2>
+        <p>
+          We may update this policy when our services, payment methods or legal requirements change. The latest version will always be published on this page.
+        </p>
+
+        <h2 className="mt-10 text-xl font-semibold text-foreground">11. Contact</h2>
+        <p>
+          For privacy questions, account deletion requests or data concerns, email:
+        </p>
+        <p className="mt-4 inline-block rounded-lg border border-border bg-muted p-4 font-medium text-foreground">info@nexusweb.co.in</p>
       </div>
     </div>
   );
