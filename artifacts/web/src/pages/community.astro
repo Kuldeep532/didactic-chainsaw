@@ -1,10 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
 ---
-<Layout title="Community — Nexus Web Technologies">
+<Layout title="Community — Nexus Wave Technologies">
   <section class="hero"><div class="container"><p class="eyebrow">Nexus Community</p><h1>Spiritual knowledge, community and useful updates.</h1><p class="lead">Community content is being connected directly to Supabase. The old Express API is no longer part of the website.</p></div></section>
   <section class="section"><div class="container grid-2"><div class="card"><h2>Community posts</h2><p class="muted">Approved public posts will be read from Supabase in the next integration step.</p><p class="note">The page structure and accessibility controls are ready without any legacy /api dependency.</p></div><div class="card"><h2>Listen audio</h2><p class="muted">The community post player will use the browser speech engine for accessible post reading until dedicated audio files are available.</p><button class="button primary" id="listen-demo" type="button">Listen to this information</button></div></div></section>
   <script is:inline>
-    document.getElementById('listen-demo')?.addEventListener('click',()=>{if(!('speechSynthesis' in window))return; speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance('Community posts and accessibility information from Nexus Web Technologies.'));});
+    document.getElementById('listen-demo')?.addEventListener('click',()=>{if(!('speechSynthesis' in window))return; speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance('Community posts and accessibility information from Nexus Wave Technologies.'));});
   </script>
 </Layout>
