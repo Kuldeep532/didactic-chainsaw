@@ -14,8 +14,6 @@ interface GlobalMessage {
   expiresAt: string;
 }
 
-const BASE = (import.meta.env.VITE_BASE_URL as string | undefined)?.replace(/\/$/, "") ?? "";
-
 const icons = {
   info: Info,
   warning: AlertTriangle,
@@ -33,13 +31,6 @@ const styles = {
 export default function GlobalMessageBanner() {
   const [messages, setMessages] = useState<GlobalMessage[]>([]);
   const [dismissed, setDismissed] = useState<Set<number>>(new Set());
-
-  useEffect(() => {
-    fetch(`${BASE}/api/messages?target=website`)
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((data: GlobalMessage[]) => setMessages(data))
-      .catch(() => setMessages([]));
-  }, []);
 
   if (messages.length === 0) return null;
 
