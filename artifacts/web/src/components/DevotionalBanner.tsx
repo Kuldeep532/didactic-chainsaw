@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Sparkles, BookOpen } from "lucide-react";
 
 interface DailyShloka {
@@ -12,7 +12,7 @@ interface DailyShloka {
 
 export default function DevotionalBanner() {
   const [shloka, setShloka] = useState<DailyShloka | null>(null);
-  const [error, setError] = useState(false);
+  const [error] = useState(false);
 
   if (error || !shloka) return null;
 
