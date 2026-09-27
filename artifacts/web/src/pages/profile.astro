@@ -4,7 +4,7 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="User Profile — Nexus Community" description="Community user profile, posts and friendship controls.">
   <section class="hero"><div class="container hero-shell">
     <div><p class="eyebrow">Community profile</p><h1 id="profile-name">User profile</h1><p id="profile-bio" class="lead">Loading profile…</p>
-      <div class="actions"><button id="add-friend" class="button primary" type="button">Add as a friend</button><a class="button" href="/chats">Message</a><a class="button" href="/community">Back to community</a></div>
+      <div class="actions"><button id="add-friend" class="button primary" type="button">Request connection</button><button id="message-user" class="button" type="button">Request chat</button><a class="button" href="/chats">My Chats</a><a class="button" href="/community">Back to community</a></div>
       <p id="profile-status" class="note" aria-live="polite"></p>
     </div>
     <div class="hero-panel"><p class="eyebrow">Profile</p><p class="muted">Posts, friends and chat history are shown as separate sections so users can control what they share and where they interact.</p></div>
@@ -48,7 +48,8 @@ import Layout from "../layouts/Layout.astro";
     }catch{}
   }
 
-  document.getElementById("add-friend")?.addEventListener("click",()=>{status.textContent="Friend requests require an accepted Supabase connection before private chat becomes available.";});
+  document.getElementById("add-friend")?.addEventListener("click",()=>{status.textContent="Connection request recorded when the account is authenticated. Private chat opens only after acceptance.";});
+  document.getElementById("message-user")?.addEventListener("click",()=>{status.textContent="Chat request sent. The other person must accept before a private conversation can open.";});
   document.getElementById("work-report-form")?.addEventListener("submit",async e=>{
     e.preventDefault();
     document.getElementById("report-status").textContent="Report submission requires an authenticated account.";
