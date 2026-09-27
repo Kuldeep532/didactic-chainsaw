@@ -1,6 +1,9 @@
 ---
 interface Props { title?: string; description?: string; }
-const { title = "Nexus Web Technologies", description = "Accessible digital products including Nexus Plus and Geeta Nexus." } = Astro.props;
+const {
+  title = "Nexus Wave Technologies",
+  description = "Accessible digital products including Nexus Plus and Geeta Nexus."
+} = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -17,17 +20,13 @@ const { title = "Nexus Web Technologies", description = "Accessible digital prod
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="site-header">
       <div class="container site-header-inner">
-        <a class="brand" href="/" aria-label="Nexus Web Technologies home">
+        <a class="brand" href="/" aria-label="Nexus Wave Technologies home">
           <span class="brand-mark" aria-hidden="true"></span>
-          <span>Nexus Web Technologies</span>
+          <span>Nexus Wave Technologies</span>
         </a>
         <nav class="desktop-nav" aria-label="Primary navigation">
-          <a href="/about" aria-current={Astro.url.pathname === "/about" ? "page" : undefined}>About</a>
-          <a href="/apps" aria-current={Astro.url.pathname === "/apps" ? "page" : undefined}>Apps</a>
-          <a href="/utilities" aria-current={Astro.url.pathname === "/utilities" ? "page" : undefined}>Utilities</a>
-          <a href="/community" aria-current={Astro.url.pathname === "/community" ? "page" : undefined}>Community</a>
-          <a href="/join-team" aria-current={Astro.url.pathname === "/join-team" ? "page" : undefined}>Join Our Team</a>
-          <a href="/contact" aria-current={Astro.url.pathname === "/contact" ? "page" : undefined}>Contact</a>
+          <a href="/about">About</a><a href="/apps">Apps</a><a href="/utilities">Utilities</a>
+          <a href="/community">Community</a><a href="/join-team">Join Our Team</a><a href="/contact">Contact</a>
           <a href="/login">Sign in</a>
         </nav>
         <button class="mobile-menu-button button" type="button" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
@@ -39,13 +38,11 @@ const { title = "Nexus Web Technologies", description = "Accessible digital prod
         </div>
       </nav>
     </header>
-    <main id="main-content">
-      <slot />
-    </main>
+    <main id="main-content"><slot /></main>
     <footer class="site-footer">
       <div class="container footer-grid">
         <div>
-          <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span><span>Nexus Web Technologies</span></a>
+          <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span><span>Nexus Wave Technologies</span></a>
           <p class="muted">Accessible digital products and online services by Kuldeep, including Nexus Plus and Geeta Nexus.</p>
         </div>
         <div class="footer-links" aria-label="Explore">
@@ -54,11 +51,12 @@ const { title = "Nexus Web Technologies", description = "Accessible digital prod
         </div>
         <div class="footer-links" aria-label="Legal">
           <strong>Legal</strong>
-          <a href="/legal/privacy">Privacy Policy</a><a href="/legal/terms">Terms and Conditions</a><a href="/legal/refund">Refund Policy</a><a href="/legal/disclaimer">Disclaimer</a><a href="/legal/accessibility">Accessibility</a>
+          <a href="/legal/privacy">Privacy Policy</a><a href="/legal/terms">Terms and Conditions</a><a href="/legal/refund">Refund Policy</a>
+          <a href="/legal/disclaimer">Disclaimer</a><a href="/legal/accessibility">Accessibility</a>
         </div>
       </div>
       <div class="container" style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--muted-foreground);font-size:.9rem;">
-        © {new Date().getFullYear()} Nexus Web Technologies.
+        © {new Date().getFullYear()} Nexus Wave Technologies.
       </div>
     </footer>
     <script is:inline>
