@@ -6,10 +6,10 @@ export default function About() {
     <div className="flex w-full flex-col">
       <section className="border-b border-border bg-background px-4 pb-16 pt-24 md:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="mb-4 text-sm font-medium text-muted-foreground">About Nexus Wave</p>
+          <p className="mb-4 text-sm font-medium text-muted-foreground">About Nexus Web Technology</p>
           <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl">Software made for people.</h1>
           <p className="text-lg leading-relaxed text-muted-foreground">
-            Nexus Wave is the name used for software products and online services developed by Kuldeep. It is a developer identity focused on practical, accessible technology and user needs.
+            Nexus Web Technology is the developer identity used for software products and online services developed by Kuldeep. It is a developer identity focused on practical, accessible technology and user needs.
           </p>
         </div>
       </section>
