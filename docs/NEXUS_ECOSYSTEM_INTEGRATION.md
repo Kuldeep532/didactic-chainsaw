@@ -18,9 +18,9 @@ Use:
 Do not use the retired company name in new user-facing content.
 
 
-## Community data model
+## Forum and community data model
 
-The Community feature uses one canonical feed contract: `posts`.
+The Forum feature uses `forum_categories` and `forum_posts` as its canonical discussion contract. Categories are admin-managed; verified members can submit moderated posts into existing categories.
 
 Each published post should expose:
 - `id`
@@ -63,3 +63,6 @@ For chat deletion, distinguish between:
 - "delete for everyone": restricted operation with explicit rules and auditability.
 
 Official publishing must be authorized by server-side role checks, not by hiding a button alone.
+
+
+Forum category creation is restricted to administrators. Users may select an existing category and choose an audience scope (`all`, `female`, or `male`) when submitting a post. The web UI does not allow users to create categories.
