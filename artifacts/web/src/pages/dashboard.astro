@@ -1,0 +1,53 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title="Dashboard — Nexus Wave Technologies" description="Your Nexus Wave Technologies account dashboard.">
+  <section class="section">
+    <div class="container">
+      <div class="page-title-row">
+        <div><p class="eyebrow">Workspace</p><h1 class="page-title">Dashboard</h1><p class="lead">Your account, community activity and saved Nexus services in one place.</p></div>
+        <a class="button" href="/account">Account settings</a>
+      </div>
+      <div class="grid-3">
+        <article class="card"><p class="eyebrow">Account</p><h3 id="dashboard-user">Loading…</h3><p class="muted" id="dashboard-email">Checking your Supabase session.</p></article>
+        <article class="card"><p class="eyebrow">Community</p><h3>Accessible conversations</h3><p class="muted">Open community posts, listen to content and manage your contributions.</p><a class="button" href="/community">Open community</a></article>
+        <article class="card"><p class="eyebrow">Apps</p><h3>Nexus ecosystem</h3><p class="muted">Explore Nexus Plus and Geeta Nexus services.</p><a class="button primary" href="/apps">View apps</a></article>
+      </div>
+      <div class="section-card">
+        <div class="section-head"><div><p class="eyebrow">Session</p><h2>Signed-in status</h2></div><button class="button" id="dashboard-signout" type="button">Sign out</button></div>
+        <div id="dashboard-status" class="note">Checking Supabase…</div>
+      </div>
+    </div>
+  </section>
+</Layout>
+<script>
+  const load = async () => {
+    const status = document.querySelector("#dashboard-status");
+    const user = document.querySelector("#dashboard-user");
+    const email = document.querySelector("#dashboard-email");
+    try {
+      const { requireSupabase } = await import("../lib/supabase.js");
+      const client = requireSupabase();
+      const { data } = await client.auth.getUser();
+      if (!data.user) {
+        status.textContent = "You are not signed in. Sign in to access your account data.";
+        user.textContent = "Guest";
+        email.textContent = "No active session";
+        return;
+      }
+      user.textContent = data.user.user_metadata?.full_name || data.user.email || "Nexus user";
+      email.textContent = data.user.email || "";
+      status.textContent = "Your Supabase session is active.";
+    } catch (error) {
+      status.textContent = error instanceof Error ? error.message : "Unable to connect to Supabase.";
+    }
+  };
+  load();
+  document.querySelector("#dashboard-signout")?.addEventListener("click", async () => {
+    try {
+      const { requireSupabase } = await import("../lib/supabase.js");
+      await requireSupabase().auth.signOut();
+      window.location.href = "/login";
+    } catch {}
+  });
+</script>
