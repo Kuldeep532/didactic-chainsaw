@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Globe, Heart, Hexagon, ShieldCheck, Sparkles } from "lucide-react";
 
 export default function About() {
@@ -8,7 +9,7 @@ export default function About() {
           <p className="mb-4 text-sm font-medium text-muted-foreground">About Nexus Wave</p>
           <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl">Software made for people.</h1>
           <p className="text-lg leading-relaxed text-muted-foreground">
-            Nexus Wave is the name used for software products and online services developed by Kuldeep. It is a developer identity focused on practical, accessible technology rather than a large software studio or team.
+            Nexus Wave is the name used for software products and online services developed by Kuldeep. It is a developer identity focused on practical, accessible technology and user needs.
           </p>
         </div>
       </section>
@@ -63,7 +64,7 @@ export default function About() {
   );
 }
 
-function Principle({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
+function Principle({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
   return (
     <div className="rounded-2xl border border-border bg-card p-7">
       <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background">{icon}</div>
