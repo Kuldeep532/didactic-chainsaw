@@ -30,15 +30,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 
   <section class="section surface-soft" id="campaign"><div class="container">
     <div class="section-head"><div><p class="eyebrow">02 · Women Safety Campaign</p><h2>Join, help and document real contribution.</h2></div></div>
-    <div class="grid-2"><article class="card"><h3>Become a volunteer</h3><p class="muted">Support awareness, share verified resources or contribute practical help within your skills and local context.</p>
+    <div class="grid-2"><article class="card"><h3>Join through the Nexus team</h3><p class="muted">Women Safety Campaign volunteers use the same Join Our Team review process, so one application can cover campaign work and other approved Nexus roles.</p>
       <form id="campaign-form" class="form">
         <label>Name<input id="campaign-name" autocomplete="name" required /></label><label>Email<input id="campaign-email" type="email" autocomplete="email" required /></label>
+        <label>Campaign role<select id="campaign-role" required><option>Women Safety Campaign Volunteer</option><option>Safety Content & Poetry</option><option>Community & Forum Organizer</option></select></label>
         <label>How would you like to help?<textarea id="campaign-help" minlength="10" required></textarea></label>
         <label>Proof or evidence link (optional)<input id="campaign-proof" type="url" placeholder="https://…" /></label>
-        <p class="note">Proof must represent real work. Submissions may be reviewed before recognition or publication.</p>
-        <button class="button primary" type="submit">Join campaign</button><p id="campaign-status" class="note" aria-live="polite"></p>
+        <p class="note">Proof should show genuine contribution. Do not upload private, intimate or identifying material belonging to another person.</p>
+        <button class="button primary" type="submit">Apply through Join Our Team</button><p id="campaign-status" class="note" aria-live="polite"></p>
       </form></article>
-      <article class="card"><h3>Evidence standards</h3><p class="muted">Recognition should be based on genuine contribution rather than fabricated screenshots, copied stories or unverifiable claims.</p>
+      <article class="card"><h3>Campaign contributions</h3><p class="muted">Poetry, short messages, educational material, accessibility-friendly awareness content and verified campaign work can be contributed. Creative work is reviewed for dignity, relevance and originality; it is never required to identify a survivor or disclose private details.</p><h3>Evidence standards</h3><p class="muted">Recognition should be based on genuine contribution rather than fabricated screenshots, copied stories or unverifiable claims.</p>
         <ul class="feature-list"><li>Prefer original, independently checkable evidence.</li><li>Protect other people’s private information and obtain consent where appropriate.</li><li>Do not upload graphic or intimate material merely as proof.</li><li>False or manipulated evidence may be rejected or removed.</li></ul>
         <p class="note"><strong>Hero of the Month</strong> should be based on reviewed, documented contribution rather than popularity alone.</p>
       </article></div>
@@ -60,5 +61,5 @@ GET  /functions/v1/women-safety-guidance</code></pre></div>
     if(!r.ok) throw new Error("request-failed"); return r.json().catch(()=>({}));
   }
   reportForm?.addEventListener("submit",async e=>{e.preventDefault();reportStatus.textContent="Submitting your safety report…";try{await callFunction("women-safety-report",{name:document.getElementById("report-name").value.trim()||null,email:document.getElementById("report-email").value.trim()||null,type:document.getElementById("report-type").value,message:document.getElementById("report-message").value.trim(),followup:document.getElementById("report-followup").value});reportStatus.textContent="Your report was submitted.";reportForm.reset()}catch{reportStatus.textContent="The Supabase safety endpoint is not connected yet. The integration-ready form is in place."}});
-  campaignForm?.addEventListener("submit",async e=>{e.preventDefault();campaignStatus.textContent="Submitting campaign application…";try{await callFunction("women-safety-campaign",{name:document.getElementById("campaign-name").value.trim(),email:document.getElementById("campaign-email").value.trim(),contribution:document.getElementById("campaign-help").value.trim(),proof_url:document.getElementById("campaign-proof").value.trim()||null});campaignStatus.textContent="Campaign application submitted for review.";campaignForm.reset()}catch{campaignStatus.textContent="The Supabase campaign endpoint is not connected yet. The integration-ready application is in place."}});
+  campaignForm?.addEventListener("submit",async e=>{e.preventDefault();campaignStatus.textContent="Submitting campaign application…";try{await callFunction("women-safety-campaign",{name:document.getElementById("campaign-name").value.trim(),email:document.getElementById("campaign-email").value.trim(),campaign_role:document.getElementById("campaign-role").value,contribution:document.getElementById("campaign-help").value.trim(),proof_url:document.getElementById("campaign-proof").value.trim()||null});campaignStatus.textContent="Campaign application submitted for review.";campaignForm.reset()}catch{campaignStatus.textContent="The Supabase campaign endpoint is not connected yet. The integration-ready application is in place."}});
 </script>
