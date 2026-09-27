@@ -5,7 +5,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useSubmitContactMessage } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
@@ -24,21 +23,15 @@ export default function Contact() {
     defaultValues: { firstName: "", lastName: "", email: "", subject: "", message: "" },
   });
   
-  const submitMessage = useSubmitContactMessage();
 
   const onSubmit = (data: z.infer<typeof contactSchema>) => {
-    submitMessage.mutate(
-      { data },
-      {
-        onSuccess: () => {
-          toast({ title: "Message dispatched", description: "We will respond shortly." });
-          form.reset();
-        },
-        onError: () => {
-          toast({ title: "Dispatch failed", description: "Please try again or email us directly.", variant: "destructive" });
-        },
-      }
+    const subject = encodeURIComponent(data.subject);
+    const body = encodeURIComponent(
+      `Name: ${data.firstName} ${data.lastName}\nEmail: ${data.email}\n\n${data.message}`,
     );
+    window.location.href = `mailto:info@nexusweb.co.in?subject=${subject}&body=${body}`;
+    toast({ title: "Your email app is opening", description: "Please send the prepared message from your email app." });
+    form.reset();
   };
 
   return (
@@ -132,8 +125,8 @@ export default function Contact() {
                         <FormMessage />
                       </FormItem>
                     )} />
-                    <Button type="submit" disabled={submitMessage.isPending} className="w-full rounded-none h-12 text-base font-medium mt-4">
-                      {submitMessage.isPending ? "Transmitting..." : "Send Payload"}
+                    <Button type="submit" disabled={false} className="w-full rounded-none h-12 text-base font-medium mt-4">
+                      "Open Email"
                     </Button>
                   </form>
                 </Form>
