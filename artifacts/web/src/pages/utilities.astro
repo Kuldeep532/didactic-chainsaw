@@ -1,0 +1,16 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title="Free Utilities — Nexus Web Technology">
+  <section class="hero"><div class="container"><p class="eyebrow">Free utilities</p><h1>Small helpers for everyday work.</h1><p class="lead">Fast browser tools that do not require an account.</p></div></section>
+  <section class="section"><div class="container grid-2">
+    <article class="card"><h2>Word &amp; character counter</h2><textarea id="counter" placeholder="Paste or type text here…" aria-label="Text to count"></textarea><div class="grid-3" style="margin-top:1rem"><div class="card"><strong id="words">0</strong><div class="muted">Words</div></div><div class="card"><strong id="chars">0</strong><div class="muted">Characters</div></div><div class="card"><strong id="charsNoSpaces">0</strong><div class="muted">No spaces</div></div></div></article>
+    <article class="card"><h2>Text format converter</h2><textarea id="formatText" placeholder="Paste text here…" aria-label="Text to format"></textarea><div class="actions"><button class="button" data-op="upper">UPPERCASE</button><button class="button" data-op="lower">lowercase</button><button class="button" data-op="title">Title Case</button><button class="button" data-op="sentence">Sentence case</button></div><textarea id="result" style="margin-top:1rem" aria-label="Formatted result"></textarea><button class="button primary" id="copyResult" type="button" style="margin-top:.75rem">Copy result</button></article>
+  </div></section>
+  <script is:inline>
+    const counter=document.getElementById('counter'); const update=()=>{const v=counter?.value??''; document.getElementById('words').textContent=v.trim()?String(v.trim().split(/\s+/).length):'0'; document.getElementById('chars').textContent=String(v.length); document.getElementById('charsNoSpaces').textContent=String(v.replace(/\s/g,'').length)}; counter?.addEventListener('input',update);
+    const input=document.getElementById('formatText'), result=document.getElementById('result');
+    document.querySelectorAll('[data-op]').forEach(b=>b.addEventListener('click',()=>{const v=input.value; const op=b.dataset.op; result.value=op==='upper'?v.toUpperCase():op==='lower'?v.toLowerCase():op==='title'?v.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()):v.trim()?v.trim().charAt(0).toUpperCase()+v.trim().slice(1).toLowerCase():'';}));
+    document.getElementById('copyResult')?.addEventListener('click',async()=>{if(result.value) await navigator.clipboard.writeText(result.value);});
+  </script>
+</Layout>
