@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Check, CircleDollarSign, Headphones, ShieldCheck, Sparkles, Video, BookOpen } from "lucide-react";
@@ -160,7 +161,7 @@ export default function Apps() {
   );
 }
 
-function Feature({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
+function Feature({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
   return (
     <div className="rounded-xl border border-border bg-card p-6">
       <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg border border-border">{icon}</div>
