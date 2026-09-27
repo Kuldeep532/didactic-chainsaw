@@ -72,9 +72,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    void syncSession();
-    const timer = window.setInterval(() => void syncSession(), 10 * 60 * 1000);
-    return () => window.clearInterval(timer);
+    if (!isSupabaseConfigured) {
+      setIsLoading(false);
+      return;
+    }
+    let cancelled = false;
+    void syncSession().finally(() => {
+      if (!cancelled) setIsLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [syncSession]);
 
   const login = useCallback(async (email: string, password: string) => {
