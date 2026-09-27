@@ -1,10 +1,27 @@
 ---
 import Layout from "../layouts/Layout.astro";
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
 <Layout title="Community — Nexus Wave Technologies">
-  <section class="hero"><div class="container"><p class="eyebrow">Nexus Community</p><h1>Spiritual knowledge, community and useful updates.</h1><p class="lead">Community content is being connected directly to Supabase. The old Express API is no longer part of the website.</p></div></section>
-  <section class="section"><div class="container grid-2"><div class="card"><h2>Community posts</h2><p class="muted">Approved public posts will be read from Supabase in the next integration step.</p><p class="note">The page structure and accessibility controls are ready without any legacy /api dependency.</p></div><div class="card"><h2>Listen audio</h2><p class="muted">The community post player will use the browser speech engine for accessible post reading until dedicated audio files are available.</p><button class="button primary" id="listen-demo" type="button">Listen to this information</button></div></div></section>
-  <script is:inline>
-    document.getElementById('listen-demo')?.addEventListener('click',()=>{if(!('speechSynthesis' in window))return; speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance('Community posts and accessibility information from Nexus Wave Technologies.'));});
+  <section class="hero"><div class="container"><p class="eyebrow">Nexus Community</p><h1>Community posts, updates and accessible listening.</h1><p class="lead">Publicly approved posts can be loaded directly from Supabase, with a Listen control for each post.</p></div></section>
+  <section class="section"><div class="container"><div id="community-grid" class="grid-3"><div class="card"><h3>Loading community…</h3><p class="muted">Connecting to Supabase.</p></div></div><p id="community-message" class="note" aria-live="polite" style="margin-top:1rem"></p></div></section>
+  <script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
+    const root=document.getElementById("community-grid"),msg=document.getElementById("community-message");
+    const escapeHtml=(v)=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+    const speak=(text)=>{if(!("speechSynthesis" in window)){msg.textContent="This device does not support speech playback.";return;} speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(text));};
+    async function load(){
+      if(!supabaseUrl||!supabaseKey){root.innerHTML='<div class="card"><h3>Community is not configured</h3><p class="muted">Supabase public configuration is missing.</p></div>';return;}
+      try{
+        const headers={apikey:supabaseKey,Authorization:"Bearer "+supabaseKey};
+        const r=await fetch(supabaseUrl+"/rest/v1/posts?select=*&status=eq.approved&order=created_at.desc",{headers});
+        const data=await r.json().catch(()=>[]);
+        if(!r.ok||!Array.isArray(data)){throw new Error("Community request failed");}
+        if(!data.length){root.innerHTML='<div class="card"><h3>No public posts yet.</h3><p class="muted">Approved community posts will appear here.</p></div>';return;}
+        root.innerHTML=data.map((post,i)=>{const title=escapeHtml(post.title||"Community post"),body=escapeHtml(post.content||post.body||"");return '<article class="card"><p class="eyebrow">Community</p><h3>'+title+'</h3><p class="muted">'+body+'</p><button class="button primary" type="button" data-listen="'+i+'">Listen</button></article>';}).join("");
+        data.forEach((post,i)=>document.querySelector('[data-listen="'+i+'"]')?.addEventListener("click",()=>speak((post.title||"Community post")+". "+(post.content||post.body||""))));
+      }catch{root.innerHTML='<div class="card"><h3>Could not load community posts.</h3><p class="muted">Please try again later.</p></div>';}
+    }
+    void load();
   </script>
 </Layout>
