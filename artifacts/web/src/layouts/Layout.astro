@@ -1,9 +1,6 @@
 ---
-interface Props { title?: string; description?: string; }
-const {
-  title = "Nexus Wave Technologies",
-  description = "Accessible digital products including Nexus Plus and Geeta Nexus."
-} = Astro.props;
+import ThemeToggle from "../components/ThemeToggle.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 const path = Astro.url.pathname;
 ---
 <!doctype html>
@@ -11,18 +8,17 @@ const path = Astro.url.pathname;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
+    <meta name="description" content={Astro.props.description ?? "Accessible digital products from Nexus Wave Technologies."} />
     <meta name="theme-color" content="#0f4c81" />
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <title>{title}</title>
-    <link rel="stylesheet" href="/src/styles/global.css" />
+    <title>{Astro.props.title ?? "Nexus Wave Technologies"}</title>
     <script is:inline>
       (() => {
         try {
           const saved = localStorage.getItem("nexus-theme");
-          const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-          document.documentElement.dataset.theme = saved || (systemDark ? "dark" : "light");
+          document.documentElement.dataset.theme =
+            saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
         } catch {}
       })();
     </script>
@@ -35,99 +31,60 @@ const path = Astro.url.pathname;
           <span class="brand-mark" aria-hidden="true"><span></span></span>
           <span class="brand-text">Nexus Wave Technologies</span>
         </a>
-
         <nav class="desktop-nav" aria-label="Primary navigation">
           <a href="/" aria-current={path === "/" ? "page" : undefined}>Home</a>
-          <a href="/apps" aria-current={path === "/apps" ? "page" : undefined}>Apps</a>
+          <a href="/apps" aria-current={path.startsWith("/apps") ? "page" : undefined}>Apps</a>
           <details class="nav-dropdown">
             <summary>Explore</summary>
             <div class="dropdown-panel">
+              <a href="/gita">श्लोक</a>
               <a href="/utilities">Utilities</a>
               <a href="/community">Community</a>
               <a href="/join-team">Join Our Team</a>
               <a href="/contact">Contact</a>
             </div>
           </details>
-          <a href="/about" aria-current={path === "/about" ? "page" : undefined}>About</a>
+          <details class="nav-dropdown">
+            <summary>Workspace</summary>
+            <div class="dropdown-panel">
+              <a href="/dashboard">Dashboard</a>
+              <a href="/admin">Admin</a>
+              <a href="/account">My account</a>
+            </div>
+          </details>
+          <a href="/about" aria-current={path.startsWith("/about") ? "page" : undefined}>About</a>
         </nav>
-
         <div class="header-actions">
-          <button class="icon-button theme-toggle" type="button" aria-label="Switch theme" aria-pressed="false" title="Switch theme">
-            <span aria-hidden="true">☼</span><span class="sr-only">Switch theme</span>
-          </button>
+          <ThemeToggle />
           <details class="account-menu">
             <summary class="account-summary" aria-label="Account menu"><span aria-hidden="true">◉</span><span class="desktop-account-label">Account</span></summary>
             <div class="dropdown-panel dropdown-right">
-              <a href="/login">Sign in</a>
-              <a href="/account">My account</a>
+              <a href="/login">Sign in</a><a href="/account">My account</a><a href="/dashboard">Dashboard</a>
             </div>
           </details>
           <button class="mobile-menu-button button" type="button" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
         </div>
       </div>
-
       <nav id="mobile-nav" hidden class="container mobile-nav" aria-label="Mobile navigation">
-        <a href="/">Home</a><a href="/apps">Apps</a><a href="/about">About</a><a href="/utilities">Utilities</a>
-        <a href="/community">Community</a><a href="/join-team">Join Our Team</a><a href="/contact">Contact</a>
-        <a href="/login">Sign in</a><a href="/account">My account</a>
+        <a href="/">Home</a><a href="/apps">Apps</a><a href="/gita">श्लोक</a><a href="/utilities">Utilities</a><a href="/community">Community</a>
+        <a href="/dashboard">Dashboard</a><a href="/admin">Admin</a><a href="/about">About</a><a href="/join-team">Join Our Team</a>
+        <a href="/contact">Contact</a><a href="/login">Sign in</a><a href="/account">My account</a>
       </nav>
     </header>
-
-    <main id="main-content">
-      <slot />
-    </main>
-
-    <footer class="site-footer">
-      <div class="container footer-grid">
-        <div>
-          <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><span></span></span><span>Nexus Wave Technologies</span></a>
-          <p class="muted">Accessible digital products and online services by Kuldeep, including Nexus Plus and Geeta Nexus.</p>
-          <div class="footer-social" aria-label="Social links">
-            <a href="https://x.com/NexusWaveApps" target="_blank" rel="noopener noreferrer" aria-label="Nexus Wave Technologies on X">X</a>
-            <a href="https://www.linkedin.com/company/nexus-wave-technologies/" target="_blank" rel="noopener noreferrer" aria-label="Nexus Wave Technologies on LinkedIn">in</a>
-            <a href="https://www.instagram.com/nexuswave_technologies" target="_blank" rel="noopener noreferrer" aria-label="Nexus Wave Technologies on Instagram">◎</a>
-          </div>
-        </div>
-        <div class="footer-links"><strong>Explore</strong><a href="/apps">Apps</a><a href="/utilities">Utilities</a><a href="/community">Community</a><a href="/join-team">Join Our Team</a><a href="/contact">Contact</a></div>
-        <div class="footer-links"><strong>Legal</strong><a href="/legal/privacy">Privacy Policy</a><a href="/legal/terms">Terms and Conditions</a><a href="/legal/refund">Refund Policy</a><a href="/legal/disclaimer">Disclaimer</a><a href="/legal/accessibility">Accessibility</a></div>
-      </div>
-      <div class="container footer-bottom">© {new Date().getFullYear()} Nexus Wave Technologies.</div>
-    </footer>
-
+    <main id="main-content"><slot /></main>
+    <SiteFooter />
     <script is:inline>
+      window.NexusSpeak = (text) => {
+        if (!("speechSynthesis" in window)) return;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+      };
       const mobileButton = document.querySelector(".mobile-menu-button");
       const mobileNav = document.getElementById("mobile-nav");
       mobileButton?.addEventListener("click", () => {
         const expanded = mobileButton.getAttribute("aria-expanded") === "true";
         mobileButton.setAttribute("aria-expanded", String(!expanded));
         if (mobileNav) mobileNav.hidden = expanded;
-      });
-
-      const themeButton = document.querySelector(".theme-toggle");
-      const updateThemeUi = () => {
-        const dark = document.documentElement.dataset.theme === "dark";
-        if (themeButton) {
-          themeButton.setAttribute("aria-pressed", String(dark));
-          themeButton.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
-          themeButton.setAttribute("title", dark ? "Switch to light mode" : "Switch to dark mode");
-          themeButton.querySelector("span[aria-hidden='true']").textContent = dark ? "☾" : "☼";
-        }
-      };
-      updateThemeUi();
-      themeButton?.addEventListener("click", () => {
-        const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-        document.documentElement.dataset.theme = next;
-        localStorage.setItem("nexus-theme", next);
-        updateThemeUi();
-      });
-
-      document.querySelectorAll("details.nav-dropdown, details.account-menu").forEach((details) => {
-        details.addEventListener("toggle", () => {
-          if (!details.open) return;
-          document.querySelectorAll("details.nav-dropdown, details.account-menu").forEach((other) => {
-            if (other !== details) other.open = false;
-          });
-        });
       });
     </script>
   </body>
