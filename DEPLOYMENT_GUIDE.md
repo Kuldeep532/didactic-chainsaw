@@ -1,58 +1,73 @@
-# Nexus Wave Technologies — Deployment Guide
+# Nexus Web Technology — Vercel Deployment Guide
 
-This repository contains the Nexus Wave Technologies website and supporting API code.
+The website is a Vite/React application under `artifacts/web`. The website frontend uses Supabase directly from the browser, so the frontend project does not need a database password or Supabase service-role key.
 
-## Website
+## Vercel project settings
 
-The production website is a Vite/React application under `artifacts/web`.
+Keep the Vercel **Root Directory** at the repository root.
 
-Build commands:
+Use:
 
-```bash
-pnpm --filter @workspace/web run typecheck
-pnpm --filter @workspace/web run build
-```
+- Framework Preset: **Vite**
+- Install Command: `corepack enable && corepack prepare pnpm@10.18.0 --activate && pnpm install --frozen-lockfile`
+- Build Command: `pnpm --filter @workspace/web run build`
+- Output Directory: `artifacts/web/dist/public`
 
-## Supabase authentication
+The repository already contains these settings in `vercel.json`.
 
-The website login and registration flow uses the existing Supabase project rather than Firebase.
+## Vercel Environment Variables
 
-Configure these variables in the Vercel project:
+For the website project, add these two variables for Production, Preview and Development:
 
 ```text
 VITE_SUPABASE_URL=https://cpbwiarqlvtlnwbkmpws.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=<Supabase publishable key>
+VITE_SUPABASE_PUBLISHABLE_KEY=<your Supabase publishable key>
 ```
 
-Do not commit the publishable key into source control. Configure it as a Vercel environment variable for Preview and Production.
+Get the publishable key from the Supabase project API settings.
 
-The browser authentication flow uses Supabase Auth for email/password registration, sign-in, session refresh and sign-out.
+Important: the `VITE_` prefix means the value is exposed to browser code during the Vite build. Never put a Supabase service-role key, database password, JWT secret, payment secret or other private credential in a `VITE_` variable.
 
-## PayU readiness
+The website frontend does not need Firebase environment variables.
 
-The website publishes customer-facing product information and the following legal pages:
+## SPA routing
 
+Vercel rewrites application routes to `/index.html`, so direct navigation works for routes such as:
+
+- `/community`
+- `/join-team`
+- `/account`
+- `/team-admin`
 - `/legal/privacy`
 - `/legal/terms`
 - `/legal/refund`
-- `/legal/disclaimer`
-- `/legal/accessibility`
 
-The refund page includes the refund request process and a stated review timeframe. Before a production payment launch, make sure the live payment provider account, website/domain details and legal/business information are consistent with the information submitted to the payment provider.
+## Website features backed by Supabase
 
-## Vercel
+The website uses Supabase for:
 
-Keep the existing Vercel routing for the Vite SPA and API server. After deployment, verify:
+- email/password sign-in and registration
+- team applications
+- approved team membership
+- community post publishing
+- community post listing
+- main-admin access
 
-1. The home page loads without a blank screen.
-2. `/apps`, `/utilities`, `/login` and all legal pages open directly.
-3. Supabase sign-in and registration work using the configured environment variables.
-4. Direct refresh on a nested route still serves the SPA.
-5. The final public domain is the same domain submitted to the payment provider.
+The database, not the browser, is the final authorization layer for admin actions.
 
-## Security
+## Community audio
 
-- Never commit secrets, service-role keys, database passwords or API provider secrets.
-- Only the Supabase publishable key belongs in the browser application.
-- Keep Row Level Security enabled for user-specific Supabase tables.
-- Use server-side verification for payment status and paid feature activation.
+Community posts have a **Listen** button. It uses the browser/device speech engine, so no audio API key or audio file service is required for this feature.
+
+## Production checks
+
+After deployment, verify:
+
+1. Home page loads without a blank screen.
+2. `/community` shows approved free posts.
+3. The Listen button reads a post aloud.
+4. Sign-in and account creation work.
+5. `/join-team` stores applications in Supabase.
+6. `/team-admin` is available only to the main Supabase account.
+7. Nested routes open correctly after a direct refresh.
+8. The final Vercel URL is the URL used later when connecting the Android apps.
