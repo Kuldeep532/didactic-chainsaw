@@ -49,7 +49,7 @@ export default function Utilities() {
     <div className="flex w-full flex-col pb-20">
       <section className="border-b border-border bg-background px-4 pb-16 pt-24 md:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <p className="mb-4 text-sm font-medium text-muted-foreground">Nexus Wave Utilities</p>
+          <p className="mb-4 text-sm font-medium text-muted-foreground">Nexus Web Technology Utilities</p>
           <h1 className="mb-5 text-4xl font-bold tracking-tight md:text-5xl">Small helpers for everyday work</h1>
           <p className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground">
             Simple, fast tools inspired by the text and accessibility utilities in Nexus products. They run in your browser and do not require an account.
