@@ -121,3 +121,22 @@ textarea { min-height: 140px; resize: vertical; }
   html { scroll-behavior: auto; }
   .card,.button { transition: none; }
 }
+
+
+/* Shared page components */
+.responsive-media { width: 100%; display: block; border-radius: 14px; margin-bottom: 1rem; }
+.daily-section { background: var(--background); }
+.daily-shlok-card { max-width: 900px; }
+.reader-toolbar { display: grid; grid-template-columns: 240px minmax(0,1fr); gap: 1rem; margin-bottom: 1rem; }
+.search-field { min-width: 0; }
+.gita-list { display: grid; gap: 1rem; margin-top: 1rem; }
+.gita-card { display: grid; gap: .35rem; }
+.gita-ref { margin: 0 0 .5rem; color: var(--primary); font-weight: 800; }
+.gita-sanskrit { margin: 0; font-size: clamp(1.55rem, 3vw, 2.25rem); line-height: 1.6; }
+.gita-translit { margin: .5rem 0; color: var(--muted-foreground); font-style: italic; line-height: 1.7; }
+.gita-meaning { margin: .35rem 0 0; line-height: 1.8; }
+.translation-heading { margin: 1rem 0 .35rem; font-size: 1rem; }
+.page-title-row { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
+.section-card { padding: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+.admin-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; }
+@media (max-width: 700px) { .reader-toolbar { grid-template-columns: 1fr; } .page-title-row { display: block; } .admin-grid { grid-template-columns: 1fr; } }
