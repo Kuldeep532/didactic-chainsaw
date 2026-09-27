@@ -24,9 +24,9 @@ export default function Login() {
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <section className="rounded-2xl border border-border bg-card p-8 md:p-10">
             <p className="mb-3 text-sm font-medium text-muted-foreground">Nexus account</p>
-            <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Sign in to Nexus Wave</h1>
+            <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Sign in to Nexus Web Technology</h1>
             <p className="mb-8 text-muted-foreground leading-relaxed">
-              Use one account for your Nexus Wave web experience. Connected Nexus apps can use the same Supabase account.
+              Use one account for your Nexus Web Technology web experience. Connected Nexus apps can use the same Supabase account.
             </p>
             <div className="space-y-5">
               <div className="flex items-start gap-3 rounded-xl border border-border bg-background p-4">
@@ -128,7 +128,7 @@ function AuthForm({
       }
       toast({
         title: isRegister ? "Account created" : "Welcome back",
-        description: "You are now signed in to Nexus Wave.",
+        description: "You are now signed in to Nexus Web Technology.",
       });
       onSuccess();
     } catch (err) {
