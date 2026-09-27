@@ -1,7 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
-const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
 <Layout title="Sign in — Nexus Wave Technologies">
   <section class="hero"><div class="container"><p class="eyebrow">Nexus account</p><h1>Sign in or create an account.</h1><p class="lead">Authentication is handled directly by Supabase Auth.</p></div></section>
@@ -9,9 +7,23 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
     <label>Email<input id="email" type="email" autocomplete="email" required /></label><label>Password<input id="password" type="password" autocomplete="current-password" minlength="6" required /></label>
     <div class="actions"><button class="button primary" type="submit">Sign in</button><button id="sign-up" class="button" type="button">Create account</button></div><p id="auth-message" class="note" aria-live="polite">Enter your account details.</p>
   </form></div></div></section>
-  <script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
+  <script is:inline>
     const form=document.getElementById("auth-form"),msg=document.getElementById("auth-message");
-    async function auth(mode){if(!supabaseUrl||!supabaseKey){msg.textContent="Supabase sign-in is not configured yet.";return;}const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;msg.textContent="Please wait…";try{const endpoint=mode==="signup"?supabaseUrl+"/auth/v1/signup":supabaseUrl+"/auth/v1/token?grant_type=password";const r=await fetch(endpoint,{method:"POST",headers:{apikey:supabaseKey,"Content-Type":"application/json"},body:JSON.stringify({email,password})});const d=await r.json().catch(()=>({}));if(!r.ok){msg.textContent=d.error_description||d.msg||"Authentication request failed.";return;}if(d.access_token)localStorage.setItem("nexus_access_token",d.access_token);if(d.refresh_token)localStorage.setItem("nexus_refresh_token",d.refresh_token);msg.textContent=mode==="signup"&&!d.access_token?"Check your email to confirm your account.":"Signed in successfully.";}catch{msg.textContent="Could not connect to Supabase. Please try again.";}}
-    form?.addEventListener("submit",e=>{e.preventDefault();void auth("signin")});document.getElementById("sign-up")?.addEventListener("click",()=>void auth("signup"));
+    async function auth(mode){
+      msg.textContent="Please wait…";
+      try {
+        const { requireSupabase } = await import("../lib/supabase.js");
+        const client=requireSupabase();
+        const email=document.getElementById("email").value.trim(), password=document.getElementById("password").value;
+        const result=mode==="signup"
+          ? await client.auth.signUp({email,password})
+          : await client.auth.signInWithPassword({email,password});
+        if(result.error) throw result.error;
+        msg.textContent=mode==="signup"&&!result.data.session?"Check your email to confirm your account.":"Signed in successfully.";
+        if(result.data.session && mode!=="signup") window.location.href="/dashboard";
+      } catch(error){ msg.textContent=error instanceof Error?error.message:"Authentication request failed."; }
+    }
+    form?.addEventListener("submit",e=>{e.preventDefault();void auth("signin")});
+    document.getElementById("sign-up")?.addEventListener("click",()=>void auth("signup"));
   </script>
 </Layout>
