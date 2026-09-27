@@ -3,55 +3,51 @@ import Layout from "../layouts/Layout.astro";
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
-<Layout title="Community — Nexus Wave Technologies" description="Nexus community posts, user help and respectful discussion.">
-  <section class="hero"><div class="container"><p class="eyebrow">Nexus Community</p><h1>Share, help, ask and learn.</h1><p class="lead">The community has two clear spaces: Posts for published community content, and Users for questions, helpful answers, ideas and personal contributions.</p></div></section>
+<Layout title="Community — Nexus Wave Technologies" description="Verified Nexus community with official posts and member-only user networking.">
+  <section class="hero"><div class="container">
+    <p class="eyebrow">Nexus Community</p>
+    <h1>Read official updates. Join verified community.</h1>
+    <p class="lead">Official team posts remain visible publicly. User profiles, user posts and networking features require a free community membership and manual verification.</p>
+  </div></section>
+
   <section class="section"><div class="container">
     <div class="community-tabs" role="tablist" aria-label="Community sections">
       <a class="button" href="/chats">My Chats</a>
-      <button class="button primary community-tab" id="posts-tab" role="tab" aria-selected="true" aria-controls="posts-panel">Posts</button>
-      <button class="button community-tab" id="users-tab" role="tab" aria-selected="false" aria-controls="users-panel">Users</button>
+      <a class="button" href="/friends">My Friends</a>
+      <a class="button" href="/verify-community">Verify to access this feature</a>
+      <a class="button" href="/blog">Official Blog</a>
     </div>
-    <div id="posts-panel" role="tabpanel" aria-labelledby="posts-tab" class="tab-panel">
-      <div id="posts-grid" class="grid-3"><div class="card"><h3>Loading posts…</h3><p class="muted">Connecting to Supabase.</p></div></div>
-    </div>
-    <div id="users-panel" role="tabpanel" aria-labelledby="users-tab" class="tab-panel" hidden>
-      <div class="grid-2">
-        <article class="card">
-          <p class="eyebrow">Ask & help</p><h2>Share something useful.</h2>
-          <p class="muted">Users can ask questions, share practical answers, write ideas or post experiences. Content must remain respectful and must not contain hate, threats or targeted harassment.</p>
-          <form id="user-post-form" class="form">
-            <label>Title<input id="user-title" required maxlength="120" /></label>
-            <label>Type<select id="user-type"><option>Question</option><option>Helpful answer</option><option>Idea</option><option>Experience</option><option>General discussion</option></select></label>
-            <label>Your content<textarea id="user-content" minlength="10" maxlength="5000" required></textarea></label>
-            <p class="note">Hate speech, threats, targeted harassment, doxxing and deliberately harmful content are not allowed. Submissions may be moderated before publication.</p>
-            <button class="button primary" type="submit">Submit for review</button><p id="user-status" class="note" aria-live="polite"></p>
-          </form>
-        </article>
-        <article class="card">
-          <p class="eyebrow">Community standards</p><h2>Help without harming.</h2>
-          <ul class="feature-list">
-            <li>Ask and answer in good faith.</li><li>Do not attack people for identity, beliefs or background.</li><li>Do not post private contact details or sensitive personal information.</li><li>Report content that appears hateful, threatening, fraudulent or abusive.</li>
-          </ul>
-          <p class="note">The moderation system should block or hold hateful content before it becomes public whenever possible.</p>
-        </article>
-      </div>
-    </div>
-    <p id="community-message" class="note" aria-live="polite" style="margin-top:1rem"></p>
+
+    <article class="card" style="margin-bottom:1rem">
+      <p class="eyebrow">Official team posts</p>
+      <h2>Updates from Nexus Wave Technologies</h2>
+      <p class="muted">Only authorized team members can publish here. Public readers see the author’s official team name; ordinary community profiles are not exposed in this section.</p>
+    </article>
+    <div id="posts-grid" class="grid-3"><div class="card"><h3>Loading official posts…</h3><p class="muted">Connecting to Supabase.</p></div></div>
+
+    <article id="locked-community" class="card surface-soft" style="margin-top:1rem">
+      <p class="eyebrow">Verified community</p>
+      <h2>Verify to access this feature</h2>
+      <p class="muted">Free community membership is open to eligible account holders. Manual verification is required before user profiles, user posts, friend requests and private networking become visible.</p>
+      <a class="button primary" href="/verify-community">Apply for free verification</a>
+    </article>
   </div></section>
 </Layout>
 <script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
-  const postsGrid=document.getElementById("posts-grid"), message=document.getElementById("community-message");
-  const form=document.getElementById("user-post-form"), userStatus=document.getElementById("user-status");
-  const postsTab=document.getElementById("posts-tab"), usersTab=document.getElementById("users-tab"), postsPanel=document.getElementById("posts-panel"), usersPanel=document.getElementById("users-panel");
+  const grid=document.getElementById("posts-grid");
   const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-  const speak=t=>{"speechSynthesis" in window&& (speechSynthesis.cancel(),speechSynthesis.speak(new SpeechSynthesisUtterance(t)))};
-  function selectTab(which){const users=which==="users";postsTab.setAttribute("aria-selected",String(!users));usersTab.setAttribute("aria-selected",String(users));postsTab.classList.toggle("primary",!users);usersTab.classList.toggle("primary",users);postsPanel.hidden=users;usersPanel.hidden=!users}
-  postsTab.onclick=()=>selectTab("posts");usersTab.onclick=()=>selectTab("users");
   async function loadPosts(){
-    if(!supabaseUrl||!supabaseKey){postsGrid.innerHTML='<div class="card"><h3>Community is not configured</h3><p class="muted">Supabase public configuration is missing.</p></div>';return}
-    try{const headers={apikey:supabaseKey,Authorization:"Bearer "+supabaseKey};const r=await fetch(supabaseUrl+"/rest/v1/posts?select=*&status=eq.approved&order=created_at.desc",{headers});const data=await r.json().catch(()=>[]);if(!r.ok||!Array.isArray(data))throw 0;if(!data.length){postsGrid.innerHTML='<div class="card"><h3>No published posts yet.</h3><p class="muted">Approved posts will appear here.</p></div>';return}postsGrid.innerHTML=data.map((p,i)=>'<article class="card"><p class="eyebrow">Post</p><h3>'+esc(p.title||"Community post")+'</h3><p class="muted">'+esc(p.content||p.body||"")+'</p><div class="actions"><button class="button primary" type="button" data-listen="'+i+'">Listen</button></div></article>').join("");data.forEach((p,i)=>document.querySelector('[data-listen="'+i+'"]')?.addEventListener("click",()=>speak((p.title||"Community post")+". "+(p.content||p.body||""))))}catch{postsGrid.innerHTML='<div class="card"><h3>Could not load posts.</h3><p class="muted">Please try again later.</p></div>'}
+    if(!supabaseUrl||!supabaseKey){grid.innerHTML='<div class="card"><h3>Community is not configured</h3><p class="muted">Supabase public configuration is missing.</p></div>';return}
+    try{
+      const headers={apikey:supabaseKey,Authorization:"Bearer "+supabaseKey};
+      const r=await fetch(supabaseUrl+"/rest/v1/team_posts?select=title,content,published_at,author_display_name&status=eq.published&order=published_at.desc",{headers});
+      const data=await r.json().catch(()=>[]);
+      if(!r.ok||!Array.isArray(data)) throw 0;
+      if(!data.length){grid.innerHTML='<div class="card"><h3>No official posts yet.</h3><p class="muted">Authorized team posts will appear here.</p></div>';return}
+      grid.innerHTML=data.map(p=>'<article class="card"><p class="eyebrow">Official team post</p><h3>'+esc(p.title||"Nexus update")+'</h3><p class="muted">'+esc(p.content||"")+'</p><p class="gita-ref">'+esc(p.author_display_name||"Nexus Team")+'</p></article>').join("");
+    }catch{
+      grid.innerHTML='<div class="card"><h3>Official posts are temporarily unavailable.</h3><p class="muted">Please try again later.</p></div>';
+    }
   }
-  function containsBlockedLanguage(text){const t=text.toLowerCase();const blocked=["kill yourself","go die","hate all","death to","i will hurt"];return blocked.some(x=>t.includes(x))}
-  form?.addEventListener("submit",async e=>{e.preventDefault();const title=document.getElementById("user-title").value.trim(),type=document.getElementById("user-type").value,content=document.getElementById("user-content").value.trim();if(containsBlockedLanguage(title+" "+content)){userStatus.textContent="This content appears to contain threatening or hateful language and cannot be submitted.";return}userStatus.textContent="Submitting for review…";try{const r=await fetch(supabaseUrl+"/rest/v1/posts",{method:"POST",headers:{apikey:supabaseKey,Authorization:"Bearer "+supabaseKey,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({title,type,content,status:"pending"})});if(!r.ok)throw 0;userStatus.textContent="Submitted for moderation. It will appear publicly only after approval.";form.reset()}catch{userStatus.textContent="The user-post endpoint is not connected yet. The community submission flow is ready for Supabase."}});
   void loadPosts();
 </script>
