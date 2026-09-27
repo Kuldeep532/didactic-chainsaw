@@ -55,5 +55,21 @@ team_members.role IN ('team_editor','moderator','admin')</code></pre>
       gate.innerHTML='<h2>Administrator access confirmed</h2><p class="muted">Privileged console unlocked.</p>';consolePanel.hidden=false;
     }catch{gate.innerHTML='<p class="note">Administrator verification is not connected yet. Keep privileged access server-enforced in Supabase.</p>'}
   }
+  document.getElementById("save-private-safety")?.addEventListener("click",async()=>{
+    const status=document.getElementById("private-safety-status"), userId=document.getElementById("private-safety-user-id").value.trim();
+    if(!userId){status.textContent="Enter the trusted recipient user ID.";return;}
+    try{
+      const r=await fetch(supabaseUrl+"/rest/v1/rpc/admin_set_private_safety_recipient",{method:"POST",headers:{apikey:supabaseKey,Authorization:"Bearer "+supabaseKey,"Content-Type":"application/json"},body:JSON.stringify({p_user_id:userId})});
+      if(!r.ok) throw 0; status.textContent="Private complaint recipient saved.";
+    }catch{status.textContent="Could not save recipient. Admin authorization is required."}
+  });
+  document.getElementById("approve-badge")?.addEventListener("click",async()=>{
+    const status=document.getElementById("badge-status"), reportId=document.getElementById("badge-report-id").value.trim(), userId=document.getElementById("badge-user-id").value.trim();
+    if(!reportId||!userId){status.textContent="Enter both report ID and user ID.";return;}
+    try{
+      const r=await fetch(supabaseUrl+"/rest/v1/rpc/admin_approve_live_badge",{method:"POST",headers:{apikey:supabaseKey,Authorization:"Bearer "+supabaseKey,"Content-Type":"application/json"},body:JSON.stringify({p_report_id:reportId,p_user_id:userId})});
+      if(!r.ok) throw 0; status.textContent="Live badge approved.";
+    }catch{status.textContent="Could not approve badge. Admin authorization is required."}
+  });
   check();
 </script>
