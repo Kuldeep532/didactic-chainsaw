@@ -55,6 +55,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
         </div>
         <form id="user-post-form" class="form">
           <label>Post title<input id="user-title" required maxlength="120" /></label>
+          <label>Category<select id="post-category" required></select></label>
+          <label>Audience<select id="post-audience" required><option value="all">Everyone</option><option value="female">Women</option><option value="male">Men</option></select></label>
           <label>Post<textarea id="user-content" minlength="10" maxlength="5000" required placeholder="Write your post…"></textarea></label>
           <p class="note">Member posts go through moderation before they appear in the public feed.</p>
           <div class="actions">
@@ -172,11 +174,13 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
         method:"POST",
         headers:{...jsonHeaders(),"Prefer":"return=minimal"},
         body:JSON.stringify({
+          category_id:document.getElementById("post-category").value,
+          author_id:user.id,
           title:document.getElementById("user-title").value.trim(),
           content:document.getElementById("user-content").value.trim(),
+          audience:document.getElementById("post-audience").value,
           status:"pending",
-          post_type:"community",
-          author_id:user.id
+          post_source:"member"
         })
       });
       if(!r.ok) throw 0;
@@ -186,6 +190,18 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
       userStatus.textContent="Your post could not be submitted. Please sign in and try again.";
     }
   });
+
+
+  async function loadPostCategoriesForComposer(){
+    try{
+      const r=await fetch(supabaseUrl+"/rest/v1/forum_categories?select=id,name&active=eq.true&order=name",{headers:apiHeaders()});
+      const data=await r.json().catch(()=>[]);
+      if(!r.ok||!Array.isArray(data)) return;
+      const select=document.getElementById("post-category");
+      select.innerHTML=data.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("");
+    }catch{}
+  }
+  void loadPostCategoriesForComposer();
 
   void checkMembership();
   void loadPosts();
