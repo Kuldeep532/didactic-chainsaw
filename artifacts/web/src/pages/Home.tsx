@@ -1,4 +1,5 @@
 import { ArrowRight, BookOpen, Check, Hexagon, ShieldCheck, Sparkles, Wand2 } from "lucide-react";
+import type { ReactNode } from "react";
 
 const nexusHighlights = [
   "Nexus Assistant with multiple AI providers",
@@ -7,7 +8,7 @@ const nexusHighlights = [
   "Voice, media, file and productivity tools",
 ];
 
-function ActionLink({ children }: { children: any }) {
+function ActionLink({ children }: { children: ReactNode }) {
   return (
     <button type="button" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-foreground px-6 py-3 text-sm font-medium text-background no-underline">{children}</button>
   );
