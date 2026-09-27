@@ -3,14 +3,14 @@ import Layout from "../layouts/Layout.astro";
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
-<Layout title="Community — Nexus Wave Technologies" description="Verified Nexus community with official posts and member-only user networking.">
+<Layout title="Community — Nexus Wave Technologies" description="One unified Nexus community feed for official and approved member posts.">
   <section class="section community-shell">
     <div class="container">
-      <div class="community-header">
+      <div class="community-appbar">
         <div>
           <p class="eyebrow">Nexus Community</p>
           <h1 class="community-title">Community</h1>
-          <p class="muted">Official team posts are public. Member networking is available after free manual verification.</p>
+          <p class="muted">One feed for Nexus updates and approved member posts.</p>
         </div>
         <div class="community-actions">
           <a class="button" href="/chats">My Chats</a>
@@ -21,15 +21,14 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 
       <div id="verification-banner" class="verification-banner" role="status">
         <div>
-          <strong>Verify to access this feature</strong>
-          <span class="muted">Verify your free community membership to create posts and access member networking.</span>
+          <strong>Verify to access posting and networking</strong>
+          <span class="muted">Free manual verification unlocks member features.</span>
         </div>
         <a class="button" href="/verify-community">Verify now</a>
       </div>
 
       <nav class="community-tabbar" aria-label="Community sections">
         <a class="community-tab active" href="/community">Posts</a>
-        <a class="community-tab" href="/blog">Official Blog</a>
         <a class="community-tab" href="/chats">My Chats</a>
         <a class="community-tab" href="/friends">My Friends</a>
       </nav>
@@ -37,10 +36,10 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
       <section class="community-panel">
         <div class="panel-heading">
           <div>
-            <p class="eyebrow">Post</p>
-            <h2>Community posts</h2>
+            <p class="eyebrow">Posts</p>
+            <h2>Community feed</h2>
           </div>
-          <span class="muted">Official posts and approved member posts</span>
+          <span class="muted">Official and approved member posts</span>
         </div>
         <div id="posts-grid" class="grid-3">
           <div class="card"><h3>Loading posts…</h3><p class="muted">Connecting to Supabase.</p></div>
@@ -57,7 +56,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
         <form id="user-post-form" class="form">
           <label>Post title<input id="user-title" required maxlength="120" /></label>
           <label>Post<textarea id="user-content" minlength="10" maxlength="5000" required placeholder="Write your post…"></textarea></label>
-          <p class="note">Posts are sent for moderation. Hate, threats, targeted harassment, doxxing and deliberately harmful content are not allowed.</p>
+          <p class="note">Member posts go through moderation before they appear in the public feed.</p>
           <div class="actions">
             <button class="button primary" type="submit">Publish My Post</button>
             <button id="close-post" class="button" type="button">Cancel</button>
@@ -80,17 +79,29 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
   const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
   const speak=t=>{"speechSynthesis" in window&&(speechSynthesis.cancel(),speechSynthesis.speak(new SpeechSynthesisUtterance(t)))};
 
+  const apiHeaders=()=>({apikey:supabaseKey,Authorization:"Bearer "+supabaseKey});
+  const jsonHeaders=()=>({...apiHeaders(),"Content-Type":"application/json"});
+
   function enableVerifiedUi(verified){
     addPostButton.disabled=!verified;
     addPostButton.title=verified ? "Create a new post" : "Verification is required";
-    if(verified) banner.hidden=true;
+    banner.hidden=verified;
+  }
+
+  async function getCurrentUser(){
+    if(!supabaseUrl||!supabaseKey) return null;
+    try{
+      const auth=await fetch(supabaseUrl+"/auth/v1/user",{headers:apiHeaders()});
+      if(!auth.ok) return null;
+      return await auth.json();
+    }catch{return null;}
   }
 
   async function checkMembership(){
-    if(!supabaseUrl||!supabaseKey) return;
     try{
-      const headers={apikey:supabaseKey,Authorization:"Bearer "+supabaseKey};
-      const r=await fetch(supabaseUrl+"/rest/v1/profiles?select=verification_status&limit=1",{headers});
+      const user=await getCurrentUser();
+      if(!user?.id){ enableVerifiedUi(false); return; }
+      const r=await fetch(supabaseUrl+"/rest/v1/profiles?select=verification_status&id=eq."+encodeURIComponent(user.id)+"&limit=1",{headers:apiHeaders()});
       if(!r.ok) return;
       const rows=await r.json();
       enableVerifiedUi(rows[0]?.verification_status==="verified");
@@ -102,14 +113,18 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
       grid.innerHTML='<div class="card"><h3>Community is not configured</h3><p class="muted">Supabase public configuration is missing.</p></div>';return;
     }
     try{
-      const headers={apikey:supabaseKey,Authorization:"Bearer "+supabaseKey};
-      const official=await fetch(supabaseUrl+"/rest/v1/team_posts?select=title,content,published_at,author_display_name&status=eq.published&order=published_at.desc",{headers});
-      const data=await official.json().catch(()=>[]);
-      if(!official.ok||!Array.isArray(data)) throw 0;
-      grid.innerHTML=data.length?data.map((p,i)=>'<article class="card"><p class="eyebrow">Official team post</p><h3>'+esc(p.title||"Nexus update")+'</h3><p class="muted">'+esc(p.content||"")+'</p><p class="gita-ref">'+esc(p.author_display_name||"Nexus Team")+'</p><button class="button" type="button" data-listen="'+i+'">Listen</button></article>').join(""):'<div class="card"><h3>No official posts yet.</h3><p class="muted">Authorized team posts will appear here.</p></div>';
+      const r=await fetch(supabaseUrl+"/rest/v1/posts?select=title,content,published_at,author_display_name,post_type,status&status=eq.published&order=published_at.desc",{headers:apiHeaders()});
+      const data=await r.json().catch(()=>[]);
+      if(!r.ok||!Array.isArray(data)) throw 0;
+      grid.innerHTML=data.length?data.map((p,i)=>{
+        const type=(p.post_type||"community").toLowerCase();
+        const label=type==="official" ? "Official team post" : "Community post";
+        const author=p.author_display_name || (type==="official" ? "Nexus Team" : "Verified member");
+        return '<article class="card"><p class="eyebrow">'+esc(label)+'</p><h3>'+esc(p.title||"Nexus update")+'</h3><p class="muted">'+esc(p.content||"")+'</p><p class="gita-ref">'+esc(author)+'</p><button class="button" type="button" data-listen="'+i+'">Listen</button></article>';
+      }).join(""):'<div class="card"><h3>No posts yet.</h3><p class="muted">Published Nexus updates and approved member posts will appear here.</p></div>';
       data.forEach((p,i)=>document.querySelector('[data-listen="'+i+'"]')?.addEventListener("click",()=>speak((p.title||"Nexus update")+". "+(p.content||""))));
     }catch{
-      grid.innerHTML='<div class="card"><h3>Official posts are temporarily unavailable.</h3><p class="muted">Please try again later.</p></div>';
+      grid.innerHTML='<div class="card"><h3>Community posts are temporarily unavailable.</h3><p class="muted">Please try again later.</p></div>';
     }
   }
 
@@ -125,16 +140,24 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
     e.preventDefault();
     userStatus.textContent="Submitting your post for review…";
     try{
+      const user=await getCurrentUser();
+      if(!user?.id) throw 0;
       const r=await fetch(supabaseUrl+"/rest/v1/posts",{
         method:"POST",
-        headers:{apikey:supabaseKey,Authorization:"Bearer "+supabaseKey,"Content-Type":"application/json","Prefer":"return=minimal"},
-        body:JSON.stringify({title:document.getElementById("user-title").value.trim(),content:document.getElementById("user-content").value.trim(),status:"pending"})
+        headers:{...jsonHeaders(),"Prefer":"return=minimal"},
+        body:JSON.stringify({
+          title:document.getElementById("user-title").value.trim(),
+          content:document.getElementById("user-content").value.trim(),
+          status:"pending",
+          post_type:"community",
+          author_id:user.id
+        })
       });
       if(!r.ok) throw 0;
       userStatus.textContent="My Post submitted for moderation.";
       form.reset();
     }catch{
-      userStatus.textContent="The post submission backend is not connected yet.";
+      userStatus.textContent="Your post could not be submitted. Please sign in and try again.";
     }
   });
 
