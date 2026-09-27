@@ -34,6 +34,8 @@ export default function Footer() {
               <li><Link href="/apps" className="hover:underline">Nexus apps</Link></li>
               <li><Link href="/utilities" className="hover:underline">Utilities</Link></li>
               <li><Link href="/contact" className="hover:underline">Contact</Link></li>
+              <li><Link href="/community" className="hover:underline">Community</Link></li>
+              <li><Link href="/join-team" className="hover:underline">Join Our Team</Link></li>
             </ul>
           </div>
 
