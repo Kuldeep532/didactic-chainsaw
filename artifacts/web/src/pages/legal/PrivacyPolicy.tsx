@@ -2,7 +2,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="container mx-auto max-w-screen-md px-4 py-20 md:px-8">
       <div className="mb-12 border-b border-border pb-8">
-        <p className="mb-3 text-sm font-medium text-muted-foreground">Nexus Wave Technologies</p>
+        <p className="mb-3 text-sm font-medium text-muted-foreground">Nexus Web Technology</p>
         <h1 className="mb-4 text-4xl font-bold tracking-tight">Privacy Policy</h1>
         <p className="text-sm text-muted-foreground">Last updated: September 27, 2026</p>
       </div>
@@ -12,7 +12,7 @@ export default function PrivacyPolicy() {
           This Privacy Policy explains how Nexus Wave uses information when you visit this website, create a Nexus account, contact us, or use connected products such as Nexus Plus and Geeta Nexus.
         </p>
         <p>
-          “Nexus Wave Technologies” and “Nexus Wave” are names used for software products and online services developed by Kuldeep. They are used as a developer identity and product name.
+          “Nexus Web Technology” and “Nexus Wave” are names used for software products and online services developed by Kuldeep. They are used as a developer identity and product name.
         </p>
 
         <h2 className="mt-10 text-xl font-semibold text-foreground">1. Information we may collect</h2>
