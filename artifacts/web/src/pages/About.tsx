@@ -26,7 +26,7 @@ export default function About() {
             <h2 className="mb-5 text-3xl font-bold tracking-tight">Kuldeep</h2>
             <div className="space-y-5 text-muted-foreground">
               <p className="leading-relaxed">
-                The Nexus Wave name brings together products such as Nexus Plus and Geeta Nexus, along with selected web utilities that make common tasks easier.
+                The Nexus Web Technology name brings together products such as Nexus Plus and Geeta Nexus, along with selected web utilities that make common tasks easier.
               </p>
               <p className="leading-relaxed">
                 Accessibility is a practical requirement throughout the products: clear navigation, screen-reader support, readable layouts and interfaces that avoid unnecessary complexity.
