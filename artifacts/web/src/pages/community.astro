@@ -138,7 +138,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
   async function loadForumPosts(){
     if(!selectedCategory) return;
     try{
-      let url=supabaseUrl+"/rest/v1/forum_posts?select=id,title,content,created_at,post_source,audience&status=eq.approved&category_id=eq."+encodeURIComponent(selectedCategory)+"&order=created_at.desc";
+      let url=supabaseUrl+"/rest/v1/forum_posts?select=id,title,content,created_at,post_source,audience,author_id&status=eq.approved&category_id=eq."+encodeURIComponent(selectedCategory)+"&order=created_at.desc";
       const audience=audienceFilter?.value||"all";
       if(audience!=="all") url+="&audience=in.(all,"+audience+")";
       const r=await fetch(url,{headers:apiHeaders()});
@@ -147,9 +147,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
       grid.innerHTML=data.length?data.map((p,i)=>{
         const source=p.post_source==="official"?"Official":"Member";
         const who=p.audience==="female"?"Women":p.audience==="male"?"Men":"Everyone";
-        return '<article class="card"><p class="eyebrow">'+esc(source)+' · '+esc(who)+'</p><h3>'+esc(p.title||"Forum discussion")+'</h3><p class="muted">'+esc(p.content||"")+'</p><button class="button" type="button" data-forum-listen="'+i+'">Listen</button></article>';
+        return '<article class="card" data-author="'+esc(p.author_id||"")+'"><p class="eyebrow">'+esc(source)+' · '+esc(who)+'</p><h3>'+esc(p.title||"Forum discussion")+'</h3><p class="muted">'+esc(p.content||"")+'</p><span class="live-user-badge" data-badge="'+esc(p.author_id||"")+'" hidden>Trusted Contributor</span><button class="button" type="button" data-forum-listen="'+i+'">Listen</button></article>';
       }).join(""):'<div class="card"><h3>No approved discussions yet.</h3><p class="muted">Approved posts in this category will appear here.</p></div>';
       data.forEach((p,i)=>document.querySelector('[data-forum-listen="'+i+'"]')?.addEventListener("click",()=>speak((p.title||"Forum discussion")+". "+(p.content||""))));
+      const ids=[...new Set(data.map(p=>p.author_id).filter(Boolean))];
+      if(ids.length){
+        const q=ids.map(id=>encodeURIComponent('"'+id+'"')).join(",");
+        const br=await fetch(supabaseUrl+"/rest/v1/user_live_badges?select=user_id,is_live&user_id=in."+q+"&is_live=eq.true",{headers:apiHeaders()});
+        const badges=await br.json().catch(()=>[]);
+        badges.forEach(b=>document.querySelectorAll('[data-badge="'+b.user_id+'"]').forEach(el=>el.hidden=false));
+      }
     }catch{
       grid.innerHTML='<div class="card"><h3>Forum discussions are temporarily unavailable.</h3><p class="muted">Please try again later.</p></div>';
     }
