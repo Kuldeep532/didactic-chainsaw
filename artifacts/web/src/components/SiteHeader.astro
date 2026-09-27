@@ -1,0 +1,68 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+const path = Astro.url.pathname;
+---
+<header class="site-header">
+  <div class="container site-header-inner">
+    <a class="brand" href="/" aria-label="Nexus Wave Technologies home">
+      <span class="brand-mark" aria-hidden="true"><span></span></span>
+      <span class="brand-text">Nexus Wave Technologies</span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="/" aria-current={path === "/" ? "page" : undefined}>Home</a>
+      <a href="/apps" aria-current={path.startsWith("/apps") ? "page" : undefined}>Apps</a>
+      <details class="nav-dropdown">
+        <summary>Explore</summary>
+        <div class="dropdown-panel">
+          <a href="/utilities">Utilities</a>
+          <a href="/community">Community</a>
+          <a href="/join-team">Join Our Team</a>
+          <a href="/contact">Contact</a>
+        </div>
+      </details>
+      <details class="nav-dropdown">
+        <summary>Workspace</summary>
+        <div class="dropdown-panel">
+          <a href="/dashboard">Dashboard</a>
+          <a href="/admin">Admin</a>
+          <a href="/account">My account</a>
+        </div>
+      </details>
+      <a href="/about" aria-current={path.startsWith("/about") ? "page" : undefined}>About</a>
+    </nav>
+    <div class="header-actions">
+      <ThemeToggle />
+      <details class="account-menu">
+        <summary class="account-summary" aria-label="Account menu"><span aria-hidden="true">◉</span><span class="desktop-account-label">Account</span></summary>
+        <div class="dropdown-panel dropdown-right">
+          <a href="/login">Sign in</a>
+          <a href="/account">My account</a>
+          <a href="/dashboard">Dashboard</a>
+        </div>
+      </details>
+      <button class="mobile-menu-button button" type="button" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+    </div>
+  </div>
+  <nav id="mobile-nav" hidden class="container mobile-nav" aria-label="Mobile navigation">
+    <a href="/">Home</a><a href="/apps">Apps</a><a href="/utilities">Utilities</a><a href="/community">Community</a>
+    <a href="/dashboard">Dashboard</a><a href="/admin">Admin</a><a href="/about">About</a><a href="/join-team">Join Our Team</a>
+    <a href="/contact">Contact</a><a href="/login">Sign in</a><a href="/account">My account</a>
+  </nav>
+</header>
+<script>
+  const mobileButton = document.querySelector(".mobile-menu-button");
+  const mobileNav = document.getElementById("mobile-nav");
+  mobileButton?.addEventListener("click", () => {
+    const expanded = mobileButton.getAttribute("aria-expanded") === "true";
+    mobileButton.setAttribute("aria-expanded", String(!expanded));
+    if (mobileNav) mobileNav.hidden = expanded;
+  });
+  document.querySelectorAll("details.nav-dropdown, details.account-menu").forEach((details) => {
+    details.addEventListener("toggle", () => {
+      if (!details.open) return;
+      document.querySelectorAll("details.nav-dropdown, details.account-menu").forEach((other) => {
+        if (other !== details) other.open = false;
+      });
+    });
+  });
+</script>
