@@ -14,12 +14,44 @@ import Layout from "../layouts/Layout.astro";
     <article class="card"><p class="eyebrow">Friends</p><h2 id="friend-count">0</h2><p class="muted">Accepted connections</p><a class="button" href="/friends">My Friends</a></article>
     <article class="card"><p class="eyebrow">Chats</p><h2 id="chat-count">0</h2><p class="muted">Previous conversations</p><a class="button" href="/chats">My Chats</a></article>
   </div></section>
-  <section class="section surface-soft" id="posts"><div class="container"><div class="section-head"><div><p class="eyebrow">Posts</p><h2>This user's posts</h2></div></div><div id="profile-posts" class="grid-3"><div class="note">Posts will appear here.</div></div></div></section>
-</Layout>
-<script is:inline>
+  <section class="section"><div class="container grid-2">
+    <article class="card"><p class="eyebrow">Contributor report</p><h2>Report your work</h2><p class="muted">Submit a report of your completed work, campaign contribution or community contribution for review.</p>
+      <form id="wor<script is:inline>
   const params=new URLSearchParams(location.search), userId=params.get("id"),name=params.get("name");
   document.getElementById("profile-name").textContent=name||"Community user";
   document.getElementById("profile-bio").textContent="Public profile. Personal details are limited to what the user chooses to share.";
-  if(!userId){document.getElementById("profile-status").textContent="Open a user profile from the community to see their published posts.";}
-  document.getElementById("add-friend")?.addEventListener("click",()=>{document.getElementById("profile-status").textContent="Friend request is ready for the authenticated Supabase friends relation."});
+  const status=document.getElementById("profile-status");
+  if(!userId) status.textContent="Open a user profile from the community to see their published posts.";
+
+  const SUPABASE_URL=window.location.origin.includes("localhost")?"":undefined;
+  async function currentUser(){
+    try{
+      const meta=document.querySelector('meta[name="supabase-url"]');
+      return null;
+    }catch{return null;}
+  }
+
+  async function loadBadge(){
+    if(!userId) return;
+    try{
+      const cfg=await fetch("/api/config").catch(()=>null);
+      if(!cfg?.ok) return;
+      const c=await cfg.json();
+      const r=await fetch(c.url+"/rest/v1/user_live_badges?select=label,is_live&user_id=eq."+encodeURIComponent(userId)+"&is_live=eq.true&limit=1",{headers:{apikey:c.key,Authorization:"Bearer "+c.key}});
+      if(!r.ok) return;
+      const rows=await r.json();
+      if(rows[0]){
+        document.getElementById("badge-title").textContent=rows[0].label||"Trusted Contributor";
+        document.getElementById("badge-copy").textContent="This contributor has a reviewed live badge.";
+        document.getElementById("live-badge").hidden=false;
+      }
+    }catch{}
+  }
+
+  document.getElementById("add-friend")?.addEventListener("click",()=>{status.textContent="Friend requests require an accepted Supabase connection before private chat becomes available.";});
+  document.getElementById("work-report-form")?.addEventListener("submit",async e=>{
+    e.preventDefault();
+    document.getElementById("report-status").textContent="Report submission requires an authenticated account.";
+  });
+  loadBadge();
 </script>
