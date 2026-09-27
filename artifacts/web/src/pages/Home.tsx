@@ -21,7 +21,7 @@ export default function Home() {
           <div className="flex items-center gap-3 font-bold">
             <Hexagon className="h-6 w-6" aria-hidden="true" />
             <span>Nexus Web Technology</span>
-
+          </div>
         </div>
       </header>
 
