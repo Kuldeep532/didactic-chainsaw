@@ -1,73 +1,49 @@
-# Nexus Web Technology — Vercel Deployment Guide
+# Nexus Wave Technologies — Vercel Deployment Guide
 
-The website is a Vite/React application under `artifacts/web`. The website frontend uses Supabase directly from the browser, so the frontend project does not need a database password or Supabase service-role key.
+The website is an Astro application under `artifacts/web`. It uses Supabase directly from the browser for the website account flow, so do not place a Supabase service-role key or database password in Vercel browser-visible environment variables.
 
 ## Vercel project settings
 
 Keep the Vercel **Root Directory** at the repository root.
 
-Use:
+Repository configuration currently uses:
 
-- Framework Preset: **Vite**
-- Install Command: `corepack enable && corepack prepare pnpm@10.18.0 --activate && pnpm install --frozen-lockfile`
-- Build Command: `pnpm --filter @workspace/web run build`
-- Output Directory: `artifacts/web/dist/public`
+- Install Command: `cd artifacts/web && npm install --no-package-lock`
+- Build Command: `cd artifacts/web && npm run build`
+- Output Directory: `artifacts/web/dist`
 
-The repository already contains these settings in `vercel.json`.
+Automatic Git deployments are currently disabled in `vercel.json` while the Astro migration is being stabilized. Re-enable deployment only after a successful build has been verified.
 
 ## Vercel Environment Variables
 
-For the website project, add these two variables for Production, Preview and Development:
+For the website project, configure these public variables for Production, Preview and Development:
 
 ```text
-VITE_SUPABASE_URL=https://cpbwiarqlvtlnwbkmpws.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=<your Supabase publishable key>
+PUBLIC_SUPABASE_URL=https://cpbwiarqlvtlnwbkmpws.supabase.co
+PUBLIC_SUPABASE_PUBLISHABLE_KEY=<your Supabase publishable key>
 ```
 
-Get the publishable key from the Supabase project API settings.
+Astro exposes `PUBLIC_*` variables to browser code. Never put a Supabase service-role key, database password, JWT secret, payment secret, or another private credential in a `PUBLIC_*` variable.
 
-Important: the `VITE_` prefix means the value is exposed to browser code during the Vite build. Never put a Supabase service-role key, database password, JWT secret, payment secret or other private credential in a `VITE_` variable.
+The website does not need Firebase environment variables.
 
-The website frontend does not need Firebase environment variables.
+## Routes
 
-## SPA routing
-
-Vercel rewrites application routes to `/index.html`, so direct navigation works for routes such as:
+Astro generates real static routes for pages such as:
 
 - `/community`
 - `/join-team`
 - `/account`
-- `/team-admin`
 - `/legal/privacy`
 - `/legal/terms`
 - `/legal/refund`
-
-## Website features backed by Supabase
-
-The website uses Supabase for:
-
-- email/password sign-in and registration
-- team applications
-- approved team membership
-- community post publishing
-- community post listing
-- main-admin access
-
-The database, not the browser, is the final authorization layer for admin actions.
+- `/legal/disclaimer`
+- `/legal/accessibility`
 
 ## Community audio
 
-Community posts have a **Listen** button. It uses the browser/device speech engine, so no audio API key or audio file service is required for this feature.
+Community content includes a **Listen** control using the browser/device speech engine. This does not require an external audio API key.
 
 ## Production checks
 
-After deployment, verify:
-
-1. Home page loads without a blank screen.
-2. `/community` shows approved free posts.
-3. The Listen button reads a post aloud.
-4. Sign-in and account creation work.
-5. `/join-team` stores applications in Supabase.
-6. `/team-admin` is available only to the main Supabase account.
-7. Nested routes open correctly after a direct refresh.
-8. The final Vercel URL is the URL used later when connecting the Android apps.
+After the Astro build is verified and deployment is re-enabled, test the home page, all primary navigation routes, legal routes, account authentication, and the community Listen control. Use the final Vercel URL later when the Android apps are connected.
