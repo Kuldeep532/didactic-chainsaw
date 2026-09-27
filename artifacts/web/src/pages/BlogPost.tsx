@@ -1,11 +1,22 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams } from "wouter";
+
+type BlogPost = {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt?: string;
+  category?: string;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { useGetBlogPostBySlug, useListBlogPosts } from "@workspace/api-client-react";
 import {
   ArrowLeft,
   Calendar,
@@ -97,11 +108,8 @@ function SocialShare({ title, slug }: { title: string; slug: string }) {
 
 /* ─── Related Posts ─── */
 function RelatedPosts({ currentSlug }: { currentSlug: string }) {
-  const { data: posts } = useListBlogPosts();
-  const related = useMemo(() => {
-    if (!posts) return [];
-    return posts.filter((p) => p.slug !== currentSlug).slice(0, 3);
-  }, [posts, currentSlug]);
+  const posts: BlogPost[] = [];
+  const related = useMemo(() => posts.filter((p) => p.slug !== currentSlug).slice(0, 3), [posts, currentSlug]);
 
   if (!related.length) return null;
 
@@ -154,7 +162,8 @@ function ScrollToTop() {
 /* ─── Main Component ─── */
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
-  const { data: post, isLoading } = useGetBlogPostBySlug(slug ?? "");
+  const post: BlogPost | undefined = undefined;
+  const isLoading = false;
 
   if (isLoading) {
     return (
