@@ -7,7 +7,7 @@ const nexusHighlights = [
   "Voice, media, file and productivity tools",
 ];
 
-function ActionLink({ children }: { children: React.ReactNode }) {
+function ActionLink({ children }: { children: any }) {
   return (
     <button type="button" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-foreground px-6 py-3 text-sm font-medium text-background no-underline">{children}</button>
   );
