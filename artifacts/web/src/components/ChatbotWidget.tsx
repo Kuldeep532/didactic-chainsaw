@@ -25,7 +25,7 @@ export default function ChatbotWidget() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "bot",
-      text: "Hi, I am Nexus Mitra, the assistant for Nexus Wave Technologies. How can I help you today?",
+      text: "Hi, I am Nexus Mitra, the assistant for Nexus Web Technology. How can I help you today?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -241,6 +241,6 @@ function getStaticReply(text: string): string {
   if (t.includes("free") || t.includes("cost") || t.includes("price"))
     return "Our apps are free to download and use. No hidden charges.";
   if (t.includes("kuldeep") || t.includes("founder"))
-    return "Nexus Wave Technologies is founded by Kuldeep Kumar Yadav, focused on building accessible, high-performance mobile utilities.";
-  return "Sign in for full AI-powered responses from Nexus Mitra. You can also visit our Apps, Blog, or Contact page for more information.";
+    return "Nexus Web Technology is founded by Kuldeep Kumar Yadav, focused on building accessible, high-performance mobile utilities.";
+  return "Sign in for full AI-powered responses from Nexus Mitra. You can also visit our Apps, Community, or Contact page for more information.";
 }
