@@ -10,7 +10,7 @@ export default function Disclaimer() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground">
         <p className="text-lg leading-relaxed mb-8 text-foreground">
-          The software and information provided by Nexus Wave Technologies are offered on an "as-is" basis, without warranties of any kind.
+          The software and information provided by Nexus Web Technology are offered on an "as-is" basis, without warranties of any kind.
         </p>
 
         <h2 className="text-xl font-semibold mt-10 mb-4 text-foreground">1. No Warranty</h2>
