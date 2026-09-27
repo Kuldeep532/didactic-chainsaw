@@ -1,0 +1,8 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title="Nexus Blog — Nexus Wave Technologies" description="Official Nexus Wave Technologies blog.">
+  <section class="hero"><div class="container"><p class="eyebrow">Official Blog</p><h1>Updates from the Nexus team.</h1><p class="lead">Only authorized team members can publish official blog posts. Community users can read and discuss published posts, but cannot publish directly into this space.</p></div></section>
+  <section class="section"><div class="container"><div id="blog-list" class="grid-3"><div class="card"><h3>Official posts</h3><p class="muted">Published team content will appear here.</p></div></div></div></section>
+  <section class="section surface-soft"><div class="container grid-2"><article class="card"><p class="eyebrow">Authorization</p><h2>Publishing is restricted.</h2><p class="muted">Blog publishing should be protected by a Supabase role such as <code>team_editor</code> or <code>admin</code>, enforced in RLS/Edge Functions rather than by hiding the button alone.</p></article><article class="card"><p class="eyebrow">Verification</p><h2>Official means authorized.</h2><p class="muted">A post becomes official only after its author is recognized as an authorized team member. Readers should be able to distinguish team posts from ordinary community posts.</p></article></div></section>
+</Layout>
