@@ -17,7 +17,7 @@ export default function Home() {
           <div className="max-w-4xl">
             <div className="mb-8 inline-flex items-center border border-border bg-muted/30 px-3 py-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
               <span className="mr-2 h-2 w-2 bg-foreground" aria-hidden="true" />
-              Nexus Wave Technologies
+              Nexus Web Technology
             </div>
             <h1 className="mb-8 text-5xl font-bold leading-[1.05] tracking-tighter text-foreground md:text-7xl lg:text-[5.5rem]">
               User-friendly software.
@@ -25,7 +25,7 @@ export default function Home() {
               Built for real life.
             </h1>
             <p className="mb-12 max-w-2xl text-xl font-light leading-relaxed text-muted-foreground md:text-2xl">
-              Nexus Wave creates accessible digital products for everyday productivity, AI, media, and spiritual learning.
+              Nexus Web Technology creates accessible digital products for everyday productivity, AI, media, and spiritual learning.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button asChild size="lg" className="h-12 rounded-sm px-8 text-base font-medium">
@@ -48,7 +48,7 @@ export default function Home() {
               <p className="mb-3 text-sm font-medium text-muted-foreground">What Nexus Wave is about</p>
               <h2 className="mb-5 text-3xl font-bold tracking-tight">Useful first, simple to understand.</h2>
               <p className="leading-relaxed text-muted-foreground">
-                Nexus Wave is the name used for software products and online services created by Kuldeep. The focus is practical software that works for people with different needs and abilities.
+                Nexus Web Technology is the developer identity used for software products and online services created by Kuldeep. The focus is practical software that works for people with different needs and abilities.
               </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-8">
