@@ -35,12 +35,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const resolvedTheme = theme === "system" ? getSystemTheme() : theme;
-    setResolved(resolvedTheme);
-    const root = document.documentElement;
-    root.classList.remove("light", "dark");
-    root.classList.add(resolvedTheme);
-    localStorage.setItem("nexus-theme", theme);
+    try {
+      const resolvedTheme = theme === "system" ? getSystemTheme() : theme;
+      setResolved(resolvedTheme);
+      const root = document.documentElement;
+      root.classList.remove("light", "dark");
+      root.classList.add(resolvedTheme);
+      localStorage.setItem("nexus-theme", theme);
+    } catch {
+      // Keep the default light theme when browser storage or media APIs are unavailable.
+    }
   }, [theme]);
 
   useEffect(() => {
