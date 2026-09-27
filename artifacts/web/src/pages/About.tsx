@@ -1,102 +1,74 @@
-import { Code2, Heart, Globe, Hexagon, ArrowRight } from "lucide-react";
+import { Globe, Heart, Hexagon, ShieldCheck, Sparkles } from "lucide-react";
 
 export default function About() {
   return (
-    <div className="flex flex-col w-full">
-      {/* Hero */}
-      <section className="bg-background pt-24 pb-16 border-b border-border">
-        <div className="container mx-auto px-4 md:px-8 max-w-screen-md text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Company Profile</h1>
-          <p className="text-xl text-muted-foreground font-light">
-            A specialized software studio building high-efficiency, barrier-free utilities for the modern web and mobile.
+    <div className="flex w-full flex-col">
+      <section className="border-b border-border bg-background px-4 pb-16 pt-24 md:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="mb-4 text-sm font-medium text-muted-foreground">About Nexus Wave</p>
+          <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl">Software made for people.</h1>
+          <p className="text-lg leading-relaxed text-muted-foreground">
+            Nexus Wave is the name used for software products and online services developed by Kuldeep. It is a developer identity focused on practical, accessible technology rather than a large software studio or team.
           </p>
         </div>
       </section>
 
-      {/* Founder */}
-      <section className="py-20 bg-card border-b border-border">
-        <div className="container mx-auto px-4 md:px-8 max-w-screen-lg">
-          <div className="grid md:grid-cols-12 gap-12 items-start">
-            <div className="md:col-span-4 flex justify-center md:justify-start">
-               <div className="w-32 h-32 bg-muted border border-border flex items-center justify-center">
-                  <Hexagon className="h-12 w-12 text-foreground" strokeWidth={1} />
-               </div>
+      <section className="border-b border-border bg-card py-20">
+        <div className="mx-auto grid max-w-5xl gap-12 px-4 md:grid-cols-12 md:px-8">
+          <div className="md:col-span-4">
+            <div className="flex aspect-square items-center justify-center rounded-2xl border border-border bg-background">
+              <Hexagon className="h-20 w-20" strokeWidth={0.8} aria-hidden="true" />
             </div>
-            <div className="md:col-span-8">
-              <h2 className="text-2xl font-bold tracking-tight mb-1">Kuldeep Kumar Yadav</h2>
-              <p className="text-muted-foreground font-mono text-sm mb-6 uppercase tracking-wider">Founder & Engineer</p>
-              <div className="prose prose-neutral dark:prose-invert">
-                <p className="text-muted-foreground leading-relaxed">
-                  Nexus Wave Technologies operates as a sole proprietorship. I founded this studio to construct software that genuinely assists people—applications that are fast, universally accessible, and built for real-world reliability.
-                </p>
-                <p className="text-muted-foreground leading-relaxed mt-4">
-                  From the applications we ship to the infrastructure running this site, every component is engineered with a strict focus on utility over embellishment.
-                </p>
-              </div>
+          </div>
+          <div className="md:col-span-8">
+            <p className="mb-2 text-sm font-medium text-muted-foreground">Developer</p>
+            <h2 className="mb-5 text-3xl font-bold tracking-tight">Kuldeep</h2>
+            <div className="space-y-5 text-muted-foreground">
+              <p className="leading-relaxed">
+                The Nexus Wave name brings together products such as Nexus Plus and Geeta Nexus, along with selected web utilities that make common tasks easier.
+              </p>
+              <p className="leading-relaxed">
+                Accessibility is a practical requirement throughout the products: clear navigation, screen-reader support, readable layouts and interfaces that avoid unnecessary complexity.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Philosophy */}
-      <section className="py-24 bg-background border-b border-border">
-        <div className="container mx-auto px-4 md:px-8 max-w-screen-lg">
+      <section className="border-b border-border bg-background py-24">
+        <div className="mx-auto max-w-5xl px-4 md:px-8">
           <div className="mb-12">
-             <h2 className="text-3xl font-bold tracking-tight mb-4">Engineering Principles</h2>
-             <p className="text-muted-foreground max-w-2xl leading-relaxed">
-               Great software does not require an army. A singular, focused approach often yields tools that are more cohesive and reliable than those produced by large committees.
-             </p>
+            <h2 className="mb-4 text-3xl font-bold tracking-tight">What users can expect</h2>
+            <p className="max-w-2xl leading-relaxed text-muted-foreground">
+              Products are built around usefulness, accessibility, privacy-aware design and clear communication.
+            </p>
           </div>
-          <div className="grid sm:grid-cols-2 gap-px bg-border border border-border">
-            <div className="bg-card p-8">
-              <div className="font-mono text-xs text-muted-foreground mb-4">01</div>
-              <h3 className="text-lg font-semibold mb-2">Performance First</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">Fast, lightweight, and battery-conscious. We minimize dependencies and optimize for speed.</p>
-            </div>
-            <div className="bg-card p-8">
-              <div className="font-mono text-xs text-muted-foreground mb-4">02</div>
-              <h3 className="text-lg font-semibold mb-2">Universal Access</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">Screen-reader compatibility, thoughtful contrast, and keyboard navigation are hard requirements.</p>
-            </div>
-            <div className="bg-card p-8">
-              <div className="font-mono text-xs text-muted-foreground mb-4">03</div>
-              <h3 className="text-lg font-semibold mb-2">Offline Capability</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">Our utilities are designed to function without an internet connection whenever possible.</p>
-            </div>
-            <div className="bg-card p-8">
-              <div className="font-mono text-xs text-muted-foreground mb-4">04</div>
-              <h3 className="text-lg font-semibold mb-2">Privacy by Default</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">We collect only what is strictly necessary. No tracking bloatware, no invasive analytics.</p>
-            </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Principle icon={<Sparkles className="h-5 w-5" />} title="Useful features">
+              Nexus Plus combines AI, audio, video, documents, content and everyday utility features in one Android experience.
+            </Principle>
+            <Principle icon={<Heart className="h-5 w-5" />} title="Accessibility">
+              Screen-reader friendly layouts and accessible controls are treated as part of the product, not an optional add-on.
+            </Principle>
+            <Principle icon={<ShieldCheck className="h-5 w-5" />} title="Privacy-aware">
+              Account, support and payment information is handled only where it is needed to provide and protect the service.
+            </Principle>
+            <Principle icon={<Globe className="h-5 w-5" />} title="Clear access">
+              Product information, account access and legal policies are published openly so users can review them before using or purchasing a service.
+            </Principle>
           </div>
         </div>
       </section>
+    </div>
+  );
+}
 
-      {/* Connectivity */}
-      <section className="py-20 bg-card">
-        <div className="container mx-auto px-4 md:px-8 max-w-screen-lg">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-             <div>
-               <h2 className="text-2xl font-bold tracking-tight mb-2">Connectivity</h2>
-               <p className="text-muted-foreground text-sm flex items-center gap-2">
-                 <Globe className="w-4 h-4" /> Based in India, shipping globally.
-               </p>
-             </div>
-             <div className="flex flex-wrap gap-3">
-                {[
-                  { label: "GitHub", url: "https://github.com/Kuldeep532/refactored-octo-couscous/releases" },
-                  { label: "LinkedIn", url: "https://www.linkedin.com/company/nexus-wave-technologies/" },
-                  { label: "X / Twitter", url: "https://x.com/NexusWaveApps" },
-                  { label: "Discord", url: "https://discord.gg/3yp8MMwJe" }
-                ].map(link => (
-                  <a key={link.label} href={link.url} target="_blank" rel="noopener noreferrer" className="px-4 py-2 border border-border bg-background text-sm font-medium hover:bg-muted transition-colors">
-                    {link.label}
-                  </a>
-                ))}
-             </div>
-          </div>
-        </div>
-      </section>
+function Principle({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
+  return (
+    <div className="rounded-2xl border border-border bg-card p-7">
+      <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background">{icon}</div>
+      <h3 className="mb-2 text-lg font-semibold">{title}</h3>
+      <p className="text-sm leading-relaxed text-muted-foreground">{children}</p>
     </div>
   );
 }
