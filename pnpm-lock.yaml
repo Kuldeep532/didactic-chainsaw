@@ -434,10 +434,6 @@ importers:
         version: 3.25.76
 
   artifacts/web:
-    dependencies:
-      firebase:
-        specifier: ^12.15.0
-        version: 12.16.0
     devDependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0
