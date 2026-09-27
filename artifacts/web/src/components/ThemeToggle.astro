@@ -1,0 +1,24 @@
+---
+---
+<button class="icon-button theme-toggle" type="button" aria-label="Switch theme" aria-pressed="false" title="Switch theme">
+  <span aria-hidden="true">☼</span>
+  <span class="sr-only">Switch theme</span>
+</button>
+<script>
+  const key = "nexus-theme";
+  const button = document.querySelector(".theme-toggle");
+  const apply = (theme) => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem(key, theme);
+    if (button) {
+      const dark = theme === "dark";
+      button.setAttribute("aria-pressed", String(dark));
+      button.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+      button.setAttribute("title", dark ? "Switch to light mode" : "Switch to dark mode");
+      const icon = button.querySelector("[aria-hidden='true']");
+      if (icon) icon.textContent = dark ? "☾" : "☼";
+    }
+  };
+  apply(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+  button?.addEventListener("click", () => apply(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
+</script>
