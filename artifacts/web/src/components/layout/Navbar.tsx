@@ -20,9 +20,12 @@ const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
+const MAIN_ADMIN_EMAIL = "kuldeepky538@gmail.com";
+
 export default function Navbar() {
   const [location, navigate] = useLocation();
   const { user, logout } = useAuth();
+  const isMainAdmin = user?.email?.toLowerCase() === MAIN_ADMIN_EMAIL;
 
   const handleLogout = async () => {
     await logout();
@@ -32,9 +35,9 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
       <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4 md:px-8">
-        <Link href="/" className="group flex items-center space-x-3" aria-label="Nexus Wave Technologies Home">
+        <Link href="/" className="group flex items-center space-x-3" aria-label="Nexus Web Technology Home">
           <Hexagon className="h-6 w-6 transition-transform duration-500 group-hover:rotate-90" aria-hidden="true" strokeWidth={1.5} />
-          <span className="font-bold tracking-tight">Nexus Wave</span>
+          <span className="font-bold tracking-tight">Nexus Web Technology</span>
         </Link>
 
         <nav className="hidden items-center space-x-8 text-sm font-medium md:flex" aria-label="Primary navigation">
@@ -70,9 +73,9 @@ export default function Navbar() {
                   <DropdownMenuItem asChild>
                     <Link href="/account"><User className="mr-2 h-4 w-4" aria-hidden="true" /> My account</Link>
                   </DropdownMenuItem>
-                  {user.isAdmin && (
+                  {isMainAdmin && (
                     <DropdownMenuItem asChild>
-                      <Link href="/admin"><Settings className="mr-2 h-4 w-4" aria-hidden="true" /> Admin</Link>
+                      <Link href="/team-admin"><Settings className="mr-2 h-4 w-4" aria-hidden="true" /> Team Admin</Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem onClick={() => void handleLogout()}>
@@ -97,7 +100,7 @@ export default function Navbar() {
               <SheetHeader className="border-b border-border pb-4 text-left">
                 <SheetTitle className="flex items-center gap-3">
                   <Hexagon className="h-6 w-6" aria-hidden="true" />
-                  Nexus Wave
+                  Nexus Web Technology
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col pt-4" aria-label="Mobile navigation">
@@ -120,7 +123,7 @@ export default function Navbar() {
                     <div className="space-y-4">
                       <p className="truncate text-sm text-muted-foreground">{user.email}</p>
                       <SheetClose asChild><Link href="/account" className="text-sm font-medium">My account</Link></SheetClose>
-                      {user.isAdmin && <SheetClose asChild><Link href="/admin" className="block text-sm font-medium">Admin</Link></SheetClose>}
+                      {isMainAdmin && <SheetClose asChild><Link href="/team-admin" className="block text-sm font-medium">Team Admin</Link></SheetClose>}
                       <button onClick={() => void handleLogout()} className="flex items-center gap-2 text-sm font-medium">
                         <LogOut className="h-4 w-4" aria-hidden="true" /> Sign out
                       </button>
