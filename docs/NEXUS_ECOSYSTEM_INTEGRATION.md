@@ -66,3 +66,33 @@ Official publishing must be authorized by server-side role checks, not by hiding
 
 
 Forum category creation is restricted to administrators. Users may select an existing category and choose an audience scope (`all`, `female`, or `male`) when submitting a post. The web UI does not allow users to create categories.
+
+## Community identity and permissions contract
+
+### Public profile
+Only the user's chosen public display name should be exposed in user lists, Forum cards, friend lists and chat surfaces. Do not expose email, phone, verification identifiers, private contact details or other account metadata through public community queries.
+
+### Private chat gate
+A private chat may be created only when both users have an accepted friendship relation in both directions. A chat request alone is not sufficient. Users can still report another profile without being friends.
+
+### User reporting
+Every user profile must expose a Report action. Reports are private moderation records and are submitted through a server-side RPC. A reported user does not receive the reporter's private details through the reporting record.
+
+### Team application and verification
+A user submits a team application from Join Our Team. The application is reviewed in the Admin Control Center. Only after approval should an authorized team-member record and role permissions be granted.
+
+### Team role categories
+Recommended roles:
+- `team_member`: general approved contributor.
+- `team_editor`: official publishing/content editing.
+- `moderator`: Forum and community moderation.
+- `safety_campaign`: Women Safety campaign contribution.
+- `safety_content`: safety education and creative content.
+- `forum_organizer`: community/forum organization.
+- `accessibility_qa`: accessibility testing and QA.
+- `admin`: full administrative control.
+
+These roles are permissions, not public profile labels. Server-side RLS/Edge Functions must enforce them.
+
+### Live contributor badge
+A contributor report is submitted from the user's profile. An authorized reviewer approves it, which activates the public-safe `Trusted Contributor` badge. The badge must not expose the underlying report, evidence, email or private details.
