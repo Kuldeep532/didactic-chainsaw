@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,10 +14,9 @@ export default function Login() {
   const [, navigate] = useLocation();
   const [mode, setMode] = useState<"login" | "register">("login");
 
-  if (user) {
-    navigate("/nexus");
-    return null;
-  }
+  useEffect(() => {
+    if (user) navigate("/account");
+  }, [user, navigate]);
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-background">
@@ -61,10 +60,10 @@ export default function Login() {
                   <TabsTrigger value="register">Create account</TabsTrigger>
                 </TabsList>
                 <TabsContent value="login">
-                  <AuthForm mode="login" onSubmit={login} onSuccess={() => navigate("/nexus")} />
+                  <AuthForm mode="login" onSubmit={login} onSuccess={() => navigate("/account")} />
                 </TabsContent>
                 <TabsContent value="register">
-                  <AuthForm mode="register" onSubmit={register} onSuccess={() => navigate("/nexus")} />
+                  <AuthForm mode="register" onSubmit={register} onSuccess={() => navigate("/account")} />
                 </TabsContent>
               </Tabs>
             )}
@@ -148,63 +147,25 @@ function AuthForm({
           <span>{error}</span>
         </div>
       )}
-
       <div className="space-y-2">
         <Label htmlFor={`${mode}-email`}>Email address</Label>
-        <Input
-          id={`${mode}-email`}
-          type="email"
-          autoComplete="email"
-          inputMode="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          disabled={loading}
-          required
-        />
+        <Input id={`${mode}-email`} type="email" autoComplete="email" inputMode="email" placeholder="you@example.com" value={email} onChange={(event) => setEmail(event.target.value)} disabled={loading} required />
       </div>
-
       <div className="space-y-2">
         <Label htmlFor={`${mode}-password`}>Password</Label>
         <div className="relative">
-          <Input
-            id={`${mode}-password`}
-            type={showPassword ? "text" : "password"}
-            autoComplete={isRegister ? "new-password" : "current-password"}
-            placeholder="Enter your password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            disabled={loading}
-            required
-            className="pr-11"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword((visible) => !visible)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground hover:text-foreground"
-            aria-label={showPassword ? "Hide password" : "Show password"}
-          >
+          <Input id={`${mode}-password`} type={showPassword ? "text" : "password"} autoComplete={isRegister ? "new-password" : "current-password"} placeholder="Enter your password" value={password} onChange={(event) => setPassword(event.target.value)} disabled={loading} required className="pr-11" />
+          <button type="button" onClick={() => setShowPassword((visible) => !visible)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground hover:text-foreground" aria-label={showPassword ? "Hide password" : "Show password"}>
             {showPassword ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
           </button>
         </div>
       </div>
-
       {isRegister && (
         <div className="space-y-2">
           <Label htmlFor="register-confirm">Confirm password</Label>
-          <Input
-            id="register-confirm"
-            type={showPassword ? "text" : "password"}
-            autoComplete="new-password"
-            placeholder="Enter the password again"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            disabled={loading}
-            required
-          />
+          <Input id="register-confirm" type={showPassword ? "text" : "password"} autoComplete="new-password" placeholder="Enter the password again" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} disabled={loading} required />
         </div>
       )}
-
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : isRegister ? <CheckCircle2 className="mr-2 h-4 w-4" aria-hidden="true" /> : <LockKeyhole className="mr-2 h-4 w-4" aria-hidden="true" />}
         {isRegister ? "Create account" : "Sign in"}
