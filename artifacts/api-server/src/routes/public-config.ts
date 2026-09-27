@@ -5,20 +5,20 @@ const router: IRouter = Router();
 
 const PUBLIC_CONFIG: PublicConfig = {
   companyName: "Nexus Wave Technologies",
-  tagline: "High-efficiency barrier-free utilities for everyone",
+  tagline: "User-friendly software for accessibility, AI, productivity and spiritual learning",
   contactEmail: "info@nexusweb.co.in",
   apps: [
     {
       id: "nexus-plus",
       name: "Nexus Plus",
       packageId: "com.nexuswavetech.nexusplus",
-      description: "Enhanced features and seamless integration",
+      description: "AI, media, audio, PDF, e-paper, accessibility and everyday utility features in one Android app.",
     },
     {
       id: "geeta-nexus",
       name: "Geeta Nexus",
       packageId: "com.nexuswavetech.geetanexus",
-      description: "Spiritual wisdom meets modern technology",
+      description: "An accessible Bhagavad Gita reading experience for Sanskrit, Hindi and English spiritual study.",
     },
   ],
 };
