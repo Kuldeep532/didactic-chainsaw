@@ -33,14 +33,23 @@ import Layout from "../layouts/Layout.astro";
       </div>
     </div>
   </section>
-  <section class="section">
+  <section class="section daily-section" aria-labelledby="daily-shlok-title">
     <div class="container">
-      <div class="section-head"><div><p class="eyebrow">Geeta Nexus on the web</p><h2>Read a shlok without installing an app.</h2></div><a class="button primary" href="/gita">Open Gita Reader</a></div>
-      <div class="grid-3">
-        <article class="card"><p class="gita-ref">Bhagavad Gita 2.47</p><h3 class="gita-sanskrit">कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।</h3><p class="muted">A short daily reading with Sanskrit and meaning.</p><a class="button" href="/gita">Read and listen →</a></article>
-        <article class="card"><p class="eyebrow">Daily</p><h3>Today's Shlok</h3><p class="muted">A simple spiritual reading surface for quick visits.</p><a class="button" href="/shlok">Open today's shlok →</a></article>
-        <article class="card"><p class="eyebrow">Scriptures</p><h3>More from Geeta Nexus</h3><p class="muted">Bhagavad Gita, Shiva Mahapurana and Ramcharitmanas are part of the broader scripture experience.</p><a class="button" href="/apps">Explore Geeta Nexus →</a></article>
+      <div class="section-head">
+        <div><p class="eyebrow">Geeta Nexus</p><h2 id="daily-shlok-title">आज का श्लोक</h2></div>
+        <a class="button primary" href="/shlok">सभी श्लोक पढ़ें</a>
       </div>
+      <article class="card daily-shlok-card">
+        <p id="daily-shlok-ref" class="gita-ref">श्लोक लोड हो रहा है…</p>
+        <h3 id="daily-shlok-text" class="gita-sanskrit" lang="sa">कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।</h3>
+        <p id="daily-shlok-meaning" class="gita-meaning" lang="hi">कर्म करने में ही तुम्हारा अधिकार है, उसके फल पर नहीं।</p>
+        <div class="actions">
+          <button id="daily-shlok-listen" class="button primary" type="button">श्लोक सुनें</button>
+          <button id="daily-shlok-copy" class="button" type="button">कॉपी करें</button>
+          <a class="button ghost" href="/shlok">Read All Shlokas</a>
+        </div>
+        <p id="daily-shlok-status" class="note" aria-live="polite">हर दिन श्लोक का चयन अपने आप बदलेगा।</p>
+      </article>
     </div>
   </section>
   <section class="section surface-soft">
@@ -54,4 +63,68 @@ import Layout from "../layouts/Layout.astro";
       </div>
     </div>
   </section>
+  <script is:inline>
+    const fallback = [
+      {chapter_number:2,verse_number:47,text:"कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।",translation:"कर्म करने में ही तुम्हारा अधिकार है, उसके फल पर कभी नहीं।"},
+      {chapter_number:2,verse_number:48,text:"योगस्थः कुरु कर्माणि सङ्गं त्यक्त्वा धनञ्जय।",translation:"हे धनंजय, आसक्ति छोड़कर समत्व-बुद्धि से कर्म करो।"},
+      {chapter_number:4,verse_number:7,text:"यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।",translation:"हे भारत, जब-जब धर्म की हानि और अधर्म की वृद्धि होती है।"},
+      {chapter_number:4,verse_number:8,text:"परित्राणाय साधूनां विनाशाय च दुष्कृताम्।",translation:"सज्जनों की रक्षा और दुष्कर्मियों के विनाश के लिए।"},
+      {chapter_number:18,verse_number:66,text:"सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज।",translation:"सभी प्रकार के आश्रयों को छोड़कर केवल मेरी शरण में आओ।"}
+    ];
+    const ref = document.getElementById("daily-shlok-ref");
+    const text = document.getElementById("daily-shlok-text");
+    const meaning = document.getElementById("daily-shlok-meaning");
+    const status = document.getElementById("daily-shlok-status");
+    let currentVerse = fallback[0];
+
+    const dayNumber = () => {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), 0, 0);
+      return Math.floor((now - start) / 86400000);
+    };
+
+    const applyDaily = (verses) => {
+      if (!verses.length) return;
+      currentVerse = verses[dayNumber() % verses.length];
+      ref.textContent = `भगवद्गीता ${currentVerse.chapter_number}.${currentVerse.verse_number}`;
+      text.textContent = currentVerse.text;
+      meaning.textContent = currentVerse.translation || "हिंदी अर्थ उपलब्ध नहीं है।";
+      status.textContent = `आज का चयन: श्लोक ${currentVerse.chapter_number}.${currentVerse.verse_number}`;
+    };
+
+    document.getElementById("daily-shlok-listen")?.addEventListener("click", () => {
+      const speakText = `भगवद्गीता अध्याय ${currentVerse.chapter_number}, श्लोक ${currentVerse.verse_number}. ${currentVerse.text}. ${currentVerse.translation || ""}`;
+      window.NexusSpeak?.(speakText);
+    });
+
+    document.getElementById("daily-shlok-copy")?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(`भगवद्गीता ${currentVerse.chapter_number}.${currentVerse.verse_number}\n${currentVerse.text}\n${currentVerse.translation || ""}`.trim());
+        status.textContent = "आज का श्लोक कॉपी हो गया।";
+      } catch {
+        status.textContent = "श्लोक कॉपी नहीं हो सका।";
+      }
+    });
+
+    (async () => {
+      try {
+        const responses = await Promise.all(Array.from({length:18}, (_, i) => fetch(`https://raw.githubusercontent.com/gita/gita/master/data/json/chapter_${i+1}.json`)));
+        if (responses.some(r => !r.ok)) throw new Error("remote unavailable");
+        const payloads = await Promise.all(responses.map(r => r.json()));
+        const verses = payloads.flatMap((payload, index) => {
+          const items = Array.isArray(payload) ? payload : (payload.verses || payload.data || []);
+          return items.map(v => ({
+            chapter_number: Number(v.chapter_number ?? index + 1),
+            verse_number: Number(v.verse_number ?? v.verse ?? v.id ?? 0),
+            text: v.text ?? v.slok ?? v.sanskrit ?? "",
+            translation: v.translation ?? v.hindi_translation ?? v.meaning ?? ""
+          }));
+        }).filter(v => v.text);
+        applyDaily(verses.length ? verses : fallback);
+      } catch {
+        applyDaily(fallback);
+        status.textContent = "पूरा संग्रह अभी उपलब्ध नहीं था; आज के लिए सुरक्षित fallback श्लोक दिखाया गया है।";
+      }
+    })();
+  </script>
 </Layout>
