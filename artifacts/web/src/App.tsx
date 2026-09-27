@@ -8,17 +8,15 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import Preloader from "./components/Preloader";
 import ChatbotWidget from "./components/ChatbotWidget";
 import { AuthProvider } from "./context/AuthContext";
-
 import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Apps from "./pages/Apps";
 import Contact from "./pages/Contact";
-import Admin from "./pages/Admin";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Login from "./pages/Login";
-import Resources from "./pages/Resources";
+import Utilities from "./pages/Utilities";
 import NexusDashboard from "./pages/NexusDashboard";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import Terms from "./pages/legal/Terms";
@@ -67,12 +65,11 @@ function FocusRouter() {
         <Route path="/nexus" component={NexusDashboard} />
         <Route path="/about" component={About} />
         <Route path="/apps" component={Apps} />
+        <Route path="/utilities" component={Utilities} />
         <Route path="/contact" component={Contact} />
         <Route path="/blog" component={Blog} />
         <Route path="/blog/:slug" component={BlogPost} />
         <Route path="/login" component={Login} />
-        <Route path="/admin" component={Admin} />
-        <Route path="/resources" component={Resources} />
         <Route path="/legal/privacy" component={PrivacyPolicy} />
         <Route path="/legal/terms" component={Terms} />
         <Route path="/legal/refund" component={RefundPolicy} />
