@@ -15,7 +15,8 @@ const NAV_LINKS = [
   { href: "/about", label: "About" },
   { href: "/apps", label: "Apps" },
   { href: "/utilities", label: "Utilities" },
-  { href: "/blog", label: "Updates" },
+  { href: "/community", label: "Community" },
+  { href: "/join-team", label: "Join Our Team" },
   { href: "/contact", label: "Contact" },
 ];
 
