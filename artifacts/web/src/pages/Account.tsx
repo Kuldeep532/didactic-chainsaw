@@ -28,7 +28,7 @@ export default function Account() {
           <p className="mb-3 text-sm font-medium text-muted-foreground">Nexus account</p>
           <h1 className="text-4xl font-bold tracking-tight">Your account</h1>
           <p className="mt-3 max-w-2xl leading-relaxed text-muted-foreground">
-            Manage your website session and quickly reach the products and policies connected to your Nexus Wave account.
+            Manage your website session and quickly reach the products and policies connected to your Nexus Web Technology account.
           </p>
         </div>
 
