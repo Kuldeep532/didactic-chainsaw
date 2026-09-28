@@ -47,3 +47,20 @@ Community content includes a **Listen** control using the browser/device speech 
 ## Production checks
 
 After the Astro build is verified and deployment is re-enabled, test the home page, all primary navigation routes, legal routes, account authentication, and the community Listen control. Use the final Vercel URL later when the Android apps are connected.
+
+
+## Current browser environment
+
+For the public Astro website, add these Vercel environment variables for the Production deployment:
+
+```text
+PUBLIC_SUPABASE_URL=https://cpbwiarqlvtlnwbkmpws.supabase.co
+PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
+```
+
+Use the Supabase **Publishable** key from **Settings → API Keys**. Never put a Supabase Secret key, database password, or service-role key in a `PUBLIC_*` variable.
+
+The separate Admin Center uses the same two variables in its own Vercel project.
+
+For Google sign-in, set the production Site URL to the website URL in Supabase Authentication → URL Configuration and allow the production `/account` redirect. The Google provider itself must also be enabled with its Web OAuth client in Supabase Authentication → Providers → Google.
+
