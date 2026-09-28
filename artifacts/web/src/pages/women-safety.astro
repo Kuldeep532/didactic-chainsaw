@@ -3,77 +3,119 @@ import Layout from "../layouts/Layout.astro";
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
-<Layout title="Women Safety Center — Nexus Wave Technologies" description="Women Safety Center for reporting concerns, joining safety campaigns and finding community support.">
-  <section class="hero"><div class="container hero-shell"><div>
-    <p class="eyebrow">Women Safety Center</p><h1>Safety, dignity and practical support.</h1>
-    <p class="lead">Report a concern, join a responsible safety campaign, or learn how the same safety system can connect to Nexus Plus and Geeta Nexus.</p>
-    <div class="actions"><a class="button primary" href="#report">Report a concern</a><a class="button" href="#campaign">Join campaign</a><a class="button" href="#integration">Integration</a></div>
-  </div><div class="hero-panel"><p class="eyebrow">Immediate danger</p><h2>Please use local emergency help first.</h2><p class="muted">This independent support channel is not a replacement for emergency services, police, medical care or qualified legal assistance.</p><div class="actions"><a class="button primary" href="tel:112">Call 112</a></div></div></div></section>
+<Layout title="Women Safety — Nexus Wave Technologies" description="A simple, private place to find safety information and request support.">
+  <section class="hero">
+    <div class="container hero-shell">
+      <div>
+        <p class="eyebrow">Women Safety Center</p>
+        <h1>You deserve to feel safe.</h1>
+        <p class="lead">Find immediate help, share a concern privately, or understand what happens after you ask for support.</p>
+        <div class="actions">
+          <a class="button primary" href="#report">Report a concern</a>
+          <a class="button" href="#support">How support works</a>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <p class="eyebrow">If you are in immediate danger</p>
+        <h2>Get emergency help first.</h2>
+        <p class="muted">For an emergency in India, call 112 or contact your local emergency service.</p>
+        <a class="button primary" href="tel:112">Call 112</a>
+      </div>
+    </div>
+  </section>
 
-  <section class="section" id="report"><div class="container grid-2">
-    <article class="card"><p class="eyebrow">01 · Safe reporting</p><h2>Share a concern.</h2><p class="muted">A Nexus account is required before a private complaint can be registered. Your complaint receives a unique case number after secure submission.</p><p class="note"><a href="/login">Log in to Nexus</a> before opening the complaint form.</p>
-      <form id="safety-report-form" class="form">
-        <label>Your name (optional)<input id="report-name" autocomplete="name" /></label>
-        <label>Are you a Nexus Plus user?<select id="nexus-user"><option value="no">No / Not sure</option><option value="yes">Yes</option></select></label>
-        <label id="report-email-wrap">Contact email<input id="report-email" type="email" autocomplete="email" required /></label>
-        <label id="report-phone-wrap">Contact phone<input id="report-phone" type="tel" autocomplete="tel" required /></label>
-        <label>Concern type<select id="report-type"><option>Harassment or intimidation</option><option>Online abuse or threats</option><option>Domestic or relationship safety concern</option><option>Public-place safety concern</option><option>Support or guidance request</option><option>Other</option></select></label>
-        <label>What happened?<textarea id="report-message" minlength="10" required placeholder="Describe the situation without confidential credentials."></textarea></label>
-        <label>Preferred follow-up<select id="report-followup"><option>Contact me if support is available</option><option>I only want to submit information</option><option>I prefer not to say</option></select></label>
-        <label class="checkbox-row"><input id="report-consent" type="checkbox" required /> I understand this is a confidential support channel, not a guaranteed emergency intervention service.</label>
-        <label>Preferred contact mode<select id="report-contact-mode"><option value="secure-chat">Private secure chat</option><option value="voice">Private voice support</option><option value="either">Chat or voice when available</option></select></label><button class="button primary" type="submit" disabled>Login required to submit</button><p id="report-status" class="note" aria-live="polite"></p>
-      </form>
-    </article>
-    <article class="card"><p class="eyebrow">Private complaint channel</p><h2>Only the designated recipient can review it.</h2>
-      <ul class="feature-list"><li>Share the minimum information needed for the request.</li><li>Evidence should be relevant and lawfully shareable.</li><li>A report here does not automatically file an official complaint.</li><li>Support requests may require verification before action.</li></ul>
-      <p class="note">Private complaints are kept out of the public campaign and forum. Access is restricted by a dedicated Supabase security policy to the configured recipient account only.</p>
-    </article>
-  </div></section>
+  <section class="section" id="report">
+    <div class="container grid-2">
+      <article class="card">
+        <p class="eyebrow">Private report</p>
+        <h2>Tell us what happened.</h2>
+        <p class="muted">A Nexus account is required so that your private request can be connected to the right support process.</p>
+        <div id="login-note" class="section-card" style="margin:16px 0">
+          <strong>Please log in first.</strong>
+          <p class="muted">Your report will not be submitted while you are signed out.</p>
+          <a class="button primary" href="/login">Log in</a>
+        </div>
+        <form id="safety-report-form" class="form" hidden>
+          <label>Your name (optional)<input id="report-name" autocomplete="name" /></label>
+          <label>Are you using Nexus Plus?<select id="nexus-user"><option value="no">No / Not sure</option><option value="yes">Yes</option></select></label>
+          <div id="website-contact">
+            <label>Contact email<input id="report-email" type="email" autocomplete="email" /></label>
+            <label>Contact phone<input id="report-phone" type="tel" autocomplete="tel" /></label>
+          </div>
+          <label>What do you need help with?
+            <select id="report-type">
+              <option>Harassment or intimidation</option>
+              <option>Online abuse or threats</option>
+              <option>Domestic or relationship safety concern</option>
+              <option>Public-place safety concern</option>
+              <option>Support or guidance</option>
+              <option>Something else</option>
+            </select>
+          </label>
+          <label>What happened?<textarea id="report-message" minlength="10" required placeholder="Tell us only what you are comfortable sharing."></textarea></label>
+          <label>How would you prefer to be contacted?
+            <select id="report-contact-mode"><option value="secure-chat">Private chat</option><option value="voice">Private voice support</option><option value="either">Chat or voice</option></select>
+          </label>
+          <label class="checkbox-row"><input id="report-consent" type="checkbox" required /> I understand this is a support channel and not a replacement for emergency services.</label>
+          <button class="button primary" type="submit">Send private report</button>
+          <p id="report-status" class="note" aria-live="polite"></p>
+        </form>
+      </article>
 
-  <section class="section surface-soft" id="campaign"><div class="container">
-    <div class="section-head"><div><p class="eyebrow">02 · Women Safety Campaign</p><h2>Join, help and document real contribution.</h2></div></div>
-    <div class="grid-2"><article class="card"><h3>Join through the Nexus team</h3><p class="muted">Women Safety Campaign volunteers use the same Join Our Team review process, so one application can cover campaign work and other approved Nexus roles.</p>
-      <form id="campaign-form" class="form">
-        <label>Name<input id="campaign-name" autocomplete="name" required /></label><label>Email<input id="campaign-email" type="email" autocomplete="email" required /></label>
-        <label>Campaign role<select id="campaign-role" required>
-          <option value="women_safety_campaign">Women Safety Campaign Volunteer</option>
-          <option value="safety_content_poetry">Safety Content & Poetry</option>
-          <option value="community_forum_organizer">Community & Forum Organizer</option>
-        </select></label>
-        <label>How would you like to help?<textarea id="campaign-help" minlength="10" required></textarea></label>
-        <label>Proof or evidence link (optional)<input id="campaign-proof" type="url" placeholder="https://…" /></label>
-        <p class="note">Proof should show genuine contribution. Do not upload private, intimate or identifying material belonging to another person.</p>
-        <button class="button primary" type="submit">Apply through Join Our Team</button><p id="campaign-status" class="note" aria-live="polite"></p>
-      </form></article>
-      <article class="card"><h3>Campaign contributions</h3><p class="muted">Poetry, short messages, educational material, accessibility-friendly awareness content and verified campaign work can be contributed. Creative work is reviewed for dignity, relevance and originality; it is never required to identify a survivor or disclose private details.</p><h3>Evidence standards</h3><p class="muted">Recognition should be based on genuine contribution rather than fabricated screenshots, copied stories or unverifiable claims.</p>
-        <ul class="feature-list"><li>Prefer original, independently checkable evidence.</li><li>Protect other people’s private information and obtain consent where appropriate.</li><li>Do not upload graphic or intimate material merely as proof.</li><li>False or manipulated evidence may be rejected or removed.</li></ul>
-        <p class="note"><strong>Hero of the Month</strong> should be based on reviewed, documented contribution rather than popularity alone.</p>
-      </article></div>
-  </div></section>
+      <article class="card">
+        <p class="eyebrow">What to expect</p>
+        <h2>Simple, private support.</h2>
+        <div class="grid-3">
+          <div class="stat"><strong>1. You ask</strong><span class="muted">Share only the information needed to understand your concern.</span></div>
+          <div class="stat"><strong>2. We review</strong><span class="muted">The request is handled privately by the appropriate support process.</span></div>
+          <div class="stat"><strong>3. We respond</strong><span class="muted">If follow-up is available, you receive a private way to continue.</span></div>
+        </div>
+        <p class="note" style="margin-top:16px">A private report does not automatically file a police complaint or guarantee an emergency response.</p>
+      </article>
+    </div>
+  </section>
 
-  <section class="section" id="integration"><div class="container"><div class="section-head"><div><p class="eyebrow">03 · Cross-product integration</p><h2>One safety system, multiple Nexus products.</h2></div></div>
-    <div class="grid-3"><article class="card"><h3>Website</h3><p class="muted">Public safety center for reports, campaigns and support access.</p></article><article class="card"><h3>Nexus Plus</h3><p class="muted">Can open the same reporting and campaign flows without a separate safety database.</p></article><article class="card"><h3>Geeta Nexus</h3><p class="muted">Can add a compact safety entry point using the same session and service contract.</p></article></div>
-    <div class="section-card" style="margin-top:1rem"><h3>Integration contract</h3><p class="muted">Use server-side validation and Supabase RLS/Edge Functions. Do not expose service-role credentials in apps or browsers.</p><pre class="code-block"><code>POST /functions/v1/women-safety-report
-POST /functions/v1/women-safety-campaign
-GET  /functions/v1/women-safety-guidance</code></pre></div>
-  </div></section>
-
-  <section class="section surface-soft" id="private-support"><div class="container"><div class="section-head"><div><p class="eyebrow">Private support access</p><h2>A confidential route for follow-up support.</h2><p class="muted">After a private report is submitted, the support system can issue an opaque case link. That link—not a phone number or public profile—becomes the conversation entry point.</p></div></div><div class="grid-3"><article class="card"><h3>Private case link</h3><p class="muted">A random, revocable invitation token can open the case workspace without exposing the person's normal profile or phone number.</p></article><article class="card"><h3>Chat or voice</h3><p class="muted">When an approved support worker becomes available, the same case can support secure messaging or an ephemeral voice session.</p></article><article class="card"><h3>Minimum information</h3><p class="muted">Support staff should see only the active case context required for assistance, not the person's unrelated account history.</p></article></div></div></section>
+  <section class="section surface-soft" id="support">
+    <div class="container">
+      <div class="section-head">
+        <div><p class="eyebrow">Support</p><h2>Designed around privacy.</h2><p class="muted">Support workers receive only the information needed for the active case. Women’s cases can be routed to approved women support workers, and men’s cases can be routed to approved men support workers.</p></div>
+      </div>
+      <div class="grid-3">
+        <article class="card"><h3>Private conversation</h3><p class="muted">Follow-up can use a private case conversation instead of exposing your phone number or public profile.</p></article>
+        <article class="card"><h3>Chat or voice</h3><p class="muted">When available, support can continue through private messaging or a voice session.</p></article>
+        <article class="card"><h3>Need a person?</h3><p class="muted">Approved support volunteers go through screening before they can receive safety-support responsibilities.</p><a class="button" href="/join-team">See support roles</a></article>
+      </div>
+    </div>
+  </section>
 </Layout>
+
 <script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
-  const reportForm=document.getElementById("safety-report-form"), reportStatus=document.getElementById("report-status");
+  const token=localStorage.getItem("nexus-access-token");
+  const form=document.getElementById("safety-report-form");
+  const loginNote=document.getElementById("login-note");
+  const status=document.getElementById("report-status");
   const nexusUser=document.getElementById("nexus-user");
-  const emailWrap=document.getElementById("report-email-wrap");
-  const phoneWrap=document.getElementById("report-phone-wrap");
-  const syncContactRequirement=()=>{const isAppUser=nexusUser?.value==="yes";if(emailWrap)emailWrap.hidden=isAppUser;if(phoneWrap)phoneWrap.hidden=isAppUser;document.getElementById("report-email").required=!isAppUser;document.getElementById("report-phone").required=!isAppUser;};
-  nexusUser?.addEventListener("change",syncContactRequirement); syncContactRequirement();
-  const campaignForm=document.getElementById("campaign-form"), campaignStatus=document.getElementById("campaign-status");
-  async function callFunction(name,payload){
-    if(!supabaseUrl||!supabaseKey) throw new Error("not-configured");
-    const r=await fetch(supabaseUrl+"/functions/v1/"+name,{method:"POST",headers:{apikey:supabaseKey,Authorization:"Bearer "+supabaseKey,"Content-Type":"application/json"},body:JSON.stringify(payload)});
-    if(!r.ok) throw new Error("request-failed"); return r.json().catch(()=>({}));
-  }
-  reportForm?.addEventListener("submit",async e=>{e.preventDefault();reportStatus.textContent="Submitting confidential complaint…";try{if(!document.getElementById("report-consent").checked) throw 0;await callFunction("submit-women-safety-private-report",{contact_name:document.getElementById("report-name").value.trim(),contact_email:document.getElementById("report-email").value.trim(),contact_phone:document.getElementById("report-phone").value.trim(),nexus_plus_user:document.getElementById("nexus-user").value==="yes",concern_type:document.getElementById("report-type").value,message:document.getElementById("report-message").value.trim(),preferred_followup:document.getElementById("report-followup").value,contact_mode:document.getElementById("report-contact-mode").value});reportStatus.textContent="Your private report was submitted. Keep the case link safe; it is used to enter the private support conversation when support becomes available.";reportForm.reset()}catch{reportStatus.textContent="The confidential complaint service is not configured yet. Your information was not reported as submitted."}});
-  campaignForm?.addEventListener("submit",async e=>{e.preventDefault();campaignStatus.textContent="Submitting campaign application…";try{const role=document.getElementById("campaign-role").value;
-await callFunction("women-safety-campaign",{name:document.getElementById("campaign-name").value.trim(),email:document.getElementById("campaign-email").value.trim(),campaign_role:role,application_type:role,contribution:document.getElementById("campaign-help").value.trim(),proof_url:document.getElementById("campaign-proof").value.trim()||null});campaignStatus.textContent="Campaign application submitted for review.";campaignForm.reset()}catch{campaignStatus.textContent="The Supabase campaign endpoint is not connected yet. The integration-ready application is in place."}});
+  const contact=document.getElementById("website-contact");
+  const syncContact=()=>{const appUser=nexusUser?.value==="yes";if(contact)contact.hidden=appUser;document.getElementById("report-email").required=!appUser;document.getElementById("report-phone").required=!appUser;};
+  if(token){form.hidden=false;loginNote.hidden=true;syncContact();}
+  nexusUser?.addEventListener("change",syncContact);
+  form?.addEventListener("submit",async e=>{
+    e.preventDefault();
+    status.textContent="Sending your private report…";
+    try{
+      if(!token) throw new Error("Please log in before sending a private report.");
+      if(!supabaseUrl||!supabaseKey) throw new Error("The support service is temporarily unavailable.");
+      const r=await fetch(supabaseUrl+"/functions/v1/submit-women-safety-private-report",{method:"POST",headers:{apikey:supabaseKey,Authorization:"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify({
+        contact_name:document.getElementById("report-name").value.trim(),
+        contact_email:document.getElementById("report-email").value.trim(),
+        contact_phone:document.getElementById("report-phone").value.trim(),
+        nexus_plus_user:nexusUser.value==="yes",
+        concern_type:document.getElementById("report-type").value,
+        message:document.getElementById("report-message").value.trim(),
+        contact_mode:document.getElementById("report-contact-mode").value
+      })});
+      if(!r.ok) throw new Error("We could not send your report right now. Please try again.");
+      form.reset();syncContact();status.textContent="Your private report has been sent. Keep your account available for follow-up.";
+    }catch(error){status.textContent=error instanceof Error?error.message:"We could not send your report right now.";}
+  });
 </script>
