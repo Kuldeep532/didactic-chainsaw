@@ -1,33 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { requireSupabase } from "../lib/supabase";
-const client = requireSupabase();
-void client;
 ---
-<Layout title="My Chats — Nexus Community" description="Private conversations and verified community rooms across Nexus Wave Technologies.">
+<Layout title="Chat — Nexus Community" description="Nexus Community chat is currently unavailable.">
   <section class="hero"><div class="container">
-    <p class="eyebrow">Community · My Chats</p>
-    <h1>Your conversations in one place.</h1>
-    <p class="lead">Private chat is intentionally restricted. You can chat only with someone who is also your accepted friend.</p>
+    <p class="eyebrow">Community · Chat</p>
+    <h1>Chat is paused for now.</h1>
+    <p class="lead">Private community chat is intentionally disabled while the next messaging model is being designed.</p>
+    <div class="actions"><a class="button primary" href="/community">Back to Community</a><a class="button" href="/posts">Read Posts</a></div>
   </div></section>
-  <section class="section"><div class="container grid-2">
-    <article class="card"><p class="eyebrow">My Chats</p><h2>Recent conversations</h2><div id="chat-list" class="chat-list"><div class="note">Only conversations that pass the mutual-friend rule will appear here.</div></div></article>
-    <article class="card"><p class="eyebrow">Verified rooms</p><h2>Choose a safe space</h2>
-      <div class="room-list">
-        <button class="button" type="button" disabled>Women-only verified community</button>
-        <button class="button" type="button" disabled>Men-only verified community</button>
-        <button class="button" type="button" disabled>General community</button>
-      </div>
-      <p class="note">Private messaging does not open from a profile alone. Both people must accept the friendship relation first. Reporting a user does not require friendship.</p>
-    </article>
-  </div></section>
-  <section class="section surface-soft"><div class="container"><div class="section-card">
-    <p class="eyebrow">Chat technology</p><h2>Designed without a paid third-party chat API.</h2>
-    <p class="muted">The product contract is built around your own application layer: Supabase Auth for identity, Supabase database/RLS for persistence, and Supabase Realtime channels for message delivery. That avoids introducing a separate commercial chat vendor.</p>
-    <div class="grid-3">
-      <article class="stat"><strong>Private</strong><span class="muted">RLS protects conversation rows.</span></article>
-      <article class="stat"><strong>Realtime</strong><span class="muted">Channel-based message updates.</span></article>
-      <article class="stat"><strong>Portable</strong><span class="muted">Same contract can be used by web and Android apps.</span></article>
-    </div>
-  </div></div></section>
 </Layout>
