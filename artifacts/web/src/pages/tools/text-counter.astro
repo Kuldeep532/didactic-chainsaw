@@ -1,0 +1,9 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+<Layout title="Text Counter — Nexus Wave Technologies" description="Count words, characters, lines and reading time in your browser.">
+  <section class="hero tool-hero"><div class="container"><p class="eyebrow">Tools</p><h1>Text Counter</h1><p class="lead">Measure your text instantly without uploading it anywhere.</p></div></section>
+  <section class="section"><div class="container"><a class="button ghost back-link" href="/tools">Back to Tools</a><article class="card"><label for="text-input">Your text</label><textarea id="text-input" class="tool-control" rows="12" placeholder="Type or paste your text here…"></textarea><div class="stats grid-4"><div class="stat"><strong id="words">0</strong><span class="muted">Words</span></div><div class="stat"><strong id="chars">0</strong><span class="muted">Characters</span></div><div class="stat"><strong id="lines">0</strong><span class="muted">Lines</span></div><div class="stat"><strong id="time">0 min</strong><span class="muted">Reading time</span></div></div></article></div></section>
+  <style>.tool-hero{padding-bottom:32px}.back-link{margin-bottom:18px}.tool-control{width:100%;border:1px solid var(--color-border);border-radius:12px;padding:12px;background:var(--color-surface);color:var(--color-text);font:inherit;resize:vertical}.stats{margin-top:20px}.stats .stat{padding:20px}.stats strong{font-size:28px}</style>
+  <script>const el=document.getElementById("text-input"),w=document.getElementById("words"),c=document.getElementById("chars"),l=document.getElementById("lines"),t=document.getElementById("time");el.addEventListener("input",()=>{const v=el.value;w.textContent=v.trim()?String(v.trim().split(/s+/).length):"0";c.textContent=String(v.length);l.textContent=v?String(v.split(/\n/).length):"0";t.textContent=(v.trim()?Math.max(1,Math.ceil(v.trim().split(/\s+/).length/200)):0)+" min"});</script>
+</Layout>
