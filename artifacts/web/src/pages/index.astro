@@ -65,14 +65,27 @@ import Layout from "../layouts/Layout.astro";
       </article>
     </div>
   </section>
-  <section class="section surface-soft">
+  <section class="section surface-soft" aria-labelledby="latest-posts-title">
     <div class="container">
-      <div class="section-head"><div><p class="eyebrow">Website services</p><h2>Everything in one simple place.</h2></div></div>
+      <div class="section-head">
+        <div><p class="eyebrow">Nexus Posts</p><h2 id="latest-posts-title">Latest from the Nexus team.</h2><p class="muted">Product updates, accessibility notes, community highlights and useful guides.</p></div>
+        <a class="button ghost" href="/posts">View All Posts</a>
+      </div>
+      <div class="grid-3">
+        <article class="card post-card"><p class="eyebrow">Product</p><h3>What is Nexus Plus?</h3><p class="muted">A practical look at the AI, media, document and accessibility tools being brought together in one product.</p><a class="button" href="/posts">Read post →</a></article>
+        <article class="card post-card"><p class="eyebrow">Accessibility</p><h3>Designing for independent use.</h3><p class="muted">How clearer headings, keyboard flow, speech support and predictable controls can make software easier to use.</p><a class="button" href="/posts">Read post →</a></article>
+        <article class="card post-card"><p class="eyebrow">Community</p><h3>Building a calmer community space.</h3><p class="muted">A look at the current community structure, moderation principles and what is intentionally being kept offline for now.</p><a class="button" href="/posts">Read post →</a></article>
+      </div>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="explore-title">
+    <div class="container">
+      <div class="section-head"><div><p class="eyebrow">Explore</p><h2 id="explore-title">More to discover.</h2></div></div>
       <div class="grid-4">
-        <article class="card"><h3>Utilities</h3><p class="muted">Fast browser-based text helpers.</p><a href="/utilities">Open utilities →</a></article>
-        <article class="card"><h3>Community</h3><p class="muted">Community posts with accessible listening.</p><a href="/community">Open community →</a></article>
-        <article class="card"><h3>Accounts</h3><p class="muted">Supabase-powered sign-in and account access.</p><a href="/login">Sign in →</a></article>
-        <article class="card"><h3>Team</h3><p class="muted">Contribute through accessibility, audio, teaching and support.</p><a href="/join-team">Join the team →</a></article>
+        <article class="card"><h3>Utilities</h3><p class="muted">Small browser-based helpers for everyday work.</p><a href="/utilities">Open utilities →</a></article>
+        <article class="card"><h3>Community</h3><p class="muted">A quieter community hub focused on people, ideas and future participation.</p><a href="/community">Explore community →</a></article>
+        <article class="card"><h3>Women Safety</h3><p class="muted">A dedicated support and awareness center with clear safety boundaries.</p><a href="/women-safety">Open safety center →</a></article>
+        <article class="card"><h3>Join Team</h3><p class="muted">Contribute through accessibility, audio, teaching, moderation and more.</p><a href="/join-team">Join the team →</a></article>
       </div>
     </div>
   </section>
