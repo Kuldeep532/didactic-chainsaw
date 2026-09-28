@@ -1,0 +1,60 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title="Nexus Migration & Help Center" description="State-wise relocation and public-help information for India, with official-source guidance.">
+  <section class="hero"><div class="container hero-shell">
+    <div>
+      <p class="eyebrow">Nexus Migration & Help Center</p>
+      <h1>Moving to a new state? Find the right public services first.</h1>
+      <p class="lead">Select your state to see a practical checklist of identity, police, emergency, transport, women-safety, legal-aid and government-service resources.</p>
+    </div>
+    <div class="hero-panel">
+      <p class="eyebrow">Important</p>
+      <h2>Use official sources for current contact details.</h2>
+      <p class="muted">Numbers, office addresses and procedures can change. Nexus should link to official government sources wherever possible instead of inventing local contacts.</p>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="container">
+    <div class="card">
+      <label for="state-select"><strong>Select your state or union territory</strong>
+        <select id="state-select" style="margin-top:.6rem">
+          <option value="">Choose a state / UT</option>
+          <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option><option>Andaman and Nicobar Islands</option><option>Chandigarh</option><option>Dadra and Nagar Haveli and Daman and Diu</option><option>Delhi</option><option>Jammu and Kashmir</option><option>Ladakh</option><option>Lakshadweep</option><option>Puducherry</option>
+        </select>
+      </label>
+      <p id="state-status" class="note" aria-live="polite">Choose a state to load the migration checklist.</p>
+    </div>
+  </div></section>
+
+  <section class="section surface-soft"><div class="container">
+    <div id="resource-grid" class="grid-3">
+      <article class="card"><p class="eyebrow">1 · Identity</p><h3>Address and identity updates</h3><p class="muted">Check Aadhaar address, voter registration, ration-card portability, driving licence and other state-linked records as applicable.</p></article>
+      <article class="card"><p class="eyebrow">2 · Police</p><h3>Nearby police station</h3><p class="muted">Use the selected state's official police website or directory to find the nearest station and jurisdiction.</p></article>
+      <article class="card"><p class="eyebrow">3 · Emergency</p><h3>Emergency numbers</h3><p class="muted">Emergency numbers can vary by service and location. Use official emergency-service sources and local government information.</p></article>
+      <article class="card"><p class="eyebrow">4 · Women Safety</p><h3>Women-safety resources</h3><p class="muted">Find official women-safety, domestic-violence, child-protection and legal-aid resources relevant to the chosen state.</p></article>
+      <article class="card"><p class="eyebrow">5 · Health</p><h3>Public health access</h3><p class="muted">Look up nearby government hospitals, primary-health centres, ambulance services and state health portals.</p></article>
+      <article class="card"><p class="eyebrow">6 · Legal aid</p><h3>Free legal assistance</h3><p class="muted">Connect to the relevant State Legal Services Authority and other official legal-aid resources.</p></article>
+      <article class="card"><p class="eyebrow">7 · Transport</p><h3>Transport & driving</h3><p class="muted">Find state transport, RTO, driving-licence and vehicle-registration information.</p></article>
+      <article class="card"><p class="eyebrow">8 · Documents</p><h3>Local certificates</h3><p class="muted">Check domicile, income, caste, birth/death and other certificate services through the state's official portals.</p></article>
+      <article class="card"><p class="eyebrow">9 · Utilities</p><h3>Everyday setup</h3><p class="muted">Locate electricity, water, gas, municipal, waste-management and other public-service portals.</p></article>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="container grid-2">
+    <article class="card"><p class="eyebrow">Migration checklist</p><h2>Do these before and after moving.</h2><ol><li>Keep original and digital copies of identity documents.</li><li>Update address-linked records that actually require a change.</li><li>Save the nearest police station, hospital and emergency contacts.</li><li>Check local transport and municipal registration requirements.</li><li>Verify important numbers from official state sources before relying on them.</li></ol></article>
+    <article class="card"><p class="eyebrow">Safety</p><h2>Need a private support route?</h2><p class="muted">The Women Safety Center remains available for private support requests. Complaints require login and are handled separately from public community content.</p><div class="actions"><a class="button primary" href="/women-safety">Open Women Safety</a><a class="button" href="/contact">Contact Nexus</a></div></article>
+  </div></section>
+  <script is:inline>
+    const select=document.getElementById("state-select");
+    const status=document.getElementById("state-status");
+    const saved=localStorage.getItem("nexus-migration-state");
+    if(saved) select.value=saved;
+    select.addEventListener("change",()=>{
+      localStorage.setItem("nexus-migration-state",select.value);
+      status.textContent=select.value
+        ? "State selected: "+select.value+". Use the official state portals linked or searched from trusted government sources for the latest local contacts."
+        : "Choose a state to load the migration checklist.";
+    });
+  </script>
+</Layout>
