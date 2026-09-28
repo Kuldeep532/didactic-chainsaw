@@ -1,17 +1,21 @@
-# Private Nexus Admin
+# Nexus Private Admin
 
-This app lives outside `artifacts/web`, so the public website does not ship the admin workspace.
+The private admin source is part of the same repository/project as the public website. It is intentionally kept out of the public website navigation.
 
-## Deployment
+For production, expose the admin experience through a separate hostname/path in the same Vercel project, for example:
 
-Deploy `artifacts/admin` as a separate Vercel project, for example at `admin.nexusweb.co.in`.
+- Public: `https://nexusweb.co.in`
+- Private: `https://admin.nexusweb.co.in`
 
-Environment variables:
+The repository contains the admin app under `artifacts/admin`. The routing/build configuration must serve that app under the private hostname without exposing it in public navigation.
+
+## Environment
+
 - `PUBLIC_SUPABASE_URL`
 - `PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 
-Do not expose a Supabase service-role key to the browser.
+Never expose the Supabase service-role key in browser code.
 
 ## Security
 
-The UI is only an entry point. Privileged authorization must be enforced in Supabase RLS, RPCs and/or Edge Functions using the administrator role. The public site contains no link to this application.
+The hostname/path is not the security boundary. Supabase Auth, RLS, RPCs and Edge Functions must enforce every privileged operation.
