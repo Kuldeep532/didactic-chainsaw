@@ -881,8 +881,8 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
       </nav>
     </header>
     <main id="main-content"><slot /></main>
-    <BackToTop />
     <AutoLinks screen={linkScreen} />
+    <BackToTop />
     <SiteFooter />
     <script>
       import { applyTranslations } from "../lib/i18n";
