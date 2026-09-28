@@ -96,3 +96,25 @@ These roles are permissions, not public profile labels. Server-side RLS/Edge Fun
 
 ### Live contributor badge
 A contributor report is submitted from the user's profile. An authorized reviewer approves it, which activates the public-safe `Trusted Contributor` badge. The badge must not expose the underlying report, evidence, email or private details.
+
+
+## Private Support Hub contract
+
+Women Safety reports may create a separate support case object. The case must not expose the reporter's ordinary profile to support staff by default.
+
+Recommended entities:
+- `support_cases`: random public-safe case ID, status, created_at, last_activity_at and contact preference.
+- `support_case_tokens`: one-time or revocable invitation tokens; store only hashes of tokens where possible.
+- `support_case_participants`: case-level membership for the reporter and approved support worker.
+- `support_messages`: end-to-end or application-layer encrypted case messages with strict RLS.
+- `support_voice_sessions`: ephemeral voice session metadata without publishing a phone number.
+
+The support URL should contain a random opaque invitation token and never contain a user ID, email address or phone number. Once the token is redeemed, the user can enter a private chat or voice session when an approved support worker is available.
+
+Support staff should see the minimum case context required for the active case, not the person's unrelated profile, friends, email, phone, or community activity. A separate emergency/escalation policy can allow disclosure only where legally or operationally required.
+
+### Identity and account uniqueness
+
+Do not promise that a normal browser/app/device can prove a unique real-world person by itself. For stronger account uniqueness, require verified phone authentication and an application-level device/account binding. Reject a second active account for the same verified phone identity, and add rate limits, CAPTCHA/risk checks and recovery rules. Treat device identifiers as risk signals rather than sole identity proof because devices can be reset, shared or spoofed.
+
+The private support case should be linked to the authenticated account internally, but support staff should interact through the opaque case ID/token rather than the public profile.
