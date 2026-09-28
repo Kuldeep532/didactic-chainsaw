@@ -1,53 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
 ---
-<Layout title="User Profile — Nexus Community" description="Community user profile, posts and friendship controls.">
-  <section class="hero"><div class="container hero-shell">
-    <div><p class="eyebrow">Community profile</p><h1 id="profile-name">User profile</h1><p id="profile-bio" class="lead">Loading profile…</p>
-      <div class="actions"><button id="add-friend" class="button primary" type="button">Request connection</button><button id="message-user" class="button" type="button">Request chat</button><a class="button" href="/chats">My Chats</a><a class="button" href="/community">Back to community</a></div>
-      <p id="profile-status" class="note" aria-live="polite"></p>
-    </div>
-    <div class="hero-panel"><p class="eyebrow">Profile</p><p class="muted">Posts, friends and chat history are shown as separate sections so users can control what they share and where they interact.</p></div>
+<Layout title="Community Profile — Nexus Wave Technologies" description="Community profiles are currently limited while the member experience is redesigned.">
+  <section class="hero"><div class="container">
+    <p class="eyebrow">Community · Profile</p>
+    <h1>Profile features are paused.</h1>
+    <p class="lead">Public community profiles will return with a simpler privacy-first design. Personal account data is not exposed on the public website.</p>
+    <div class="actions"><a class="button primary" href="/community">Back to Community</a><a class="button" href="/posts">View Posts</a></div>
   </div></section>
-  <section class="section"><div class="container grid-3">
-    <article class="card"><p class="eyebrow">Posts</p><h2 id="post-count">0</h2><p class="muted">Published contributions</p><a class="button" href="#posts">View posts</a></article>
-    <article class="card"><p class="eyebrow">Friends</p><h2 id="friend-count">0</h2><p class="muted">Accepted connections</p><a class="button" href="/friends">My Friends</a></article>
-    <article class="card"><p class="eyebrow">Chats</p><h2 id="chat-count">0</h2><p class="muted">Previous conversations</p><a class="button" href="/chats">My Chats</a></article>
-  </div></section>
-  <section class="section"><div class="container grid-2">
-    <article class="card"><p class="eyebrow">Contributor report</p><h2>Report your work</h2><p class="muted">Submit a report of your completed work, campaign contribution or community contribution for review.</p>
-      <form id="wor<script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
-  const params=new URLSearchParams(location.search), userId=params.get("id"),name=params.get("name");
-  const status=document.getElementById("profile-status");
-  const apiHeaders=()=>({apikey:supabaseKey,Authorization:"Bearer "+supabaseKey,"Content-Type":"application/json"});
-  document.getElementById("profile-name").textContent=name||"Community user";
-  document.getElementById("profile-bio").textContent="Name only is shown publicly. Personal details are not displayed in the community.";
-  if(!userId) status.textContent="Open a user profile to connect or report this user.";
-
-  async function currentUser(){
-    try{const r=await fetch(supabaseUrl+"/auth/v1/user",{headers:apiHeaders()}); return r.ok?await r.json():null;}catch{return null}
-  }
-  document.getElementById("add-friend")?.addEventListener("click",async()=>{
-    const me=await currentUser();
-    if(!me?.id||!userId){status.textContent="Sign in to send a friend request.";return;}
-    const r=await fetch(supabaseUrl+"/rest/v1/friendships",{method:"POST",headers:{...apiHeaders(),"Prefer":"return=minimal"},body:JSON.stringify({requester_id:me.id,addressee_id:userId,status:"pending"})});
-    status.textContent=r.ok?"Friend request sent. Chat opens only after both users accept the friendship.":"This friend request could not be sent.";
-  });
-  document.getElementById("message-user")?.addEventListener("click",async()=>{
-    const me=await currentUser();
-    if(!me?.id||!userId){status.textContent="Sign in to chat.";return;}
-    const r=await fetch(supabaseUrl+"/rest/v1/rpc/can_start_private_chat",{method:"POST",headers:apiHeaders(),"body":JSON.stringify({p_other_user_id:userId})});
-    const allowed=r.ok?await r.json():false;
-    status.textContent=allowed?"Both users are friends, so private chat can open from My Chats.":"Private chat is locked until both users are in each other's accepted friend list.";
-  });
-  document.getElementById("report-user")?.addEventListener("click",()=>{document.getElementById("report-panel").hidden=false;document.getElementById("user-report-details")?.focus();});
-  document.getElementById("cancel-user-report")?.addEventListener("click",()=>document.getElementById("report-panel").hidden=true);
-  document.getElementById("user-report-form")?.addEventListener("submit",async e=>{
-    e.preventDefault();
-    const me=await currentUser(), out=document.getElementById("report-status");
-    if(!me?.id){out.textContent="Sign in to submit a report.";return;}
-    const r=await fetch(supabaseUrl+"/rest/v1/rpc/submit_user_report",{method:"POST",headers:apiHeaders(),body:JSON.stringify({p_reported_user_id:userId,p_reason:document.getElementById("user-report-reason").value,p_details:document.getElementById("user-report-details").value.trim()})});
-    out.textContent=r.ok?"Report submitted for review.":"The report could not be submitted right now.";
-    if(r.ok) document.getElementById("user-report-form").reset();
-  });
-</script>
+</Layout>
