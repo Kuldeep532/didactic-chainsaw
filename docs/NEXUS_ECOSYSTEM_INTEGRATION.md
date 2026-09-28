@@ -118,3 +118,26 @@ Support staff should see the minimum case context required for the active case, 
 Do not promise that a normal browser/app/device can prove a unique real-world person by itself. For stronger account uniqueness, require verified phone authentication and an application-level device/account binding. Reject a second active account for the same verified phone identity, and add rate limits, CAPTCHA/risk checks and recovery rules. Treat device identifiers as risk signals rather than sole identity proof because devices can be reset, shared or spoofed.
 
 The private support case should be linked to the authenticated account internally, but support staff should interact through the opaque case ID/token rather than the public profile.
+
+
+## WebRTC private support contract
+
+Private support voice uses WebRTC for real-time media. Supabase Realtime is the signaling layer only; audio/video media must not be stored in the public database.
+
+Signaling channel:
+- channel name: `support:<case_id>`
+- messages: `offer`, `answer`, `ice-candidate`, `hangup`, `availability`
+- channel access: only authenticated participants in `support_case_participants`
+- never put a phone number, email address or normal profile ID in the signaling payload when an opaque case token can be used.
+
+Client flow:
+1. Reporter submits a private case.
+2. Backend creates an opaque case code and revocable invitation token.
+3. Support worker is assigned only after availability and gender-scope checks.
+4. The app redeems the invitation and obtains case-level membership.
+5. WebRTC offer/answer and ICE candidates are exchanged through the protected Realtime channel.
+6. The voice session record stores status and timestamps, not raw audio.
+7. Closing or revoking the case invalidates future signaling and token redemption.
+
+The website may register the complaint and collect a required email when the user will not install the app. The website does not expose the active private conversation UI. Email should be used only for case notifications/invitation delivery and must never contain the complaint body.
+
