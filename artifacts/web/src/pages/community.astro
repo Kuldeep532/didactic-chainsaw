@@ -1,215 +1,64 @@
 ---
 import Layout from "../layouts/Layout.astro";
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
-const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
-<Layout title="Forum — Nexus Wave Technologies" description="Category-based Nexus forum for approved community discussions.">
-  <section class="section community-shell">
+<Layout title="Community — Nexus Wave Technologies" description="Nexus Community: a calm, accessible home for people, ideas and future participation.">
+  <section class="hero">
+    <div class="container hero-shell">
+      <div>
+        <p class="eyebrow">Nexus Community</p>
+        <h1>People, ideas and useful connections.</h1>
+        <p class="lead">The community area is being kept simple for now. Public discussion and posting are intentionally paused while the next community model is designed.</p>
+        <div class="actions">
+          <a class="button primary" href="/posts">Read Nexus Posts</a>
+          <a class="button" href="/join-team">Join the Team</a>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <p class="eyebrow">Current status</p>
+        <h2>Community chat is disabled for now.</h2>
+        <p class="muted">Private chat, friend-to-chat flows and community messaging are not exposed from the public website at this stage.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="community-pillars">
     <div class="container">
-      <div class="community-appbar">
-        <div>
-          <p class="eyebrow">Nexus Community</p>
-          <h1 class="community-title">Forum</h1>
-          <p class="muted">One feed for Nexus updates and approved member posts.</p>
-        </div>
-        <div class="community-actions">
-          <a class="button" href="/chats">My Chats</a>
-          <a class="button" href="/friends">My Friends</a>
-          <button id="add-post-button" class="button primary" type="button" disabled title="Verification is required">Add New Post</button>
-        </div>
+      <div class="section-head">
+        <div><p class="eyebrow">Community scope</p><h2 id="community-pillars">A cleaner structure for what comes next.</h2></div>
       </div>
-
-      <div id="verification-banner" class="verification-banner" role="status">
-        <div>
-          <strong>Verify to access posting and networking</strong>
-          <span class="muted">Free manual verification unlocks member features.</span>
-        </div>
-        <a class="button" href="/verify-community">Verify now</a>
+      <div class="grid-4">
+        <article class="card community-pillar"><p class="eyebrow">01</p><h3>Posts</h3><p class="muted">The current public content layer for product updates, accessibility notes, guides and community highlights.</p><a class="button" href="/posts">Explore Posts</a></article>
+        <article class="card community-pillar"><p class="eyebrow">02</p><h3>People</h3><p class="muted">Future member discovery will focus on names and safe public information only, without exposing private account data.</p></article>
+        <article class="card community-pillar disabled-feature"><p class="eyebrow">03</p><h3>Chat</h3><p class="muted">Private messaging is paused. A future version will use a clear mutual-friend rule before any conversation can begin.</p><button class="button" type="button" disabled>Coming later</button></article>
+        <article class="card community-pillar"><p class="eyebrow">04</p><h3>Contribute</h3><p class="muted">People can still contribute through the team application process, accessibility work, content and approved initiatives.</p><a class="button" href="/join-team">Join Team</a></article>
       </div>
+    </div>
+  </section>
 
-      <nav class="community-tabbar" aria-label="Community sections">
-        <a class="community-tab active" href="/community">Forum</a>
-        <a class="community-tab" href="/chats">My Chats</a>
-        <a class="community-tab" href="/friends">My Friends</a>
-      </nav>
+  <section class="section surface-soft" aria-labelledby="community-guidelines">
+    <div class="container grid-2">
+      <article class="card">
+        <p class="eyebrow">Privacy first</p>
+        <h2>Keep public community information minimal.</h2>
+        <p class="muted">Public community surfaces should show only the information needed for the experience. Personal email addresses, phone numbers and private account details do not belong in public lists.</p>
+      </article>
+      <article class="card">
+        <p class="eyebrow">Safety</p>
+        <h2>Reporting stays available.</h2>
+        <p class="muted">The future community design can include profile-level reporting without requiring friendship or chat access.</p>
+        <a class="button" href="/women-safety">Open Women Safety Center</a>
+      </article>
+    </div>
+  </section>
 
-      <section class="community-panel">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">Forum</p>
-            <h2>Community discussions</h2>
-          </div>
-          <span class="muted">Official and approved member posts</span>
-        </div>
-        <div id="posts-grid" class="grid-3">
-          <div class="card"><h3>Loading posts…</h3><p class="muted">Connecting to Supabase.</p></div>
-        </div>
-      </section>
-
-      <section id="my-post-panel" class="community-panel" hidden>
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">My Post</p>
-            <h2>Create a post</h2>
-          </div>
-        </div>
-        <form id="user-post-form" class="form">
-          <label>Post title<input id="user-title" required maxlength="120" /></label>
-          <label>Category<select id="post-category" required></select></label>
-          <label>Audience<select id="post-audience" required><option value="all">Everyone</option><option value="female">Women</option><option value="male">Men</option></select></label>
-          <label>Post<textarea id="user-content" minlength="10" maxlength="5000" required placeholder="Write your post…"></textarea></label>
-          <p class="note">Member posts go through moderation before they appear in the public feed.</p>
-          <div class="actions">
-            <button class="button primary" type="submit">Publish My Post</button>
-            <button id="close-post" class="button" type="button">Cancel</button>
-          </div>
-          <p id="user-status" class="note" aria-live="polite"></p>
-        </form>
-      </section>
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><div><p class="eyebrow">Why this layout</p><h2>Community now behaves like the other website sections.</h2></div></div>
+      <div class="grid-3">
+        <article class="card"><h3>Clear</h3><p class="muted">One main purpose per section, with fewer unfinished controls.</p></article>
+        <article class="card"><h3>Accessible</h3><p class="muted">Semantic headings, readable blocks and straightforward navigation.</p></article>
+        <article class="card"><h3>Ready to expand</h3><p class="muted">Chat and richer member features can be added later without redesigning the whole public website.</p></article>
+      </div>
     </div>
   </section>
 </Layout>
-
-<script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
-  const addPostButton=document.getElementById("add-post-button");
-  const postPanel=document.getElementById("my-post-panel");
-  const closePost=document.getElementById("close-post");
-  const form=document.getElementById("user-post-form");
-  const userStatus=document.getElementById("user-status");
-  const grid=document.getElementById("posts-grid");
-  const banner=document.getElementById("verification-banner");
-  const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-  const speak=t=>{"speechSynthesis" in window&&(speechSynthesis.cancel(),speechSynthesis.speak(new SpeechSynthesisUtterance(t)))};
-
-  const apiHeaders=()=>({apikey:supabaseKey,Authorization:"Bearer "+supabaseKey});
-  const jsonHeaders=()=>({...apiHeaders(),"Content-Type":"application/json"});
-
-  function enableVerifiedUi(verified){
-    addPostButton.disabled=!verified;
-    addPostButton.title=verified ? "Create a new post" : "Verification is required";
-    banner.hidden=verified;
-  }
-
-  async function getCurrentUser(){
-    if(!supabaseUrl||!supabaseKey) return null;
-    try{
-      const auth=await fetch(supabaseUrl+"/auth/v1/user",{headers:apiHeaders()});
-      if(!auth.ok) return null;
-      return await auth.json();
-    }catch{return null;}
-  }
-
-  async function checkMembership(){
-    try{
-      const user=await getCurrentUser();
-      if(!user?.id){ enableVerifiedUi(false); return; }
-      const r=await fetch(supabaseUrl+"/rest/v1/profiles?select=verification_status&id=eq."+encodeURIComponent(user.id)+"&limit=1",{headers:apiHeaders()});
-      if(!r.ok) return;
-      const rows=await r.json();
-      enableVerifiedUi(rows[0]?.verification_status==="verified");
-    }catch{}
-  }
-
-  let selectedCategory="";
-  const categoryList=document.getElementById("category-list");
-  const selectedTitle=document.getElementById("selected-category-title");
-  const audienceFilter=document.getElementById("audience-filter");
-
-  async function loadForumCategories(){
-    try{
-      const r=await fetch(supabaseUrl+"/rest/v1/forum_categories?select=id,name,description&active=eq.true&order=name",{headers:apiHeaders()});
-      const data=await r.json().catch(()=>[]);
-      if(!r.ok||!Array.isArray(data)) throw 0;
-      categoryList.innerHTML=data.map(c=>'<button class="forum-category-card" type="button" data-category="'+esc(c.id)+'"><strong>'+esc(c.name)+'</strong><span>'+esc(c.description||"")+'</span></button>').join("");
-      data.forEach(c=>document.querySelector('[data-category="'+c.id+'"]')?.addEventListener("click",()=>selectForumCategory(c)));
-      if(data[0]) await selectForumCategory(data[0]);
-    }catch{
-      categoryList.innerHTML='<div class="card"><h3>Forum categories are temporarily unavailable.</h3><p class="muted">Please try again later.</p></div>';
-    }
-  }
-
-  async function selectForumCategory(category){
-    selectedCategory=category.id;
-    selectedTitle.textContent=category.name;
-    document.querySelectorAll(".forum-category-card").forEach(el=>el.classList.toggle("selected",el.dataset.category===selectedCategory));
-    await loadForumPosts();
-  }
-
-  async function loadForumPosts(){
-    if(!selectedCategory) return;
-    try{
-      let url=supabaseUrl+"/rest/v1/forum_posts?select=id,title,content,created_at,post_source,audience,author_id&status=eq.approved&category_id=eq."+encodeURIComponent(selectedCategory)+"&order=created_at.desc";
-      const audience=audienceFilter?.value||"all";
-      if(audience!=="all") url+="&audience=in.(all,"+audience+")";
-      const r=await fetch(url,{headers:apiHeaders()});
-      const data=await r.json().catch(()=>[]);
-      if(!r.ok||!Array.isArray(data)) throw 0;
-      grid.innerHTML=data.length?data.map((p,i)=>{
-        const source=p.post_source==="official"?"Official":"Member";
-        const who=p.audience==="female"?"Women":p.audience==="male"?"Men":"Everyone";
-        return '<article class="card" data-author="'+esc(p.author_id||"")+'"><p class="eyebrow">'+esc(source)+' · '+esc(who)+'</p><h3>'+esc(p.title||"Forum discussion")+'</h3><p class="muted">'+esc(p.content||"")+'</p><span class="live-user-badge" data-badge="'+esc(p.author_id||"")+'" hidden>Trusted Contributor</span><button class="button" type="button" data-forum-listen="'+i+'">Listen</button></article>';
-      }).join(""):'<div class="card"><h3>No approved discussions yet.</h3><p class="muted">Approved posts in this category will appear here.</p></div>';
-      data.forEach((p,i)=>document.querySelector('[data-forum-listen="'+i+'"]')?.addEventListener("click",()=>speak((p.title||"Forum discussion")+". "+(p.content||""))));
-      const ids=[...new Set(data.map(p=>p.author_id).filter(Boolean))];
-      if(ids.length){
-        const q=ids.map(id=>encodeURIComponent('"'+id+'"')).join(",");
-        const br=await fetch(supabaseUrl+"/rest/v1/user_live_badges?select=user_id,is_live&user_id=in."+q+"&is_live=eq.true",{headers:apiHeaders()});
-        const badges=await br.json().catch(()=>[]);
-        badges.forEach(b=>document.querySelectorAll('[data-badge="'+b.user_id+'"]').forEach(el=>el.hidden=false));
-      }
-    }catch{
-      grid.innerHTML='<div class="card"><h3>Forum discussions are temporarily unavailable.</h3><p class="muted">Please try again later.</p></div>';
-    }
-  }
-
-  audienceFilter?.addEventListener("change",()=>void loadForumPosts());
-    addPostButton.addEventListener("click",()=>{
-    if(addPostButton.disabled) return;
-    postPanel.hidden=false;
-    document.getElementById("user-title")?.focus();
-    postPanel.scrollIntoView({behavior:"smooth",block:"start"});
-  });
-  closePost?.addEventListener("click",()=>postPanel.hidden=true);
-
-  form?.addEventListener("submit",async e=>{
-    e.preventDefault();
-    userStatus.textContent="Submitting your post for review…";
-    try{
-      const user=await getCurrentUser();
-      if(!user?.id) throw 0;
-      const r=await fetch(supabaseUrl+"/rest/v1/forum_posts",{
-        method:"POST",
-        headers:{...jsonHeaders(),"Prefer":"return=minimal"},
-        body:JSON.stringify({
-          category_id:document.getElementById("post-category").value,
-          author_id:user.id,
-          title:document.getElementById("user-title").value.trim(),
-          content:document.getElementById("user-content").value.trim(),
-          audience:document.getElementById("post-audience").value,
-          status:"pending",
-          post_source:"member"
-        })
-      });
-      if(!r.ok) throw 0;
-      userStatus.textContent="My Post submitted for moderation.";
-      form.reset();
-    }catch{
-      userStatus.textContent="Your post could not be submitted. Please sign in and try again.";
-    }
-  });
-
-
-  async function loadPostCategoriesForComposer(){
-    try{
-      const r=await fetch(supabaseUrl+"/rest/v1/forum_categories?select=id,name&active=eq.true&order=name",{headers:apiHeaders()});
-      const data=await r.json().catch(()=>[]);
-      if(!r.ok||!Array.isArray(data)) return;
-      const select=document.getElementById("post-category");
-      select.innerHTML=data.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("");
-    }catch{}
-  }
-  void loadPostCategoriesForComposer();
-
-  void checkMembership();
-  void loadPosts();
-</script>
