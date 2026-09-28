@@ -32,7 +32,7 @@ const path = Astro.url.pathname;
     <a href="/contact">Contact</a>
   </nav>
 </header>
-<script>
+<script is:inline>
   const mobileButton = document.querySelector(".mobile-menu-button");
   const mobileNav = document.getElementById("mobile-nav");
   mobileButton?.addEventListener("click", () => {
