@@ -69,7 +69,7 @@ import Layout from "../layouts/Layout.astro";
     e.preventDefault();
     status.textContent="Submitting…";
     try {
-      const { requireSupabase } = await import("../lib/supabase.js");
+      const { requireSupabase } = await import("../lib/supabase");
       const { error } = await requireSupabase().from("nexus_team_applications").insert({
         full_name:document.getElementById("name").value.trim(),
         email:document.getElementById("email").value.trim(),
