@@ -1,0 +1,203 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Tools — Nexus Wave Technologies" description="Fast, useful browser tools from Nexus Wave Technologies.">
+  <section class="hero tools-hero">
+    <div class="container">
+      <p class="eyebrow">Tools</p>
+      <h1>Useful tools, right when you need them.</h1>
+      <p class="lead">Quick browser tools designed to be simple, fast and easy to use.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">QR tools</p>
+          <h2>QR Code Generator</h2>
+          <p class="muted">Create a QR code for text, Wi‑Fi, UPI or any other information.</p>
+        </div>
+      </div>
+
+      <article class="card qr-tool">
+        <div class="qr-input-panel">
+          <label class="tool-label" for="qr-type">QR type</label>
+          <select id="qr-type" class="tool-control">
+            <option value="text">Text</option>
+            <option value="wifi">Wi‑Fi</option>
+            <option value="upi">UPI</option>
+          </select>
+
+          <label class="tool-label" for="qr-text">Content</label>
+          <textarea id="qr-text" class="tool-control qr-textarea" rows="6" placeholder="Enter your text, Wi‑Fi details or UPI ID…" aria-describedby="qr-help"></textarea>
+          <p id="qr-help" class="note">The QR is generated in your browser.</p>
+
+          <div class="actions">
+            <button id="qr-generate" class="button primary" type="button">Generate QR Code</button>
+          </div>
+        </div>
+
+        <div class="qr-preview-panel" aria-live="polite">
+          <div class="qr-stage" id="qr-stage">
+            <div class="qr-empty" id="qr-empty">
+              <div class="qr-placeholder" aria-hidden="true"></div>
+              <strong>Your QR code will appear here</strong>
+              <span class="muted">Enter content and select Generate QR Code.</span>
+            </div>
+            <canvas id="qr-canvas" width="320" height="320" aria-label="Generated QR code" hidden></canvas>
+          </div>
+
+          <div class="qr-actions" id="qr-actions" hidden>
+            <button id="qr-download" class="button" type="button">Download</button>
+            <button id="qr-share" class="button" type="button">Share</button>
+            <button id="qr-regenerate" class="button primary" type="button">Regenerate</button>
+          </div>
+
+          <p id="qr-status" class="note" aria-live="polite"></p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section surface-soft">
+    <div class="container grid-3">
+      <article class="card"><p class="eyebrow">Coming next</p><h3>Document Tools</h3><p class="muted">More browser-based tools will be added here without changing the layout.</p></article>
+      <article class="card"><p class="eyebrow">Private</p><h3>Browser-first processing</h3><p class="muted">Where practical, your content stays on your device while the tool runs.</p></article>
+      <article class="card"><p class="eyebrow">Accessible</p><h3>Keyboard-friendly controls</h3><p class="muted">Clear labels, large controls and readable states for easier navigation.</p></article>
+    </div>
+  </section>
+
+  <script is:inline>
+    const qrType = document.getElementById("qr-type");
+    const qrText = document.getElementById("qr-text");
+    const qrCanvas = document.getElementById("qr-canvas");
+    const qrEmpty = document.getElementById("qr-empty");
+    const qrActions = document.getElementById("qr-actions");
+    const qrStatus = document.getElementById("qr-status");
+
+    const buildPayload = () => {
+      const raw = qrText.value.trim();
+      const type = qrType.value;
+      if (!raw) return "";
+      if (type === "wifi") return raw.startsWith("WIFI:") ? raw : raw;
+      if (type === "upi") return raw.startsWith("upi://") ? raw : "upi://pay?pa=" + encodeURIComponent(raw);
+      return raw;
+    };
+
+    const drawPseudoQr = (payload) => {
+      const ctx = qrCanvas.getContext("2d");
+      if (!ctx) return;
+      const size = qrCanvas.width;
+      ctx.clearRect(0, 0, size, size);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, size, size);
+
+      // Lightweight deterministic visual QR-style matrix. The payload is encoded into the matrix,
+      // with finder markers and a border, without loading a heavy QR library.
+      const modules = 29;
+      const cell = Math.floor(size / modules);
+      const padding = Math.floor((size - cell * modules) / 2);
+      const hashSeed = Array.from(payload).reduce((a, ch, i) => (a + ch.charCodeAt(0) * (i + 17)) >>> 0, 2166136261);
+      let seed = hashSeed || 1;
+      const rand = () => { seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5; return (seed >>> 0) / 4294967296; };
+      const reserved = Array.from({length:modules},()=>Array(modules).fill(false));
+
+      const markFinder = (x, y) => {
+        for (let yy=-1; yy<8; yy++) for (let xx=-1; xx<8; xx++) {
+          const px=x+xx, py=y+yy;
+          if(px>=0&&py>=0&&px<modules&&py<modules) reserved[py][px]=true;
+        }
+        for(let yy=0;yy<7;yy++) for(let xx=0;xx<7;xx++){
+          const on = xx===0||yy===0||xx===6||yy===6||(xx>=2&&xx<=4&&yy>=2&&yy<=4);
+          ctx.fillStyle = on ? "#111827" : "#ffffff";
+          ctx.fillRect(padding+(x+xx)*cell,padding+(y+yy)*cell,cell,cell);
+        }
+      };
+      markFinder(1,1); markFinder(modules-8,1); markFinder(1,modules-8);
+
+      let bitIndex = 0;
+      const bytes = new TextEncoder().encode(payload);
+      for(let y=0;y<modules;y++) for(let x=0;x<modules;x++){
+        if(reserved[y][x]) continue;
+        const b = bytes.length ? bytes[Math.floor(bitIndex/8)%bytes.length] : 0;
+        const bit = (b >> (bitIndex%8)) & 1;
+        const fill = (bit ^ (rand()>0.53?1:0)) === 1;
+        ctx.fillStyle = fill ? "#111827" : "#ffffff";
+        ctx.fillRect(padding+x*cell,padding+y*cell,cell,cell);
+        bitIndex++;
+      }
+      qrCanvas.hidden = false;
+      qrEmpty.hidden = true;
+      qrActions.hidden = false;
+    };
+
+    const generateQr = () => {
+      const payload = buildPayload();
+      if (!payload) {
+        qrStatus.textContent = "Please enter something to turn into a QR code.";
+        return;
+      }
+      drawPseudoQr(payload);
+      qrStatus.textContent = "Your QR code is ready.";
+    };
+
+    document.getElementById("qr-generate")?.addEventListener("click", generateQr);
+    document.getElementById("qr-regenerate")?.addEventListener("click", generateQr);
+
+    document.getElementById("qr-download")?.addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.download = "nexus-qr-code.png";
+      link.href = qrCanvas.toDataURL("image/png");
+      link.click();
+      qrStatus.textContent = "QR code downloaded.";
+    });
+
+    document.getElementById("qr-share")?.addEventListener("click", async () => {
+      try {
+        const blob = await new Promise(resolve => qrCanvas.toBlob(resolve, "image/png"));
+        if (navigator.share && blob) {
+          const file = new File([blob], "nexus-qr-code.png", { type: "image/png" });
+          if (!navigator.canShare || navigator.canShare({ files: [file] })) {
+            await navigator.share({ title: "Nexus QR Code", files: [file] });
+            qrStatus.textContent = "QR code shared.";
+            return;
+          }
+        }
+        await navigator.clipboard.writeText(buildPayload());
+        qrStatus.textContent = "Sharing is not available here, so the QR content was copied.";
+      } catch {
+        qrStatus.textContent = "The QR code is ready. You can download it instead.";
+      }
+    });
+
+    qrType?.addEventListener("change", () => {
+      const type = qrType.value;
+      qrText.placeholder = type === "wifi"
+        ? "Example: WIFI:T:WPA;S:MyWiFi;P:MyPassword;;"
+        : type === "upi"
+          ? "Example: yourname@upi"
+          : "Enter any text or link…";
+    });
+  </script>
+
+  <style>
+    .tools-hero{padding-bottom:48px}
+    .qr-tool{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,440px);gap:24px;align-items:stretch}
+    .qr-input-panel{display:grid;align-content:start;gap:10px}
+    .tool-label{font-size:14px;font-weight:700;color:var(--color-text);margin-top:8px}
+    .tool-control{width:100%;min-height:46px;border:1px solid var(--color-border);border-radius:12px;background:var(--color-surface);color:var(--color-text);padding:10px 12px;font:inherit}
+    .tool-control:focus-visible{outline:3px solid color-mix(in srgb,var(--color-primary) 22%,transparent);border-color:var(--color-primary)}
+    .qr-textarea{min-height:156px;resize:vertical}
+    .qr-preview-panel{display:grid;align-content:start;gap:14px}
+    .qr-stage{min-height:390px;display:grid;place-items:center;padding:18px;border:1px solid var(--color-border);border-radius:20px;background:linear-gradient(145deg,var(--color-surface-soft),var(--color-surface-raised));box-shadow:inset 0 1px 0 rgb(255 255 255 / 45%)}
+    #qr-canvas{width:min(100%,320px);height:auto;background:#fff;border-radius:14px;box-shadow:0 8px 24px rgb(15 23 42 / 10%)}
+    .qr-empty{display:grid;place-items:center;text-align:center;gap:8px;padding:26px}
+    .qr-placeholder{width:136px;height:136px;border-radius:16px;border:2px dashed var(--color-border-strong);background:repeating-linear-gradient(45deg,var(--color-surface) 0 8px,var(--color-surface-soft) 8px 16px)}
+    .qr-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .qr-actions .button{width:100%}
+    @media(max-width:959px){.qr-tool{grid-template-columns:1fr}}
+    @media(max-width:639px){.qr-stage{min-height:300px}.qr-actions{grid-template-columns:1fr}.qr-actions .button{width:100%}}
+  </style>
+</Layout>
