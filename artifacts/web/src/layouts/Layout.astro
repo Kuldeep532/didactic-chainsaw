@@ -69,7 +69,6 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
     <AutoLinks screen={linkScreen} />
     <SiteFooter />
     <script>
-      import { browserSupabase } from "../lib/browser-auth";
       import { applyTranslations } from "../lib/i18n";
 
       const syncAccountLinks = (session = null) => {
@@ -80,6 +79,8 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
 
       const initShell = () => {
         applyTranslations();
+        const active = Boolean(localStorage.getItem("nexus-access-token"));
+        syncAccountLinks(active ? {} : null);
         const mobileButton = document.querySelector(".mobile-menu-button");
         const mobileNav = document.getElementById("mobile-nav");
         if (mobileButton && !mobileButton.hasAttribute("data-ready")) {
@@ -90,12 +91,21 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
             if (mobileNav) mobileNav.hidden = expanded;
           });
         }
-        browserSupabase?.auth.getSession().then(({ data }) => syncAccountLinks(data.session));
       };
 
-      browserSupabase?.auth.onAuthStateChange((_event, session) => syncAccountLinks(session));
+      const connectAuthWhenIdle = async () => {
+        try {
+          const { browserSupabase } = await import("../lib/browser-auth");
+          browserSupabase?.auth.onAuthStateChange((_event, session) => syncAccountLinks(session));
+          const { data } = await browserSupabase?.auth.getSession() ?? { data: { session: null } };
+          syncAccountLinks(data.session);
+        } catch {}
+      };
+
       document.addEventListener("astro:page-load", initShell);
       initShell();
+      if ("requestIdleCallback" in window) requestIdleCallback(connectAuthWhenIdle, { timeout: 1800 });
+      else setTimeout(connectAuthWhenIdle, 900);
 
       window.NexusSpeak = (text) => {
         if (!("speechSynthesis" in window)) return;
