@@ -79,7 +79,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
   document.getElementById("login-form")?.addEventListener("submit",async e=>{
     e.preventDefault();status.textContent="Signing you in…";
     try{saveSession(await request("token?grant_type=password",{email:document.getElementById("email").value.trim(),password:document.getElementById("password").value}));}
-    catch(error){status.textContent=error instanceof Error?error.message:"We could not sign you in right now.";}
+    catch(error){status.textContent="We could not sign you in right now. Please check your details and try again.";}
   });
 
   document.getElementById("signup-form")?.addEventListener("submit",async e=>{
@@ -89,7 +89,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
       if(data.access_token){saveSession(data);return;}
       status.textContent="Your account is ready. Check your email to confirm it, then log in.";
       show("login");
-    }catch(error){status.textContent=error instanceof Error?error.message:"We could not create your account right now.";}
+    }catch(error){status.textContent="We could not create your account right now. Please check your details and try again.";}
   });
 
   document.getElementById("google-login")?.addEventListener("click",async()=>{
@@ -99,6 +99,6 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
       const client=module.createClient(supabaseUrl,supabaseKey);
       const {error}=await client.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+"/account"}});
       if(error) throw error;
-    }catch(error){status.textContent=error instanceof Error?error.message:"Google sign-in is not available yet. Please use email and password.";}
+    }catch(error){status.textContent="Google sign-in is not available right now. Please try again or use email and password.";}
   });
 </script>
