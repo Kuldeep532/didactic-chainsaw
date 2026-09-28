@@ -1,18 +1,71 @@
 ---
 import Layout from "../layouts/Layout.astro";
 ---
-<Layout title="Nexus Apps — Nexus Wave Technologies">
-  <section class="hero"><div class="container"><p class="eyebrow">Nexus products</p><h1>Apps built around real everyday needs.</h1><p class="lead">Explore Nexus Plus and Geeta Nexus, with clear sections for features, accessibility and membership information.</p></div></section>
-  <section id="nexus-plus" class="section"><div class="container grid-2">
-    <div class="card"><img src="/assets/nexus-plus-mockup.jpg" alt="Nexus Plus app preview" style="width:100%;border-radius:14px;margin-bottom:1rem" /><p class="eyebrow">Nexus Plus</p><h2>One place for AI, media and accessibility tools.</h2><p class="muted">AI assistant, audio editing, PDF utilities, e-paper workflows, media tools and accessibility-focused features.</p><div class="actions"><a class="button primary" href="https://play.google.com/" target="_blank" rel="noopener noreferrer">Open app listing</a><a class="button" href="/contact">Contact</a></div></div>
-    <div class="card"><p class="eyebrow">Business & pricing</p><h2>Free services with optional paid AI tools.</h2>
-<ul class="feature-list"><li><strong>Free:</strong> Women Safety Center and public support-information features.</li><li><strong>Free:</strong> Community, Posts, migration/help information and basic website utilities.</li><li><strong>Free:</strong> Core non-AI Nexus services and accessibility-oriented tools.</li><li><strong>Paid:</strong> Selected AI features, premium AI tools, AI credits and other clearly labelled premium capabilities inside Nexus Plus.</li></ul>
-<div class="grid-3"><div class="stat"><strong>AI</strong><span class="muted">Paid where labelled premium</span></div><div class="stat"><strong>Safety</strong><span class="muted">Free</span></div><div class="stat"><strong>Core</strong><span class="muted">Free</span></div></div>
-<p class="muted" style="margin-top:1rem">Prices, taxes, billing periods and refund eligibility are shown before a paid purchase. Payment processing may be handled by an external provider such as PayU.</p>
-<a class="button" href="/legal/refund">Read Refund Policy</a></div>
-  </div></section>
-  <section id="geeta-nexus" class="section surface-soft"><div class="container grid-2">
-    <div class="card"><img src="/assets/geeta-nexus-mockup.jpg" alt="Geeta Nexus app preview" style="width:100%;border-radius:14px;margin-bottom:1rem" /><p class="eyebrow">Geeta Nexus</p><h2>Accessible spiritual learning.</h2><p class="muted">Explore Bhagavad Gita content with an emphasis on clear reading, Hindi and English support, and accessible navigation.</p></div>
-    <div class="card"><h3>Use it on the web too</h3><p class="muted">Read Bhagavad Gita shlok directly on the website before deciding whether you need the full app experience.</p><div class="actions"><a class="button primary" href="/shlok">Open Shlok Reader</a><a class="button" href="/shlok">Today's Shlok</a></div><p class="note">Geeta Nexus also contains broader scripture experiences such as Shiva Mahapurana and Ramcharitmanas.</p></div>
-  </div></section>
+<Layout title="Apps & Services — Nexus Wave Technologies" description="Explore simple, accessible Nexus apps and services.">
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Apps & services</p>
+      <h1>Useful tools for everyday life.</h1>
+      <p class="lead">Explore our apps, free services and premium tools. Start with what you need and keep things simple.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid-2">
+      <article class="card">
+        <img src="/assets/nexus-plus-mockup.jpg" alt="Nexus Plus app preview" style="width:100%;border-radius:16px;margin-bottom:18px" />
+        <p class="eyebrow">Nexus Plus</p>
+        <h2>One app for AI, audio, media and more.</h2>
+        <p class="muted">Create, edit, listen, read and get help from one accessible place.</p>
+        <ul class="feature-list">
+          <li>AI assistant and everyday tools</li>
+          <li>Audio recording and editing</li>
+          <li>Document and PDF tools</li>
+          <li>Media and accessibility features</li>
+        </ul>
+        <a class="button primary" href="https://play.google.com/" target="_blank" rel="noopener noreferrer">Explore Nexus Plus</a>
+      </article>
+
+      <article class="card">
+        <img src="/assets/geeta-nexus-mockup.jpg" alt="Geeta Nexus app preview" style="width:100%;border-radius:16px;margin-bottom:18px" />
+        <p class="eyebrow">Geeta Nexus</p>
+        <h2>Read, listen and learn.</h2>
+        <p class="muted">A simple spiritual-learning experience designed for comfortable reading and listening.</p>
+        <ul class="feature-list">
+          <li>Bhagavad Gita</li>
+          <li>Ramcharitmanas and other spiritual content</li>
+          <li>Clear Hindi and English reading</li>
+          <li>Accessible navigation</li>
+        </ul>
+        <a class="button primary" href="/shlok">Read Bhagavad Gita</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="section surface-soft">
+    <div class="container">
+      <div class="section-head">
+        <div><p class="eyebrow">Audio</p><h2>Record and listen to meaningful content.</h2><p class="muted">Audio work includes both personal recording and accessible spiritual recordings.</p></div>
+      </div>
+      <div class="grid-3">
+        <article class="card"><h3>Voice recording</h3><p class="muted">Record your voice clearly for personal or creative work.</p></article>
+        <article class="card"><h3>Bhagavad Gita audio</h3><p class="muted">Accessible recordings for listening and spiritual learning.</p></article>
+        <article class="card"><h3>Ramayana audio</h3><p class="muted">Accessible Ramayana recordings and future audio content.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div><p class="eyebrow">Pricing</p><h2>Start free. Pay only for premium features.</h2></div>
+      </div>
+      <div class="grid-3">
+        <article class="card"><h3>Free</h3><p class="muted">Women Safety, Community, Posts, basic utilities and other free services.</p></article>
+        <article class="card"><h3>Premium AI</h3><p class="muted">Selected advanced AI tools are available as paid features when clearly marked.</p></article>
+        <article class="card"><h3>AI credits</h3><p class="muted">Some AI tools may use optional credits. The price is shown before you pay.</p></article>
+      </div>
+      <p class="note" style="margin-top:18px">You will always see the price and payment details before a purchase. See our <a href="/legal/refund">refund policy</a> for more information.</p>
+    </div>
+  </section>
 </Layout>
