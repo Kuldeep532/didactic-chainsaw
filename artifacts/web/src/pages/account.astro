@@ -1,22 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 ---
-<Layout title="Account — Nexus Wave Technologies">
-  <section class="hero"><div class="container"><p class="eyebrow">Nexus account</p><h1>Your account.</h1><p class="lead">Manage your website session through Supabase.</p></div></section>
-  <section class="section"><div class="container"><div class="card" style="max-width:720px;margin-inline:auto"><p id="account-state" class="muted">Checking session…</p><div class="actions"><a class="button" href="/apps">View apps</a><a class="button" href="/dashboard">Dashboard</a><button id="sign-out" class="button" type="button">Sign out</button></div></div></div></section>
-  <script is:inline>
-    const state=document.getElementById("account-state");
-    async function load(){
-      try {
-        const { requireSupabase } = await import("../lib/supabase.js");
-        const {data,error}=await requireSupabase().auth.getUser();
-        if(error||!data.user){state.textContent="No active website session was found.";return;}
-        state.textContent="Signed in as "+(data.user.email||"your Nexus account")+".";
-      } catch(error){state.textContent=error instanceof Error?error.message:"Could not check the account session right now.";}
-    }
-    document.getElementById("sign-out")?.addEventListener("click",async()=>{
-      try { const {requireSupabase}=await import("../lib/supabase.js"); await requireSupabase().auth.signOut(); } finally { state.textContent="Signed out."; }
-    });
-    void load();
-  </script>
+<Layout title="Account access disabled — Nexus Wave Technologies">
+  <section class="hero"><div class="container"><p class="eyebrow">Public website</p><h1>Account access is currently disabled.</h1><p class="lead">The main Nexus website is available here. Account and workspace features are not exposed through the public website right now.</p></div></section>
 </Layout>
