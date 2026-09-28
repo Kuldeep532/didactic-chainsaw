@@ -140,6 +140,6 @@ import Layout from "../layouts/Layout.astro";
       });
       if(error)throw error;
       form.reset();status.textContent="Thank you. Your application has been sent for review.";
-    }catch(error){status.textContent=error instanceof Error?error.message:"We could not send your application right now.";}
+    }catch(error){status.textContent="We could not send your application right now. Please try again in a moment.";}
   });
 </script>
