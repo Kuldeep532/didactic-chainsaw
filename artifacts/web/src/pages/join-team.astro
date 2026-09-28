@@ -46,8 +46,9 @@ import Layout from "../layouts/Layout.astro";
           <label>Name<input id="name" required /></label>
           <label>Email<input id="email" type="email" required /></label>
           <label>Area<select id="area" required><option value="">Select an area</option><option>Bhagavad Gita audio</option><option>Ramayana audio</option><option>Translation</option><option>Volunteer / promotion</option><option>Teacher / Gita educator</option><option>Accessibility QA</option><option>Women Safety Campaign Volunteer</option><option>Safety Content & Poetry</option><option>Forum Moderator</option><option>Community & Forum Organizer</option></select></label>
-          <p class="note">Verification: applications are reviewed in the Admin Control Center. An approved application is converted into an authorized team role; until approval, the user has no team permissions.</p>
-          <label>Message<textarea id="message" minlength="10" required></textarea></label>
+          <p class="note"><strong>Safety-role screening:</strong> Women Safety Support roles are not granted automatically. Shortlisted applicants must complete a human interview and screening focused on motivation, confidentiality, boundaries, respectful communication, escalation and safeguarding. Only applicants who pass that process can receive a support role.</p>
+          <label>Why do you want to help?<textarea id="message" minlength="10" required></textarea>
+          <label>Are you available for a short interview?<select id="interview-availability" required><option value="">Select</option><option>Yes</option><option>No</option></select></label></label>
           <button class="button primary" type="submit">Submit application</button>
           <p id="team-status" class="note" aria-live="polite"></p>
         </form>
