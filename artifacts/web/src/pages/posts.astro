@@ -90,8 +90,8 @@ import Layout from "../layouts/Layout.astro";
   </section>
 </Layout>
 <script>
-  import { browserSupabase } from "../lib/browser-auth";
   const loadPublishedPosts = async () => {
+    const { browserSupabase } = await import("../lib/browser-auth");
     const section=document.getElementById("live-posts"),grid=document.getElementById("live-post-grid");
     if(!section||!grid||!browserSupabase)return;
     const {data}=await browserSupabase.from("site_posts").select("id,title,category,excerpt,body,slug,created_at").eq("published",true).order("created_at",{ascending:false}).limit(12);
@@ -107,6 +107,6 @@ import Layout from "../layouts/Layout.astro";
     }
     section.hidden=false;
   };
-  document.addEventListener("astro:page-load",loadPublishedPosts);
-  loadPublishedPosts();
+  document.addEventListener("astro:page-load",()=>setTimeout(loadPublishedPosts,300));
+  setTimeout(loadPublishedPosts,300);
 </script>
