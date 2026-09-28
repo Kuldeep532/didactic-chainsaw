@@ -2,18 +2,69 @@
 import Layout from "../../layouts/Layout.astro";
 ---
 <Layout title="Privacy Policy — Nexus Wave Technologies">
-  <section class="hero"><div class="container"><p class="eyebrow">Privacy</p><h1>Privacy Policy</h1><p class="lead">How Nexus Wave Technologies handles information across this website and its services.</p></div></section>
+  <section class="hero"><div class="container post-hero">
+    <p class="eyebrow">Privacy & Safety</p>
+    <h1>Privacy Policy</h1>
+    <p class="lead">This policy explains how Nexus Wave Technologies handles information across the public website, private support services, Nexus Plus integrations and team programmes.</p>
+  </div></section>
+
   <section class="section"><div class="container prose card">
-    <h2>Information we receive</h2><p>We may receive information you provide directly, such as an email address when you contact us or create an account. Service providers such as Supabase may process authentication and account data on our behalf.</p>
-    <h2>How we use information</h2><p>Information is used to provide requested features, maintain account security, respond to support requests, improve reliability, and meet legal obligations.</p>
-    <h2>Website utilities</h2><p>Browser-only utilities may process text locally on your device. They do not require an account unless a page explicitly says otherwise.</p>
-    <h2>Cookies and local storage</h2><p>Some account features use browser storage for session information. You can clear browser storage through your device or browser settings.</p>
-    <h2>Third-party services</h2><p>Some features may connect to third-party services for authentication, payments, AI, media processing, or other requested functionality. Their own privacy terms may also apply.</p>
-    <h2>Women Safety Campaign and creative contributions</h2>
-    <p>People may choose to participate in the Women Safety Campaign through approved volunteer roles, awareness activities, educational resources, poetry, short campaign messages, accessibility-friendly content or other responsible contributions. Campaign participation is reviewed through the Nexus team process.</p>
-    <p>We do not require contributors to disclose a survivor's identity or private details. Evidence shared for review should be relevant, lawful to share and limited to what is necessary. Creative contributions such as poetry are treated as campaign content and may be reviewed before publication or recognition.</p>
-    <h2>Data retention and deletion</h2><p>We retain information only as needed for the service, security, legal obligations, or legitimate operational needs. Contact us to request deletion where applicable.</p>
-    <h2>Contact</h2><p>Email: <a href="mailto:info@nexusweb.co.in">info@nexusweb.co.in</a></p>
-    <p class="muted">Last updated: September 27, 2026.</p>
+    <h2>1. What this policy covers</h2>
+    <p>This policy applies to the Nexus Wave Technologies website and the website features that connect to Nexus services, including community content, notifications, Women Safety reporting, private support cases, team applications and related account services.</p>
+
+    <h2>2. Information we may receive</h2>
+    <p>Depending on the feature you use, we may receive a display name, account identifier, verified phone number, email address, support-case information, messages, notification preferences, team application details and technical information needed to keep the service secure.</p>
+    <p>For a private Women Safety complaint submitted from the website, a contact email address or phone number may be required so that we can provide a safe follow-up route when the person is not using Nexus Plus. If you are already a Nexus Plus user and the system can securely match your verified account, you may use the app-based contact route instead of re-entering contact details.</p>
+
+    <h2>3. Private complaint information</h2>
+    <p>Private complaints are treated separately from ordinary community content. A complaint receives a unique case number/code and is not published to the community feed. The support design uses a case-level identity boundary so a support worker can work on the case without automatically receiving access to unrelated account information.</p>
+    <p>We do not promise absolute anonymity or absolute security. No internet service can provide a zero-risk guarantee. We use access controls, encrypted transport, restricted case membership and application-level protections intended to reduce unauthorized access.</p>
+
+    <h2>4. Encryption and secure handling</h2>
+    <p>Data should be encrypted in transit using HTTPS/TLS. Private support message content is designed to be stored as protected application ciphertext rather than ordinary public text. Invitation links use random opaque tokens and should be revocable or expiring. Sensitive secrets must never be stored in browser code.</p>
+    <p>Where a feature requires stronger end-to-end encryption, the exact technical implementation and supported devices will be identified in the product documentation before that guarantee is made.</p>
+
+    <h2>5. Who may handle a private complaint</h2>
+    <p>Women-focused cases are intended to be routed to approved women support volunteers. Men-focused cases are intended to be routed to approved men support volunteers. Access is case-scoped and role-scoped; volunteers should not browse unrelated user profiles, friends, emails, phone numbers or community history.</p>
+    <p>At launch, there may be no active volunteer team. In that situation, a complaint can remain in a protected pending state until an approved support worker becomes available, subject to the retention limits below.</p>
+
+    <h2>6. Website versus Nexus Plus</h2>
+    <p>The public website is intended to register a private complaint and establish a secure follow-up route. Active private chat and real-time voice support are intended to be provided through the Nexus Plus app when available.</p>
+    <p>If a person does not use Nexus Plus, an email address or phone number may be required for contact. We use that contact method only for the support workflow and related notifications, subject to applicable law.</p>
+
+    <h2>7. Notifications and case status</h2>
+    <p>Notifications may indicate that a case received a response, a support worker became available, a case status changed, or an important security event occurred. Notification text should avoid exposing the complaint body or other sensitive content.</p>
+
+    <h2>8. Identity matching with Nexus Plus</h2>
+    <p>If a website complaint was submitted with an email address or phone number and the same verified contact later becomes associated with a Nexus Plus account, the support system may securely link the case to the authenticated account for a safer app-based follow-up. The administrator should be notified only that the case can be migrated to the authenticated Nexus Plus contact path; ordinary account data must not be exposed unnecessarily.</p>
+
+    <h2>9. Data minimisation and retention</h2>
+    <p>We aim to delete temporary or operational data that is no longer needed within 24 hours where technically feasible and lawful. Private complaint records are intended to be retained for no longer than 5 days unless a longer period is required by law, an active support process, a security investigation, or another clearly documented necessity.</p>
+    <p>Attachments, temporary processing objects, invitation tokens and unused operational records should be expired or removed as soon as they are no longer needed. Supabase Storage and database cleanup should follow the same retention policy rather than leaving stale copies behind.</p>
+
+    <h2>10. Account and phone uniqueness</h2>
+    <p>For stronger account integrity, Nexus may require verified phone authentication and additional risk controls. A device identifier alone is not considered proof of a unique real-world identity because phones can be shared, reset or spoofed.</p>
+
+    <h2>11. Team applications and interviews</h2>
+    <p>People applying for Women Safety support roles may be asked for an interview or screening process. The purpose is to assess whether the applicant understands confidentiality, respectful communication, boundaries, escalation and the responsibilities of the role. Approval is not automatic.</p>
+
+    <h2>12. WebRTC voice support</h2>
+    <p>Private voice support may use WebRTC. WebRTC media is intended to flow between authorized participants rather than being stored as public website audio. Signaling metadata may be used to establish a call. A personal phone number does not need to be exposed to either participant for the private support call flow.</p>
+
+    <h2>13. Emergency situations</h2>
+    <p>The Women Safety service is not an emergency response agency, police authority, hospital, legal authority or guaranteed intervention service. If someone is in immediate danger, they should use appropriate local emergency or professional services first.</p>
+
+    <h2>14. Third-party providers</h2>
+    <p>Supabase and other service providers may process limited technical information needed to operate requested features. Their own terms and privacy policies may also apply. We do not place secret service credentials in public web code.</p>
+
+    <h2>15. Your choices</h2>
+    <p>Where applicable, you may request access, correction or deletion of personal information. Some records may need to be retained for legal, security or fraud-prevention reasons.</p>
+
+    <h2>16. Changes to this policy</h2>
+    <p>As Nexus services evolve, this policy may be updated. The current version will remain published on this page.</p>
+
+    <h2>17. Contact</h2>
+    <p>Email: <a href="mailto:info@nexusweb.co.in">info@nexusweb.co.in</a></p>
+    <p class="muted">Last updated: September 28, 2026.</p>
   </div></div></section>
 </Layout>
