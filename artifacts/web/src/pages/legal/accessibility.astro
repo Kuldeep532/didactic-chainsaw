@@ -2,10 +2,25 @@
 import Layout from "../../layouts/Layout.astro";
 ---
 <Layout title="Accessibility — Nexus Wave Technologies">
-  <section class="hero"><div class="container"><p class="eyebrow">Accessibility</p><h1>Accessibility Statement</h1><p class="lead">We aim to make the website clear, keyboard-friendly, screen-reader-friendly, and usable across devices.</p></div></section>
-  <section class="section"><div class="container prose card">
+  <section class="hero legal-hero"><div class="container"><p class="eyebrow">Accessibility</p><h1>Accessibility Statement</h1><p class="lead">We aim to make the website clear, keyboard-friendly, screen-reader-friendly, and usable across devices.</p></div></section>
+  <section class="section"><div class="container legal-shell"><nav class="legal-nav" aria-label="Legal pages"><a href="/legal/privacy">Privacy</a><a href="/legal/terms">Terms</a><a href="/legal/refund">Refunds</a><a href="/legal/disclaimer">Disclaimer</a><a href="/legal/accessibility">Accessibility</a></nav><article class="prose card legal-document">
     <h2>Our approach</h2><p>We use semantic HTML, visible focus states, readable layouts, descriptive controls, skip navigation, and responsive design where practical.</p>
     <h2>Assistive technology</h2><p>The website is designed to work with common browser accessibility features and screen readers. Some third-party or browser-generated content may behave differently.</p>
     <h2>Feedback</h2><p>Tell us about an accessibility barrier at <a href="mailto:info@nexusweb.co.in">info@nexusweb.co.in</a>. Please describe the page, the problem, and any assistive technology involved so we can investigate.</p>
-  </div></div></section>
+  </article></div></section>
+<style is:global>
+  .legal-hero{padding:72px 0 40px;border-bottom:1px solid var(--color-border);background:linear-gradient(180deg,var(--color-surface),var(--color-bg))}
+  .legal-hero .lead{max-width:760px}
+  .legal-shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:32px;align-items:start}
+  .legal-nav{position:sticky;top:96px;display:grid;gap:6px;padding:8px;border:1px solid var(--color-border);border-radius:16px;background:var(--color-surface)}
+  .legal-nav a{padding:10px 12px;border-radius:10px;color:var(--color-text-muted);text-decoration:none;font-size:.92rem;font-weight:650}
+  .legal-nav a:hover,.legal-nav a[aria-current=page]{background:var(--color-surface-soft);color:var(--color-text)}
+  .legal-document{padding:32px}
+  .legal-document h2{margin:34px 0 10px;font-size:1.35rem}
+  .legal-document h2:first-child{margin-top:0}
+  .legal-document p{margin:0 0 14px;color:var(--color-text-muted);line-height:1.75}
+  .legal-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+  .legal-meta span{padding:7px 10px;border:1px solid var(--color-border);border-radius:999px;font-size:.78rem;font-weight:700;color:var(--color-text-muted)}
+  @media(max-width:850px){.legal-shell{grid-template-columns:1fr}.legal-nav{position:static;display:flex;overflow:auto}.legal-nav a{flex:0 0 auto}.legal-document{padding:24px}}
+</style>
 </Layout>
