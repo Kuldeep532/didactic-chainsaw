@@ -1,21 +1,28 @@
 ---
 import Layout from "../layouts/Layout.astro";
 ---
-<Layout title="Notifications — Nexus Wave Technologies" description="Nexus notifications for important updates and private support follow-up.">
-  <section class="hero"><div class="container hero-shell">
-    <div><p class="eyebrow">Nexus Notifications</p><h1>Important updates, in one place.</h1><p class="lead">Notifications can keep you informed about support responses, case status changes, app updates and other important activity.</p></div>
-    <div class="hero-panel"><p class="eyebrow">Privacy</p><h2>Support notifications reveal only the minimum necessary information.</h2><p class="muted">Private case details stay inside the protected support flow.</p></div>
-  </div></section>
-  <section class="section"><div class="container grid-3">
-    <article class="card"><p class="eyebrow">Support</p><h3>Case response</h3><p class="muted">A future notification can tell you that a support worker has replied or become available.</p></article>
-    <article class="card"><p class="eyebrow">Security</p><h3>Account alerts</h3><p class="muted">Important authentication or privacy events can be surfaced here without exposing sensitive data.</p></article>
-    <article class="card"><p class="eyebrow">Nexus</p><h3>Product updates</h3><p class="muted">Relevant app and service announcements can appear here.</p></article>
-  </div></section>
-  <section class="section surface-soft"><div class="container">
-    <div class="section-card">
-      <h2>Notifications are ready for the app workflow.</h2>
-      <p class="muted">The public website currently provides the information architecture. Authenticated app users can later receive the same notification contract through Supabase Realtime and push notifications.</p>
-      <a class="button primary" href="/apps">Explore Nexus Apps</a>
+<Layout title="Notifications — Nexus Wave Technologies" description="Your important Nexus updates.">
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Notifications</p>
+      <h1>Important updates, in one place.</h1>
+      <p class="lead">See replies, account alerts and useful updates without searching through different pages.</p>
     </div>
-  </div></section>
+  </section>
+  <section class="section">
+    <div class="container grid-3">
+      <article class="card"><p class="eyebrow">Support</p><h3>Support replies</h3><p class="muted">Know when someone has replied to a private support request.</p></article>
+      <article class="card"><p class="eyebrow">Your account</p><h3>Account alerts</h3><p class="muted">Important sign-in and privacy updates can appear here.</p></article>
+      <article class="card"><p class="eyebrow">Nexus</p><h3>New things</h3><p class="muted">Hear about useful app features and service updates.</p></article>
+    </div>
+  </section>
+  <section class="section surface-soft">
+    <div class="container">
+      <div class="card">
+        <h2>Sign in to see your personal updates.</h2>
+        <p class="muted">Your private notifications are available only after you sign in.</p>
+        <a class="button primary" href="/login">Log in</a>
+      </div>
+    </div>
+  </section>
 </Layout>
