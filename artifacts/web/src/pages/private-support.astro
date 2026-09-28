@@ -19,5 +19,5 @@ const token=new URLSearchParams(location.search).get("token");
 const title=document.getElementById("support-title");
 const msg=document.getElementById("support-message");
 if(!token){title.textContent="Private support link required";msg.textContent="Open the invitation link you received after submitting a private support request.";}
-else{title.textContent="Private support session";msg.textContent="The support session endpoint will validate this invitation token before any case information is shown.";}
+else{title.textContent="Private support session";msg.textContent="Your private invitation is checked before any case information is shown.";}
 </script>
