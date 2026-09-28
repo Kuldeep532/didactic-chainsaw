@@ -1,0 +1,34 @@
+---
+const compact = Astro.props.compact ?? false;
+---
+<div class:list={["nexus-logo", compact && "nexus-logo--compact"]} role="img" aria-label="Nexus Plus — Radhe Radhe, Hare Krishna">
+  <span class="nexus-logo__halo" aria-hidden="true"></span>
+  <span class="nexus-logo__peacock" aria-hidden="true">🪶</span>
+  <span class="nexus-logo__figures" aria-hidden="true">
+    <span class="nexus-logo__krishna">◉</span>
+    <span class="nexus-logo__radha">◌</span>
+  </span>
+  <span class="nexus-logo__wordmark">Nexus Plus</span>
+  <span class="nexus-logo__mantra">Radhe Radhe · Hare Krishna</span>
+</div>
+
+<style>
+  .nexus-logo{position:relative;display:grid;place-items:center;min-width:210px;padding:10px 14px 9px;border-radius:24px;overflow:hidden;background:linear-gradient(135deg,#0f2b68 0%,#1d4ed8 48%,#7c3aed 100%);box-shadow:0 10px 26px rgb(37 99 235 / 18%);isolation:isolate}
+  .nexus-logo::before{content:"";position:absolute;inset:-30%;background:radial-gradient(circle at 35% 30%,rgb(255 255 255 / 20%),transparent 30%),radial-gradient(circle at 80% 75%,rgb(255 207 93 / 22%),transparent 32%);z-index:-1}
+  .nexus-logo__halo{position:absolute;width:60px;height:60px;border:1px solid rgb(255 215 120 / 65%);border-radius:50%;box-shadow:0 0 0 6px rgb(255 215 120 / 10%);left:18px;top:10px}
+  .nexus-logo__peacock{position:absolute;right:14px;top:4px;font-size:34px;line-height:1;transform:rotate(-12deg)}
+  .nexus-logo__figures{position:absolute;left:28px;top:12px;width:46px;height:50px}
+  .nexus-logo__krishna,.nexus-logo__radha{position:absolute;display:grid;place-items:center;border-radius:50%;font-size:20px;font-weight:900;text-shadow:0 1px 2px rgb(0 0 0 / 30%)}
+  .nexus-logo__krishna{width:36px;height:36px;background:radial-gradient(circle at 35% 30%,#bfe3ff,#2563eb 58%,#173b9d);color:#ffd86b;left:0;top:8px;border:2px solid #ffd76b}
+  .nexus-logo__radha{width:33px;height:33px;background:radial-gradient(circle at 35% 30%,#ffe5ef,#e879a9 60%,#9d174d);color:#ffd76b;right:0;top:16px;border:2px solid #ffd76b}
+  .nexus-logo__wordmark{margin-left:48px;color:#fff;font-size:21px;font-weight:850;line-height:1.05;letter-spacing:-.04em}
+  .nexus-logo__mantra{margin-left:48px;color:#ffe8a3;font-size:10px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}
+  .nexus-logo--compact{min-width:154px;border-radius:16px;padding:7px 10px}
+  .nexus-logo--compact .nexus-logo__halo{width:42px;height:42px;left:9px;top:8px}
+  .nexus-logo--compact .nexus-logo__figures{left:16px;top:9px;transform:scale(.72);transform-origin:top left}
+  .nexus-logo--compact .nexus-logo__peacock{right:8px;font-size:23px}
+  .nexus-logo--compact .nexus-logo__wordmark{margin-left:35px;font-size:15px}
+  .nexus-logo--compact .nexus-logo__mantra{margin-left:35px;font-size:7px}
+  @media (prefers-reduced-motion:no-preference){.nexus-logo__halo{animation:nexusHalo 7s linear infinite}.nexus-logo__peacock{animation:nexusFloat 4s ease-in-out infinite}}
+  @keyframes nexusHalo{to{transform:rotate(360deg)}}@keyframes nexusFloat{50%{transform:rotate(-5deg) translateY(-2px)}}
+</style>
