@@ -1,0 +1,36 @@
+---
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Private Admin — Nexus Wave Technologies</title>
+</head>
+<body>
+<main style="max-width:920px;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+<p>Private administration</p><h1>Nexus Control Center</h1><p id="status">Checking secure session…</p>
+<section id="login-panel" hidden><h2>Administrator sign in</h2><form id="login-form"><label>Email <input id="email" type="email" required></label><br><label>Password <input id="password" type="password" required></label><br><button type="submit">Sign in</button></form><p id="login-status"></p></section>
+<section id="admin-panel" hidden><p id="identity"></p><h2>Private workspace</h2><div><button type="button" data-action="verification">Community verification</button> <button type="button" data-action="moderation">Post moderation</button> <button type="button" data-action="team">Team applications</button> <button type="button" data-action="safety">Safety reports</button></div><div id="result" style="white-space:pre-wrap;margin-top:1rem"></div><button id="sign-out" type="button">Sign out</button></section>
+</main>
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+const status=document.getElementById("status"),loginPanel=document.getElementById("login-panel"),adminPanel=document.getElementById("admin-panel"),loginStatus=document.getElementById("login-status"),result=document.getElementById("result");
+const url=${JSON.stringify(supabaseUrl)},key=${JSON.stringify(supabaseKey)}; const supabase=url&&key?createClient(url,key):null;
+const isAllowedRole=(profile)=>profile?.role==="admin";
+async function render(){
+ if(!supabase){status.textContent="Private admin environment is not configured.";return;}
+ const {data:{session}}=await supabase.auth.getSession();
+ if(!session){status.textContent="Sign in with an authorized administrator account.";loginPanel.hidden=false;adminPanel.hidden=true;return;}
+ const {data:profile,error}=await supabase.from("profiles").select("id,display_name,role").eq("id",session.user.id).maybeSingle();
+ if(error||!isAllowedRole(profile)){await supabase.auth.signOut();status.textContent="Administrator access is not permitted for this account.";loginPanel.hidden=false;adminPanel.hidden=true;return;}
+ status.textContent="Secure administrator session active.";loginPanel.hidden=true;adminPanel.hidden=false;document.getElementById("identity").textContent="Signed in as "+(profile.display_name||session.user.email||"Administrator");
+}
+document.getElementById("login-form")?.addEventListener("submit",async e=>{e.preventDefault();loginStatus.textContent="Signing in…";const {error}=await supabase.auth.signInWithPassword({email:document.getElementById("email").value.trim(),password:document.getElementById("password").value});loginStatus.textContent=error?"Sign in failed. Check your credentials.":"Signed in.";await render();});
+document.getElementById("sign-out")?.addEventListener("click",async()=>{await supabase?.auth.signOut();await render();});
+document.querySelectorAll("[data-action]").forEach(b=>b.addEventListener("click",()=>{result.textContent="Private module: "+b.dataset.action+"\n\nAll privileged reads and writes must be enforced by Supabase RLS, RPCs or Edge Functions. Never place a service-role key in this client app.";}));
+void render();
+</script>
+</body></html>
