@@ -1,65 +1,30 @@
 ---
 import Layout from "../layouts/Layout.astro";
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
-const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
 <Layout title="My Account — Nexus Wave Technologies" description="Manage your Nexus account and private services.">
-  <section class="hero">
-    <div class="container">
-      <p class="eyebrow">My account</p>
-      <h1>Everything important, in one place.</h1>
-      <p class="lead">Manage your account, notifications and private support access without exposing personal details publicly.</p>
-    </div>
-  </section>
-  <section class="section">
-    <div class="container grid-3">
-      <article class="card"><p class="eyebrow">Account</p><h3 id="account-email">Your Nexus account</h3><p class="muted">Your private account information is kept separate from public pages.</p></article>
-      <article class="card"><p class="eyebrow">Notifications</p><h3>Stay up to date</h3><p class="muted">See important updates and support messages.</p><a class="button" href="/notifications">View notifications</a></article>
-      <article class="card"><p class="eyebrow">Women Safety</p><h3>Private support</h3><p class="muted">Open the safety center when you need to report a concern or find support information.</p><a class="button primary" href="/women-safety">Open Women Safety</a></article>
-    </div>
-  </section>
-  <section class="section surface-soft">
-    <div class="container">
-      <div class="card">
-        <h2>Ready to leave?</h2>
-        <p class="muted">You can sign out from this device at any time.</p>
-        <button id="signout" class="button" type="button">Sign out</button>
-        <p id="status" class="note" aria-live="polite"></p>
-      </div>
-    </div>
-  </section>
+  <section class="hero"><div class="container"><p class="eyebrow">My account</p><h1>Everything important, in one place.</h1><p class="lead">Manage your account, notifications and private support access without exposing personal details publicly.</p></div></section>
+  <section class="section"><div class="container grid-3">
+    <article class="card"><p class="eyebrow">Account</p><h3 id="account-name">Your Nexus account</h3><p id="account-email" class="muted">Loading your account…</p></article>
+    <article class="card"><p class="eyebrow">Notifications</p><h3>Stay up to date</h3><p class="muted">See important updates and support messages.</p><a class="button" href="/notifications">View notifications</a></article>
+    <article class="card"><p class="eyebrow">Women Safety</p><h3>Private support</h3><p class="muted">Open the safety center when you need to report a concern or find support information.</p><a class="button primary" href="/women-safety">Open Women Safety</a></article>
+  </div></section>
+  <section class="section surface-soft"><div class="container"><div class="card"><h2>Sign out</h2><p class="muted">You can sign out from this device at any time.</p><button id="signout" class="button" type="button">Sign out</button><p id="status" class="note" aria-live="polite"></p></div></div></section>
 </Layout>
-<script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
-  const status=document.getElementById("status");
-  const params=new URLSearchParams(location.hash.replace(/^#/,""));
-  const access=params.get("access_token");
-  const refresh=params.get("refresh_token");
-  if(access){
-    localStorage.setItem("nexus-access-token",access);
-    if(refresh) localStorage.setItem("nexus-refresh-token",refresh);
-    history.replaceState({},document.title,location.pathname+location.search);
-  }
-  (async()=>{
-    const code=new URLSearchParams(location.search).get("code");
-    if(code && supabaseUrl && supabaseKey){
-      try{
-        const module=await import("https://esm.sh/@supabase/supabase-js@2.57.4");
-        const client=module.createClient(supabaseUrl,supabaseKey);
-        const {data,error}=await client.auth.exchangeCodeForSession(code);
-        if(error) throw error;
-        if(data.session?.access_token) localStorage.setItem("nexus-access-token",data.session.access_token);
-        if(data.session?.refresh_token) localStorage.setItem("nexus-refresh-token",data.session.refresh_token);
-        history.replaceState({},document.title,location.pathname);
-      }catch(error){ status.textContent="We could not finish Google sign-in. Please try again."; }
+
+<script>
+  import { browserSupabase } from "../lib/browser-auth";
+
+  const nameEl=document.getElementById("account-name"),emailEl=document.getElementById("account-email"),status=document.getElementById("status");
+  const showSession=async(session)=>{
+    if(!session){location.href="/login";return;}
+    emailEl.textContent=session.user.email||"Account email";
+    nameEl.textContent=session.user.user_metadata?.full_name||"Your Nexus account";
+    if(browserSupabase){
+      const {data}=await browserSupabase.from("profiles").select("full_name").eq("user_id",session.user.id).maybeSingle();
+      if(data?.full_name)nameEl.textContent=data.full_name;
     }
-    const token=localStorage.getItem("nexus-access-token");
-    if(!token){location.replace("/login");}
-    else{
-    document.getElementById("account-email").textContent="Signed in to your Nexus account";
-    status.textContent="You are signed in on this device.";
-    document.getElementById("signout")?.addEventListener("click",()=>{
-      localStorage.removeItem("nexus-access-token");localStorage.removeItem("nexus-refresh-token");location.href="/login";
-    });
-  }
-  })();
+  };
+  browserSupabase?.auth.onAuthStateChange((_event,session)=>{void showSession(session);});
+  browserSupabase?.auth.getSession().then(({data})=>showSession(data.session));
+  document.getElementById("signout")?.addEventListener("click",async()=>{status.textContent="Signing you out…";if(browserSupabase)await browserSupabase.auth.signOut();});
 </script>
