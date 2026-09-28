@@ -44,31 +44,16 @@ const path = Astro.url.pathname;
               <a href="/contact">Contact</a>
             </div>
           </details>
-          <details class="nav-dropdown">
-            <summary>Workspace</summary>
-            <div class="dropdown-panel">
-              <a href="/dashboard">Dashboard</a>
-              <a href="/admin">Admin</a>
-              <a href="/account">My account</a>
-            </div>
-          </details>
           <a href="/about" aria-current={path.startsWith("/about") ? "page" : undefined}>About</a>
         </nav>
         <div class="header-actions">
           <ThemeToggle />
-          <details class="account-menu">
-            <summary class="account-summary" aria-label="Account menu"><span aria-hidden="true">◉</span><span class="desktop-account-label">Account</span></summary>
-            <div class="dropdown-panel dropdown-right">
-              <a href="/login">Sign in</a><a href="/account">My account</a><a href="/dashboard">Dashboard</a>
-            </div>
-          </details>
           <button class="mobile-menu-button button" type="button" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
         </div>
       </div>
       <nav id="mobile-nav" hidden class="container mobile-nav" aria-label="Mobile navigation">
-        <a href="/">Home</a><a href="/apps">Apps</a><a href="/shlok">श्लोक</a><a href="/utilities">Utilities</a><a href="/community">Forum</a><a href="/blog">Official Blog</a><a href="/chats">My Chats</a>
-        <a href="/dashboard">Dashboard</a><a href="/admin">Admin</a><a href="/about">About</a><a href="/join-team">Join Our Team</a>
-        <a href="/contact">Contact</a><a href="/women-safety">Women Safety</a><a href="/login">Sign in</a><a href="/account">My account</a>
+        <a href="/">Home</a><a href="/apps">Apps</a><a href="/shlok">श्लोक</a><a href="/utilities">Utilities</a><a href="/community">Forum</a><a href="/blog">Official Blog</a><a href="/chats">My Chats</a><a href="/about">About</a><a href="/join-team">Join Our Team</a>
+        <a href="/contact">Contact</a><a href="/women-safety">Women Safety</a>
       </nav>
     </header>
     <main id="main-content"><slot /></main>
