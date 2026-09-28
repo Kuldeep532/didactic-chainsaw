@@ -5,25 +5,31 @@
     <div>
       <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><span></span></span><span>Nexus Wave Technologies</span></a>
       <p class="muted">Accessible digital products and online services by Kuldeep, including Nexus Plus and Geeta Nexus.</p>
-      <div class="footer-social" aria-label="Social links"><a href="https://x.com/NexusWaveApps" target="_blank" rel="noopener noreferrer" aria-label="Nexus Wave Technologies on X">X</a><a href="https://www.linkedin.com/company/nexus-wave-technologies/" target="_blank" rel="noopener noreferrer" aria-label="Nexus Wave Technologies on LinkedIn">in</a><a href="https://www.instagram.com/nexuswave_technologies" target="_blank" rel="noopener noreferrer" aria-label="Nexus Wave Technologies on Instagram">◎</a></div>
+      <div class="footer-social" aria-label="Social links">
+        <a href="https://x.com/NexusWaveApps" target="_blank" rel="noopener noreferrer" aria-label="Nexus Wave Technologies on X">X</a>
+        <a href="https://www.linkedin.com/company/nexus-wave-technologies/" target="_blank" rel="noopener noreferrer" aria-label="Nexus Wave Technologies on LinkedIn">LinkedIn</a>
+        <a href="https://www.instagram.com/nexuswave_technologies" target="_blank" rel="noopener noreferrer" aria-label="Nexus Wave Technologies on Instagram">Instagram</a>
+      </div>
     </div>
     <div class="footer-links"><strong>Explore</strong><a href="/apps">Apps</a><a href="/business">Business</a><a href="/tools">Tools</a><a href="/community">Community</a><a href="/posts">Posts</a><a href="/notifications">Notifications</a><a href="/contact">Contact</a></div>
     <div class="footer-links"><strong>Legal</strong><a href="/legal/privacy">Privacy Policy</a><a href="/legal/terms">Terms and Conditions</a><a href="/legal/refund">Refund Policy</a><a href="/legal/disclaimer">Disclaimer</a><a href="/legal/accessibility">Accessibility</a></div>
   </div>
-  <div id="footer-auto-links" class="container footer-links" hidden style="margin-top:26px;padding-top:20px;border-top:1px solid var(--border)"><strong>More links</strong><div id="footer-auto-link-list" class="footer-links"></div></div>
+  <div id="footer-auto-links" class="container footer-links" hidden style="margin-top:26px;padding-top:20px;border-top:1px solid var(--color-border)"><strong>More links</strong><div id="footer-auto-link-list" class="footer-links"></div></div>
   <div class="container footer-bottom">© {new Date().getFullYear()} Nexus Wave Technologies.</div>
 </footer>
 <script>
   const loadFooterLinks=async()=>{
-    const { browserSupabase } = await import("../lib/browser-auth");
-    const section=document.getElementById("footer-auto-links"),list=document.getElementById("footer-auto-link-list");
-    if(!section||!list||!browserSupabase)return;
-    const {data}=await browserSupabase.from("site_links").select("label,url").eq("screen","footer").eq("active",true).order("sort_order").limit(10);
-    if(!data?.length){section.hidden=true;return;}
-    list.replaceChildren();
-    for(const item of data){const a=document.createElement("a");a.href=item.url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=item.label;list.append(a);}
-    section.hidden=false;
+    try {
+      const { browserSupabase } = await import("../lib/browser-auth");
+      const section=document.getElementById("footer-auto-links"),list=document.getElementById("footer-auto-link-list");
+      if(!section||!list||!browserSupabase)return;
+      const {data}=await browserSupabase.from("site_links").select("label,url").eq("screen","footer").eq("active",true).order("sort_order").limit(10);
+      if(!data?.length){section.hidden=true;return;}
+      list.replaceChildren();
+      for(const item of data){const a=document.createElement("a");a.href=item.url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=item.label;list.append(a);}
+      section.hidden=false;
+    } catch {}
   };
-  document.addEventListener("astro:page-load",()=>{setTimeout(loadFooterLinks,1400)});
-  setTimeout(loadFooterLinks,1400);
+  document.addEventListener("astro:page-load",()=>{setTimeout(loadFooterLinks,700)});
+  setTimeout(loadFooterLinks,700);
 </script>
