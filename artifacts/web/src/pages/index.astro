@@ -141,27 +141,4 @@ import Layout from "../layouts/Layout.astro";
     })();
   </script>
 </Layout>
-  <script is:inline>
-    const heroMonthName = document.getElementById("hero-month-name");
-    const heroMonthContribution = document.getElementById("hero-month-contribution");
-    const heroMonthProof = document.getElementById("hero-month-proof");
-    (async () => {
-      try {
-        const url = "__SUPABASE_URL__";
-        const key = "__SUPABASE_KEY__";
-        if (!url || !key || url.includes("__SUPABASE_")) throw new Error("not-configured");
-        const r = await fetch(url + "/rest/v1/women_safety_heroes?select=display_name,contribution_summary,proof_url&status=eq.published&order=month_start.desc&limit=1", {headers:{apikey:key,Authorization:"Bearer "+key}});
-        if (!r.ok) throw new Error("request-failed");
-        const rows = await r.json();
-        if (!rows.length) throw new Error("empty");
-        const hero = rows[0];
-        heroMonthName.textContent = hero.display_name + " · Hero of the Month";
-        heroMonthContribution.textContent = hero.contribution_summary || "A reviewed community contribution.";
-        heroMonthProof.textContent = hero.proof_url ? "Verified contribution evidence is available." : "Contribution reviewed by the community team.";
-      } catch {
-        heroMonthName.textContent = "Hero of the Month";
-        heroMonthContribution.textContent = "Recognition will appear automatically after a contribution has been reviewed and published.";
-        heroMonthProof.textContent = "Recognition is based on reviewed contribution, not popularity alone.";
-      }
-    })();
-  </script>
+  
