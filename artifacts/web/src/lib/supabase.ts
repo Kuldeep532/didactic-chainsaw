@@ -11,7 +11,7 @@ export const supabase = supabaseUrl && supabaseKey
 
 export function requireSupabase() {
   if (!supabase) {
-    throw new Error("This feature is not ready yet. Please try again shortly.");
+    throw new Error("This feature is temporarily unavailable. Please try again in a moment.");
   }
   return supabase;
 }
