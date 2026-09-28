@@ -1,24 +1,26 @@
----
----
-<button class="icon-button theme-toggle" type="button" aria-label="Switch theme" aria-pressed="false" title="Switch theme">
+<button class="icon-button theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode">
   <span aria-hidden="true">☼</span>
-  <span class="sr-only">Switch theme</span>
+  <span class="sr-only">Change theme</span>
 </button>
-<script is:inline>
+<script>
   const key = "nexus-theme";
-  const button = document.querySelector(".theme-toggle");
-  const apply = (theme) => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem(key, theme);
-    if (button) {
+  const initThemeButton = () => {
+    const button = document.querySelector(".theme-toggle");
+    if (!button || button.hasAttribute("data-ready")) return;
+    button.setAttribute("data-ready", "true");
+    const apply = (theme) => {
+      document.documentElement.dataset.theme = theme;
+      try { localStorage.setItem(key, theme); } catch {}
       const dark = theme === "dark";
       button.setAttribute("aria-pressed", String(dark));
       button.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
       button.setAttribute("title", dark ? "Switch to light mode" : "Switch to dark mode");
       const icon = button.querySelector("[aria-hidden='true']");
       if (icon) icon.textContent = dark ? "☾" : "☼";
-    }
+    };
+    apply(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+    button.addEventListener("click", () => apply(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
   };
-  apply(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
-  button?.addEventListener("click", () => apply(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
+  document.addEventListener("astro:page-load", initThemeButton);
+  initThemeButton();
 </script>
