@@ -11,7 +11,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
   </div><div class="hero-panel"><p class="eyebrow">Immediate danger</p><h2>Please use local emergency help first.</h2><p class="muted">This independent support channel is not a replacement for emergency services, police, medical care or qualified legal assistance.</p><div class="actions"><a class="button primary" href="tel:112">Call 112</a></div></div></div></section>
 
   <section class="section" id="report"><div class="container grid-2">
-    <article class="card"><p class="eyebrow">01 · Safe reporting</p><h2>Share a concern.</h2><p class="muted">Share only what is necessary. Never submit passwords, OTPs, banking credentials or private keys.</p>
+    <article class="card"><p class="eyebrow">01 · Safe reporting</p><h2>Share a concern.</h2><p class="muted">A Nexus account is required before a private complaint can be registered. Your complaint receives a unique case number after secure submission.</p><p class="note"><a href="/login">Log in to Nexus</a> before opening the complaint form.</p>
       <form id="safety-report-form" class="form">
         <label>Your name (optional)<input id="report-name" autocomplete="name" /></label>
         <label>Are you a Nexus Plus user?<select id="nexus-user"><option value="no">No / Not sure</option><option value="yes">Yes</option></select></label>
@@ -21,7 +21,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
         <label>What happened?<textarea id="report-message" minlength="10" required placeholder="Describe the situation without confidential credentials."></textarea></label>
         <label>Preferred follow-up<select id="report-followup"><option>Contact me if support is available</option><option>I only want to submit information</option><option>I prefer not to say</option></select></label>
         <label class="checkbox-row"><input id="report-consent" type="checkbox" required /> I understand this is a confidential support channel, not a guaranteed emergency intervention service.</label>
-        <label>Preferred contact mode<select id="report-contact-mode"><option value="secure-chat">Private secure chat</option><option value="voice">Private voice support</option><option value="either">Chat or voice when available</option></select></label><button class="button primary" type="submit">Submit safety report</button><p id="report-status" class="note" aria-live="polite"></p>
+        <label>Preferred contact mode<select id="report-contact-mode"><option value="secure-chat">Private secure chat</option><option value="voice">Private voice support</option><option value="either">Chat or voice when available</option></select></label><button class="button primary" type="submit" disabled>Login required to submit</button><p id="report-status" class="note" aria-live="polite"></p>
       </form>
     </article>
     <article class="card"><p class="eyebrow">Private complaint channel</p><h2>Only the designated recipient can review it.</h2>
