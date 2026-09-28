@@ -1,0 +1,7 @@
+<button id="back-to-top" class="back-to-top" type="button" aria-label="Back to top" title="Back to top" hidden>↑<span class="sr-only">Back to top</span></button>
+<style>
+.back-to-top{position:fixed;right:18px;bottom:18px;z-index:40;width:46px;height:46px;border:1px solid var(--color-border);border-radius:50%;background:var(--color-surface-raised);color:var(--color-text);box-shadow:var(--shadow-2);font-size:22px;font-weight:800;cursor:pointer;transition:transform 180ms ease,opacity 180ms ease,box-shadow 180ms ease}.back-to-top:hover{transform:translateY(-2px);box-shadow:var(--shadow-3)}
+</style>
+<script>
+const init=()=>{const b=document.getElementById("back-to-top");if(!b||b.dataset.ready)return;b.dataset.ready="1";const sync=()=>{b.hidden=scrollY<420};addEventListener("scroll",sync,{passive:true});b.addEventListener("click",()=>scrollTo({top:0,behavior:"smooth"}));sync()};document.addEventListener("astro:page-load",init);init();
+</script>
