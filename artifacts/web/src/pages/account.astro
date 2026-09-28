@@ -1,18 +1,49 @@
 ---
 import Layout from "../layouts/Layout.astro";
 ---
-<Layout title="My Account — Nexus Wave Technologies" description="Your Nexus account and private service access.">
-  <section class="hero"><div class="container">
-    <p class="eyebrow">Nexus Account</p><h1 id="account-name">My Account</h1><p class="lead">Authenticated services, notifications and private support access are managed from this account context.</p>
-  </div></section>
-  <section class="section"><div class="container grid-3">
-    <article class="card"><p class="eyebrow">Identity</p><h3 id="account-email">Checking account…</h3><p class="muted">Public pages should not expose your private account information.</p></article>
-    <article class="card"><p class="eyebrow">Notifications</p><h3>Stay updated</h3><p class="muted">View support and account notifications.</p><a class="button" href="/notifications">Open Notifications</a></article>
-    <article class="card"><p class="eyebrow">Private Support</p><h3>Protected by login</h3><p class="muted">Private complaints and future support flows use the authenticated Nexus identity boundary.</p><a class="button primary" href="/women-safety">Women Safety</a></article>
-  </div></section>
-  <section class="section surface-soft"><div class="container"><button id="signout" class="button">Sign out</button><p id="status" class="note" aria-live="polite"></p></div></section>
+<Layout title="My Account — Nexus Wave Technologies" description="Manage your Nexus account and private services.">
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">My account</p>
+      <h1>Everything important, in one place.</h1>
+      <p class="lead">Manage your account, notifications and private support access without exposing personal details publicly.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid-3">
+      <article class="card"><p class="eyebrow">Account</p><h3 id="account-email">Your Nexus account</h3><p class="muted">Your private account information is kept separate from public pages.</p></article>
+      <article class="card"><p class="eyebrow">Notifications</p><h3>Stay up to date</h3><p class="muted">See important updates and support messages.</p><a class="button" href="/notifications">View notifications</a></article>
+      <article class="card"><p class="eyebrow">Women Safety</p><h3>Private support</h3><p class="muted">Open the safety center when you need to report a concern or find support information.</p><a class="button primary" href="/women-safety">Open Women Safety</a></article>
+    </div>
+  </section>
+  <section class="section surface-soft">
+    <div class="container">
+      <div class="card">
+        <h2>Ready to leave?</h2>
+        <p class="muted">You can sign out from this device at any time.</p>
+        <button id="signout" class="button" type="button">Sign out</button>
+        <p id="status" class="note" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
 </Layout>
 <script is:inline>
-const token=localStorage.getItem("nexus-access-token");const emailEl=document.getElementById("account-email");const status=document.getElementById("status");
-if(!token){location.href="/login";}else{emailEl.textContent="Authenticated Nexus user";status.textContent="Session token present.";document.getElementById("signout")?.addEventListener("click",()=>{localStorage.removeItem("nexus-access-token");localStorage.removeItem("nexus-refresh-token");location.href="/login";});}
+  const status=document.getElementById("status");
+  const params=new URLSearchParams(location.hash.replace(/^#/,""));
+  const access=params.get("access_token");
+  const refresh=params.get("refresh_token");
+  if(access){
+    localStorage.setItem("nexus-access-token",access);
+    if(refresh) localStorage.setItem("nexus-refresh-token",refresh);
+    history.replaceState({},document.title,location.pathname+location.search);
+  }
+  const token=localStorage.getItem("nexus-access-token");
+  if(!token){location.replace("/login");}
+  else{
+    document.getElementById("account-email").textContent="Signed in to your Nexus account";
+    status.textContent="You are signed in on this device.";
+    document.getElementById("signout")?.addEventListener("click",()=>{
+      localStorage.removeItem("nexus-access-token");localStorage.removeItem("nexus-refresh-token");location.href="/login";
+    });
+  }
 </script>
