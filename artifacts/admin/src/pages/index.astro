@@ -25,7 +25,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 <div class="grid"><section class="card"><h2>Recent posts</h2><div id="post-list" class="list"></div></section><section class="card"><h2>Website links</h2><div id="link-list" class="list"></div></section></div>
 </section>
 </div>
-<script>
+<script type="module" is:inline>
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 const url=${JSON.stringify(supabaseUrl)},key=${JSON.stringify(supabaseKey)};
 const supabase=url&&key?createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
