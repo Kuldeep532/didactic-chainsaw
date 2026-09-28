@@ -69,7 +69,9 @@ import Layout from "../layouts/Layout.astro";
     </div>
   </section>
 
-  <script is:inline>
+  <script>
+    import QRCode from "qrcode";
+
     const qrType = document.getElementById("qr-type");
     const qrText = document.getElementById("qr-text");
     const qrCanvas = document.getElementById("qr-canvas");
@@ -79,68 +81,31 @@ import Layout from "../layouts/Layout.astro";
 
     const buildPayload = () => {
       const raw = qrText.value.trim();
-      const type = qrType.value;
       if (!raw) return "";
-      if (type === "wifi") return raw.startsWith("WIFI:") ? raw : raw;
-      if (type === "upi") return raw.startsWith("upi://") ? raw : "upi://pay?pa=" + encodeURIComponent(raw);
+      if (qrType.value === "upi") return raw.startsWith("upi://") ? raw : "upi://pay?pa=" + encodeURIComponent(raw);
       return raw;
     };
 
-    const drawPseudoQr = (payload) => {
-      const ctx = qrCanvas.getContext("2d");
-      if (!ctx) return;
-      const size = qrCanvas.width;
-      ctx.clearRect(0, 0, size, size);
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, size, size);
-
-      // Lightweight deterministic visual QR-style matrix. The payload is encoded into the matrix,
-      // with finder markers and a border, without loading a heavy QR library.
-      const modules = 29;
-      const cell = Math.floor(size / modules);
-      const padding = Math.floor((size - cell * modules) / 2);
-      const hashSeed = Array.from(payload).reduce((a, ch, i) => (a + ch.charCodeAt(0) * (i + 17)) >>> 0, 2166136261);
-      let seed = hashSeed || 1;
-      const rand = () => { seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5; return (seed >>> 0) / 4294967296; };
-      const reserved = Array.from({length:modules},()=>Array(modules).fill(false));
-
-      const markFinder = (x, y) => {
-        for (let yy=-1; yy<8; yy++) for (let xx=-1; xx<8; xx++) {
-          const px=x+xx, py=y+yy;
-          if(px>=0&&py>=0&&px<modules&&py<modules) reserved[py][px]=true;
-        }
-        for(let yy=0;yy<7;yy++) for(let xx=0;xx<7;xx++){
-          const on = xx===0||yy===0||xx===6||yy===6||(xx>=2&&xx<=4&&yy>=2&&yy<=4);
-          ctx.fillStyle = on ? "#111827" : "#ffffff";
-          ctx.fillRect(padding+(x+xx)*cell,padding+(y+yy)*cell,cell,cell);
-        }
-      };
-      markFinder(1,1); markFinder(modules-8,1); markFinder(1,modules-8);
-
-      let bitIndex = 0;
-      const bytes = new TextEncoder().encode(payload);
-      for(let y=0;y<modules;y++) for(let x=0;x<modules;x++){
-        if(reserved[y][x]) continue;
-        const b = bytes.length ? bytes[Math.floor(bitIndex/8)%bytes.length] : 0;
-        const bit = (b >> (bitIndex%8)) & 1;
-        const fill = (bit ^ (rand()>0.53?1:0)) === 1;
-        ctx.fillStyle = fill ? "#111827" : "#ffffff";
-        ctx.fillRect(padding+x*cell,padding+y*cell,cell,cell);
-        bitIndex++;
-      }
-      qrCanvas.hidden = false;
-      qrEmpty.hidden = true;
-      qrActions.hidden = false;
-    };
-
-    const generateQr = () => {
+    const generateQr = async () => {
       const payload = buildPayload();
       if (!payload) {
         qrStatus.textContent = "Please enter something to turn into a QR code.";
         return;
       }
-      drawPseudoQr(payload);
-      qrStatus.textContent = "Your QR code is ready.";
+      try {
+        await QRCode.toCanvas(qrCanvas, payload, {
+          width: 320,
+          margin: 3,
+          errorCorrectionLevel: "M",
+          color: { dark: "#111827", light: "#ffffff" }
+        });
+        qrCanvas.hidden = false;
+        qrEmpty.hidden = true;
+        qrActions.hidden = false;
+        qrStatus.textContent = "Your QR code is ready.";
+      } catch {
+        qrStatus.textContent = "We could not create that QR code. Please check the content and try again.";
+      }
     };
 
     document.getElementById("qr-generate")?.addEventListener("click", generateQr);
@@ -156,7 +121,7 @@ import Layout from "../layouts/Layout.astro";
 
     document.getElementById("qr-share")?.addEventListener("click", async () => {
       try {
-        const blob = await new Promise(resolve => qrCanvas.toBlob(resolve, "image/png"));
+        const blob = await new Promise((resolve) => qrCanvas.toBlob(resolve, "image/png"));
         if (navigator.share && blob) {
           const file = new File([blob], "nexus-qr-code.png", { type: "image/png" });
           if (!navigator.canShare || navigator.canShare({ files: [file] })) {
@@ -173,15 +138,13 @@ import Layout from "../layouts/Layout.astro";
     });
 
     qrType?.addEventListener("change", () => {
-      const type = qrType.value;
-      qrText.placeholder = type === "wifi"
+      qrText.placeholder = qrType.value === "wifi"
         ? "Example: WIFI:T:WPA;S:MyWiFi;P:MyPassword;;"
-        : type === "upi"
+        : qrType.value === "upi"
           ? "Example: yourname@upi"
           : "Enter any text or link…";
     });
   </script>
-
   <style>
     .tools-hero{padding-bottom:48px}
     .qr-tool{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,440px);gap:24px;align-items:stretch}
