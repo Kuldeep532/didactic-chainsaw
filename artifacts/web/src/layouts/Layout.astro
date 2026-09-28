@@ -234,7 +234,7 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
         gap: var(--space-4);
       }
 
-      .brand {
+      .nexus-brand{min-width:0}.brand {
         display: inline-flex;
         flex: 0 0 auto;
         align-items: center;
@@ -254,7 +254,7 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
         text-decoration: none;
       }
 
-      .brand-mark {
+      .brand-text{display:inline-flex}.brand-mark {
         width: 40px;
         height: 40px;
         display: grid;
@@ -794,6 +794,7 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
       }
 
       @media (max-width: 639px) {
+        .nexus-brand .nexus-logo{display:none}
         .site-header-inner {
           min-height: 64px;
         }
@@ -859,7 +860,7 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="site-header">
       <div class="container site-header-inner">
-        <a class="brand" href="/" aria-label="Nexus Plus — Radhe Radhe, Hare Krishna home"><NexusLogo compact /><span class="sr-only">Nexus Wave Technologies</span></a>
+        <a class="brand nexus-brand" href="/" aria-label="Nexus Wave Technologies home"><NexusLogo compact /><span class="brand-text">Nexus Wave Technologies</span></a>
         <nav class="desktop-nav" aria-label="Primary navigation">
           <a href="/" aria-current={path === "/" ? "page" : undefined} data-i18n="nav.home">Home</a>
           <a href="/apps" aria-current={path.startsWith("/apps") ? "page" : undefined} data-i18n="nav.apps">Apps & Services</a>
