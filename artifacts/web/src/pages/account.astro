@@ -1,5 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
 <Layout title="My Account — Nexus Wave Technologies" description="Manage your Nexus account and private services.">
   <section class="hero">
@@ -27,7 +29,7 @@ import Layout from "../layouts/Layout.astro";
     </div>
   </section>
 </Layout>
-<script is:inline>
+<script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
   const status=document.getElementById("status");
   const params=new URLSearchParams(location.hash.replace(/^#/,""));
   const access=params.get("access_token");
@@ -37,13 +39,27 @@ import Layout from "../layouts/Layout.astro";
     if(refresh) localStorage.setItem("nexus-refresh-token",refresh);
     history.replaceState({},document.title,location.pathname+location.search);
   }
-  const token=localStorage.getItem("nexus-access-token");
-  if(!token){location.replace("/login");}
-  else{
+  (async()=>{
+    const code=new URLSearchParams(location.search).get("code");
+    if(code && supabaseUrl && supabaseKey){
+      try{
+        const module=await import("https://esm.sh/@supabase/supabase-js@2.57.4");
+        const client=module.createClient(supabaseUrl,supabaseKey);
+        const {data,error}=await client.auth.exchangeCodeForSession(code);
+        if(error) throw error;
+        if(data.session?.access_token) localStorage.setItem("nexus-access-token",data.session.access_token);
+        if(data.session?.refresh_token) localStorage.setItem("nexus-refresh-token",data.session.refresh_token);
+        history.replaceState({},document.title,location.pathname);
+      }catch(error){ status.textContent="We could not finish Google sign-in. Please try again."; }
+    }
+    const token=localStorage.getItem("nexus-access-token");
+    if(!token){location.replace("/login");}
+    else{
     document.getElementById("account-email").textContent="Signed in to your Nexus account";
     status.textContent="You are signed in on this device.";
     document.getElementById("signout")?.addEventListener("click",()=>{
       localStorage.removeItem("nexus-access-token");localStorage.removeItem("nexus-refresh-token");location.href="/login";
     });
   }
+  })();
 </script>
