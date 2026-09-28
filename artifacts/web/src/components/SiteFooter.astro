@@ -14,8 +14,8 @@
   <div class="container footer-bottom">© {new Date().getFullYear()} Nexus Wave Technologies.</div>
 </footer>
 <script>
-  import { browserSupabase } from "../lib/browser-auth";
   const loadFooterLinks=async()=>{
+    const { browserSupabase } = await import("../lib/browser-auth");
     const section=document.getElementById("footer-auto-links"),list=document.getElementById("footer-auto-link-list");
     if(!section||!list||!browserSupabase)return;
     const {data}=await browserSupabase.from("site_links").select("label,url").eq("screen","footer").eq("active",true).order("sort_order").limit(10);
@@ -24,6 +24,6 @@
     for(const item of data){const a=document.createElement("a");a.href=item.url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=item.label;list.append(a);}
     section.hidden=false;
   };
-  document.addEventListener("astro:page-load",loadFooterLinks);
-  loadFooterLinks();
+  document.addEventListener("astro:page-load",()=>{setTimeout(loadFooterLinks,1400)});
+  setTimeout(loadFooterLinks,1400);
 </script>
