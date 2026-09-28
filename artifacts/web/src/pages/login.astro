@@ -1,6 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
-<Layout title="Sign in unavailable — Nexus Wave Technologies">
-  <section class="hero"><div class="container"><p class="eyebrow">Public website</p><h1>Public account sign-in is disabled.</h1><p class="lead">The website is currently available as a public product site without account access.</p></div></section>
+<Layout title="Login — Nexus Wave Technologies" description="Sign in to your Nexus account.">
+  <section class="hero"><div class="container post-hero">
+    <p class="eyebrow">Nexus Account</p><h1>Sign in</h1><p class="lead">Your account provides the secure identity layer for private complaints, notifications and future Nexus Plus services.</p>
+  </div></section>
+  <section class="section"><div class="container grid-2">
+    <article class="card">
+      <form id="login-form" class="form">
+        <label>Email<input id="email" type="email" autocomplete="email" required /></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" required /></label>
+        <button class="button primary" type="submit">Sign in</button>
+        <p id="status" class="note" aria-live="polite"></p>
+      </form>
+    </article>
+    <article class="card"><h2>Why login?</h2><p class="muted">Login helps us keep private support requests attached to the right authenticated account while keeping them separate from public Community content.</p><p class="note">Never share your password or OTP with anyone.</p></article>
+  </div></section>
 </Layout>
+<script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
+  const form=document.getElementById("login-form"), status=document.getElementById("status");
+  form?.addEventListener("submit",async e=>{e.preventDefault();status.textContent="Signing in…";try{if(!supabaseUrl||!supabaseKey)throw 0;const r=await fetch(supabaseUrl+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:supabaseKey,"Content-Type":"application/json"},body:JSON.stringify({email:document.getElementById("email").value.trim(),password:document.getElementById("password").value})});if(!r.ok)throw 0;const data=await r.json();localStorage.setItem("nexus-access-token",data.access_token||"");localStorage.setItem("nexus-refresh-token",data.refresh_token||"");status.textContent="Signed in. You can now continue to protected Nexus services.";location.href="/account";}catch{status.textContent="Sign in failed. Check your email and password.";}}});
+</script>
