@@ -5,7 +5,8 @@
   "buildCommand": "cd artifacts/web && npm run build",
   "outputDirectory": "artifacts/web/dist",
   "cleanUrls": true,
-  "git": {
-    "deploymentEnabled": false
-  }
+  "git": { "deploymentEnabled": false },
+  "rewrites": [
+    { "source": "/_admin/(.*)", "destination": "https://admin.nexusweb.co.in/$1" }
+  ]
 }
