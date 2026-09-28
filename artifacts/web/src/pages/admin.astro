@@ -1,8 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
-const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
-<Layout title="Private admin access — Nexus Wave Technologies" description="Private administration entry point.">
-  <section class="hero"><div class="container"><p class="eyebrow">Private administration</p><h1>Administration is not part of the public website.</h1><p class="lead">Use the private administrative access method configured outside the public site.</p></div></section>
+<Layout title="Nexus Admin Center" description="Private content management for Nexus Wave Technologies.">
+  <section class="hero">
+    <div class="container hero-shell">
+      <div>
+        <p class="eyebrow">Nexus Admin</p>
+        <h1>Manage website content in one place.</h1>
+        <p class="lead">The private Admin Center lets approved administrators publish Posts and add useful links to selected website screens.</p>
+        <div class="actions"><a class="button primary" href="https://admin.nexusweb.co.in/">Open Admin Center</a><a class="button" href="/">Back to website</a></div>
+      </div>
+      <div class="hero-panel"><p class="eyebrow">Private access</p><h2>Only approved admin accounts can make changes.</h2><p class="muted">Visitors can never use this page to change public content.</p></div>
+    </div>
+  </section>
 </Layout>
