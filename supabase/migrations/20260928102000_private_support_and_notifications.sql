@@ -23,6 +23,8 @@ create table if not exists public.support_cases (
   status text not null default 'open' check (status in ('open','waiting','active','resolved','closed')),
   contact_mode text not null default 'secure-chat' check (contact_mode in ('secure-chat','voice','either','email-only')),
   contact_email text,
+  contact_phone text,
+  nexus_plus_user boolean not null default false,
   invitation_expires_at timestamptz,
   assigned_role text,
   created_at timestamptz not null default now(),
