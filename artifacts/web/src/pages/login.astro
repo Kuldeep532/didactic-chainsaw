@@ -3,23 +3,102 @@ import Layout from "../layouts/Layout.astro";
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 ---
-<Layout title="Login — Nexus Wave Technologies" description="Sign in to your Nexus account.">
-  <section class="hero"><div class="container post-hero">
-    <p class="eyebrow">Nexus Account</p><h1>Sign in</h1><p class="lead">Your account provides the secure identity layer for private complaints, notifications and future Nexus Plus services.</p>
-  </div></section>
-  <section class="section"><div class="container grid-2">
-    <article class="card">
-      <form id="login-form" class="form">
-        <label>Email<input id="email" type="email" autocomplete="email" required /></label>
-        <label>Password<input id="password" type="password" autocomplete="current-password" required /></label>
-        <button class="button primary" type="submit">Sign in</button>
+<Layout title="Log in — Nexus Wave Technologies" description="Log in or create your Nexus account.">
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Your Nexus account</p>
+      <h1>Welcome back.</h1>
+      <p class="lead">Sign in to keep your private services, notifications and account settings together in one place.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid-2">
+      <article class="card">
+        <div id="login-view">
+          <p class="eyebrow">Sign in</p>
+          <h2>Log in to Nexus</h2>
+          <button id="google-login" class="button primary" type="button" style="width:100%">Continue with Google</button>
+          <div class="note" style="text-align:center;margin:14px 0">or use your email</div>
+          <form id="login-form" class="form">
+            <label>Email<input id="email" type="email" autocomplete="email" required placeholder="you@example.com" /></label>
+            <label>Password<input id="password" type="password" autocomplete="current-password" required placeholder="Your password" /></label>
+            <button class="button" type="submit">Log in</button>
+          </form>
+          <p class="note" style="margin-top:16px">New here? <button id="show-signup" class="button ghost" type="button">Create a new account</button></p>
+        </div>
+
+        <div id="signup-view" hidden>
+          <p class="eyebrow">New account</p>
+          <h2>Create your Nexus account</h2>
+          <p class="muted">It only takes a moment. Use an email address you can access.</p>
+          <form id="signup-form" class="form">
+            <label>Your name<input id="signup-name" autocomplete="name" required placeholder="Your name" /></label>
+            <label>Email<input id="signup-email" type="email" autocomplete="email" required placeholder="you@example.com" /></label>
+            <label>Password<input id="signup-password" type="password" autocomplete="new-password" minlength="6" required placeholder="At least 6 characters" /></label>
+            <button class="button primary" type="submit">Create account</button>
+          </form>
+          <p class="note" style="margin-top:16px">Already have an account? <button id="show-login" class="button ghost" type="button">Log in</button></p>
+        </div>
         <p id="status" class="note" aria-live="polite"></p>
-      </form>
-    </article>
-    <article class="card"><h2>Why login?</h2><p class="muted">Login helps us keep private support requests attached to the right authenticated account while keeping them separate from public Community content.</p><p class="note">Never share your password or OTP with anyone.</p></article>
-  </div></section>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">Simple and private</p>
+        <h2>One account, one place.</h2>
+        <ul class="feature-list">
+          <li>Keep your account and notifications together.</li>
+          <li>Use private support features when you need them.</li>
+          <li>Your public profile stays separate from private account details.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
 </Layout>
+
 <script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
-  const form=document.getElementById("login-form"), status=document.getElementById("status");
-  form?.addEventListener("submit",async e=>{e.preventDefault();status.textContent="Signing in…";try{if(!supabaseUrl||!supabaseKey)throw 0;const r=await fetch(supabaseUrl+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:supabaseKey,"Content-Type":"application/json"},body:JSON.stringify({email:document.getElementById("email").value.trim(),password:document.getElementById("password").value})});if(!r.ok)throw 0;const data=await r.json();localStorage.setItem("nexus-access-token",data.access_token||"");localStorage.setItem("nexus-refresh-token",data.refresh_token||"");status.textContent="Signed in. You can now continue to protected Nexus services.";location.href="/account";}catch{status.textContent="Sign in failed. Check your email and password.";}}});
+  const loginView=document.getElementById("login-view"), signupView=document.getElementById("signup-view");
+  const status=document.getElementById("status");
+  const show=(name)=>{loginView.hidden=name!=="login";signupView.hidden=name!=="signup";status.textContent="";};
+  document.getElementById("show-signup")?.addEventListener("click",()=>show("signup"));
+  document.getElementById("show-login")?.addEventListener("click",()=>show("login"));
+
+  async function request(path, body){
+    if(!supabaseUrl||!supabaseKey) throw new Error("Account service is temporarily unavailable.");
+    const r=await fetch(supabaseUrl+"/auth/v1/"+path,{method:"POST",headers:{apikey:supabaseKey,"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(data.msg||data.error_description||data.message||"Please check your details and try again.");
+    return data;
+  }
+  function saveSession(data){
+    if(data.access_token) localStorage.setItem("nexus-access-token",data.access_token);
+    if(data.refresh_token) localStorage.setItem("nexus-refresh-token",data.refresh_token);
+    location.href="/account";
+  }
+
+  document.getElementById("login-form")?.addEventListener("submit",async e=>{
+    e.preventDefault();status.textContent="Signing you in…";
+    try{saveSession(await request("token?grant_type=password",{email:document.getElementById("email").value.trim(),password:document.getElementById("password").value}));}
+    catch(error){status.textContent=error instanceof Error?error.message:"We could not sign you in right now.";}
+  });
+
+  document.getElementById("signup-form")?.addEventListener("submit",async e=>{
+    e.preventDefault();status.textContent="Creating your account…";
+    try{
+      const data=await request("signup",{email:document.getElementById("signup-email").value.trim(),password:document.getElementById("signup-password").value,data:{full_name:document.getElementById("signup-name").value.trim()}});
+      if(data.access_token){saveSession(data);return;}
+      status.textContent="Your account is ready. Check your email to confirm it, then log in.";
+      show("login");
+    }catch(error){status.textContent=error instanceof Error?error.message:"We could not create your account right now.";}
+  });
+
+  document.getElementById("google-login")?.addEventListener("click",async()=>{
+    status.textContent="Opening Google sign-in…";
+    try{
+      const module=await import("https://esm.sh/@supabase/supabase-js@2.57.4");
+      const client=module.createClient(supabaseUrl,supabaseKey);
+      const {error}=await client.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+"/account"}});
+      if(error) throw error;
+    }catch(error){status.textContent=error instanceof Error?error.message:"Google sign-in is not available yet. Please use email and password.";}
+  });
 </script>
