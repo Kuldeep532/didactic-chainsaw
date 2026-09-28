@@ -7,6 +7,9 @@
   "cleanUrls": true,
   "git": { "deploymentEnabled": false },
   "rewrites": [
-    { "source": "/_admin/(.*)", "destination": "https://admin.nexusweb.co.in/$1" }
+    { "source": "/_admin", "destination": "/_admin/index.html" }
+  ],
+  "headers": [
+    { "source": "/_admin/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }] }
   ]
 }
