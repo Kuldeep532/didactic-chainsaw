@@ -1,7 +1,10 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import ThemeToggle from "../components/ThemeToggle.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import AutoLinks from "../components/AutoLinks.astro";
 const path = Astro.url.pathname;
+const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0] || "home";
 ---
 <!doctype html>
 <html lang="en">
@@ -13,6 +16,7 @@ const path = Astro.url.pathname;
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{Astro.props.title ?? "Nexus Wave Technologies"}</title>
+    <ClientRouter fallback="swap" />
     <script is:inline>
       (() => {
         try {
@@ -27,114 +31,77 @@ const path = Astro.url.pathname;
       })();
     </script>
     <style is:global>
-      :root{
-        --background:#f7f9fc;--surface:#ffffff;--surface-soft:#eef4ff;--foreground:#142033;
-        --muted-foreground:#5f6b7a;--border:#dce3ee;--primary:#2563eb;--primary-hover:#1d4ed8;
-        --primary-soft:#e8f0ff;--success:#16805b;--danger:#c24141;--shadow:0 14px 40px rgba(20,32,51,.08);
-        --radius:18px;--container:1160px;
-      }
-      html[data-theme="dark"]{
-        --background:#0b1220;--surface:#111a2b;--surface-soft:#16233a;--foreground:#edf3ff;
-        --muted-foreground:#aab6c8;--border:#26364f;--primary:#6ea8ff;--primary-hover:#8bb8ff;
-        --primary-soft:#172a4b;--shadow:0 16px 44px rgba(0,0,0,.28);
-      }
-      html{scroll-behavior:smooth;background:var(--background)}
-      body{margin:0;background:var(--background);color:var(--foreground);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65;transition:background .2s,color .2s}
-      *,*::before,*::after{box-sizing:border-box}
-      a{color:var(--primary);text-decoration:none}a:hover{text-decoration:underline}
-      img{max-width:100%;height:auto}
-      .container{width:min(calc(100% - 32px),var(--container));margin-inline:auto}
-      .site-header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
-      .site-header-inner{min-height:72px;display:flex;align-items:center;gap:24px}
-      .brand{display:inline-flex;align-items:center;gap:10px;color:var(--foreground);font-weight:750;text-decoration:none;white-space:nowrap}
-      .brand:hover{text-decoration:none}
-      .brand-mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--primary),#7c3aed);display:grid;place-items:center}
-      .brand-mark span{width:13px;height:13px;border:3px solid white;border-radius:50%}
-      .brand-text{letter-spacing:-.02em}
-      .desktop-nav{display:flex;align-items:center;gap:6px;margin-left:auto}
-      .desktop-nav>a,.nav-dropdown>summary{padding:9px 12px;border-radius:10px;color:var(--muted-foreground);font-size:.94rem;font-weight:600;cursor:pointer;list-style:none}
-      .desktop-nav>a:hover,.nav-dropdown>summary:hover,.desktop-nav>a[aria-current="page"]{background:var(--primary-soft);color:var(--foreground);text-decoration:none}
-      .nav-dropdown{position:relative}.nav-dropdown>summary::-webkit-details-marker{display:none}
-      .dropdown-panel{position:absolute;right:0;top:calc(100% + 8px);min-width:210px;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);display:grid;gap:2px}
-      .dropdown-panel a{padding:9px 11px;border-radius:9px;color:var(--foreground)}.dropdown-panel a:hover{background:var(--primary-soft);text-decoration:none}
-      .header-actions{display:flex;align-items:center;gap:8px}.icon-button,.mobile-menu-button{border:1px solid var(--border);background:var(--surface);color:var(--foreground);border-radius:11px;min-height:42px;padding:0 12px;cursor:pointer}
-      .mobile-menu-button{display:none}.mobile-nav{padding:12px 0 18px;gap:6px}.mobile-nav a{padding:11px 12px;border-radius:10px;color:var(--foreground);font-weight:600}.mobile-nav a:hover{background:var(--primary-soft);text-decoration:none}
-      .hero{padding:76px 0 54px}.hero h1{max-width:850px;font-size:clamp(2.2rem,6vw,4.6rem);line-height:1.04;letter-spacing:-.055em;margin:.25rem 0 1rem}.hero .lead{max-width:760px;font-size:1.16rem;color:var(--muted-foreground)}
-      .hero-shell{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:32px;align-items:center}.hero-panel{padding:26px;border:1px solid var(--border);background:var(--surface);border-radius:24px;box-shadow:var(--shadow)}
-      .section{padding:64px 0}.surface-soft{background:var(--surface-soft)}
-      .section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px}.section-head h2{margin:.2rem 0}.eyebrow{font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--primary);margin:0 0 7px}.muted{color:var(--muted-foreground)}
-      .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
-      .card,.section-card,.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:0 6px 24px rgba(20,32,51,.04)}.stat{display:grid;gap:4px}
-      .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:1px solid var(--border);border-radius:11px;background:var(--surface);color:var(--foreground);font-weight:700;cursor:pointer;text-decoration:none}.button:hover{text-decoration:none;border-color:var(--primary);transform:translateY(-1px)}.button.primary{background:var(--primary);border-color:var(--primary);color:white}.button.primary:hover{background:var(--primary-hover)}.button.ghost{background:transparent}
-      .form{display:grid;gap:15px}.form label{display:grid;gap:6px;font-weight:650}.form input,.form textarea,.form select,.reader-toolbar input,.reader-toolbar select{width:100%;border:1px solid var(--border);border-radius:11px;padding:11px 12px;background:var(--background);color:var(--foreground);font:inherit}.form textarea{min-height:130px;resize:vertical}.checkbox-row{display:flex!important;grid-template-columns:none!important;align-items:flex-start;gap:9px}.checkbox-row input{width:auto;margin-top:.35rem}
-      .note{font-size:.92rem;color:var(--muted-foreground)}.feature-list{padding-left:1.25rem}.feature-list li{margin:.5rem 0}
-      .skip-link{position:fixed;left:12px;top:-80px;z-index:100;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px}.skip-link:focus{top:12px}
-      .site-footer{margin-top:48px;border-top:1px solid var(--border);padding:44px 0 20px;background:var(--surface)}.footer-grid{display:grid;grid-template-columns:2fr 1fr 1.4fr;gap:32px}.footer-links{display:grid;align-content:start;gap:8px}.footer-links strong{margin-bottom:4px}.footer-bottom{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted-foreground);font-size:.9rem}.footer-social{display:flex;gap:8px;margin-top:16px}.footer-social a{display:grid;place-items:center;width:36px;height:36px;border:1px solid var(--border);border-radius:10px;color:var(--foreground)}
-      [hidden]{display:none!important}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-      @media(max-width:900px){.desktop-nav{display:none}.mobile-menu-button{display:inline-flex;align-items:center;justify-content:center}.hero-shell,.grid-4{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}}
-      @media(max-width:650px){.container{width:min(calc(100% - 24px),var(--container))}.site-header-inner{min-height:64px}.brand-text{font-size:.95rem}.hero{padding:52px 0 34px}.hero-shell,.grid-2,.grid-3,.grid-4,.footer-grid{grid-template-columns:1fr}.section{padding:44px 0}.section-head{display:block}.section-head .button{margin-top:10px}.card{padding:18px}.actions{display:grid;grid-template-columns:1fr}.actions .button{width:100%}}
+      :root{--background:#f7f9fc;--surface:#fff;--surface-soft:#eef4ff;--foreground:#142033;--muted-foreground:#5f6b7a;--border:#dce3ee;--primary:#2563eb;--primary-hover:#1d4ed8;--primary-soft:#e8f0ff;--success:#16805b;--danger:#c24141;--shadow:0 14px 40px rgba(20,32,51,.08);--radius:18px;--container:1160px}
+      html[data-theme="dark"]{--background:#0b1220;--surface:#111a2b;--surface-soft:#16233a;--foreground:#edf3ff;--muted-foreground:#aab6c8;--border:#26364f;--primary:#6ea8ff;--primary-hover:#8bb8ff;--primary-soft:#172a4b;--shadow:0 16px 44px rgba(0,0,0,.28)}
+      html{scroll-behavior:smooth;background:var(--background)}body{margin:0;background:var(--background);color:var(--foreground);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65;transition:background .2s,color .2s}*,*::before,*::after{box-sizing:border-box}a{color:var(--primary);text-decoration:none}a:hover{text-decoration:underline}img{max-width:100%;height:auto}.container{width:min(calc(100% - 32px),var(--container));margin-inline:auto}
+      .site-header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}.site-header-inner{min-height:72px;display:flex;align-items:center;gap:24px}.brand{display:inline-flex;align-items:center;gap:10px;color:var(--foreground);font-weight:750;text-decoration:none;white-space:nowrap}.brand:hover{text-decoration:none}.brand-mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--primary),#7c3aed);display:grid;place-items:center}.brand-mark span{width:13px;height:13px;border:3px solid white;border-radius:50%}.brand-text{letter-spacing:-.02em}.desktop-nav{display:flex;align-items:center;gap:6px;margin-left:auto}.desktop-nav>a,.nav-dropdown>summary{padding:9px 12px;border-radius:10px;color:var(--muted-foreground);font-size:.94rem;font-weight:600;cursor:pointer;list-style:none}.desktop-nav>a:hover,.nav-dropdown>summary:hover,.desktop-nav>a[aria-current="page"]{background:var(--primary-soft);color:var(--foreground);text-decoration:none}.nav-dropdown{position:relative}.nav-dropdown>summary::-webkit-details-marker{display:none}.dropdown-panel{position:absolute;right:0;top:calc(100% + 8px);min-width:210px;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);display:grid;gap:2px}.dropdown-panel a{padding:9px 11px;border-radius:9px;color:var(--foreground)}.dropdown-panel a:hover{background:var(--primary-soft);text-decoration:none}.header-actions{display:flex;align-items:center;gap:8px}.icon-button,.mobile-menu-button{border:1px solid var(--border);background:var(--surface);color:var(--foreground);border-radius:11px;min-height:42px;padding:0 12px;cursor:pointer}.mobile-menu-button{display:none}.mobile-nav{padding:12px 0 18px;gap:6px}.mobile-nav a{padding:11px 12px;border-radius:10px;color:var(--foreground);font-weight:600}.mobile-nav a:hover{background:var(--primary-soft);text-decoration:none}
+      .hero{padding:76px 0 54px}.hero h1{max-width:850px;font-size:clamp(2.2rem,6vw,4.6rem);line-height:1.04;letter-spacing:-.055em;margin:.25rem 0 1rem}.hero .lead{max-width:760px;font-size:1.16rem;color:var(--muted-foreground)}.hero-shell{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:32px;align-items:center}.hero-panel{padding:26px;border:1px solid var(--border);background:var(--surface);border-radius:24px;box-shadow:var(--shadow)}.section{padding:64px 0}.surface-soft{background:var(--surface-soft)}.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px}.section-head h2{margin:.2rem 0}.eyebrow{font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--primary);margin:0 0 7px}.muted{color:var(--muted-foreground)}
+      .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.card,.section-card,.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:0 6px 24px rgba(20,32,51,.04)}.stat{display:grid;gap:4px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:1px solid var(--border);border-radius:11px;background:var(--surface);color:var(--foreground);font-weight:700;cursor:pointer;text-decoration:none}.button:hover{text-decoration:none;border-color:var(--primary);transform:translateY(-1px)}.button.primary{background:var(--primary);border-color:var(--primary);color:white}.button.primary:hover{background:var(--primary-hover)}.button.ghost{background:transparent}.form{display:grid;gap:15px}.form label{display:grid;gap:6px;font-weight:650}.form input,.form textarea,.form select,.reader-toolbar input,.reader-toolbar select{width:100%;border:1px solid var(--border);border-radius:11px;padding:11px 12px;background:var(--background);color:var(--foreground);font:inherit}.form textarea{min-height:130px;resize:vertical}.checkbox-row{display:flex!important;grid-template-columns:none!important;align-items:flex-start;gap:9px}.checkbox-row input{width:auto;margin-top:.35rem}.note{font-size:.92rem;color:var(--muted-foreground)}.feature-list{padding-left:1.25rem}.feature-list li{margin:.5rem 0}.skip-link{position:fixed;left:12px;top:-80px;z-index:100;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px}.skip-link:focus{top:12px}.site-footer{margin-top:48px;border-top:1px solid var(--border);padding:44px 0 20px;background:var(--surface)}.footer-grid{display:grid;grid-template-columns:2fr 1fr 1.4fr;gap:32px}.footer-links{display:grid;align-content:start;gap:8px}.footer-links strong{margin-bottom:4px}.footer-bottom{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted-foreground);font-size:.9rem}.footer-social{display:flex;gap:8px;margin-top:16px}.footer-social a{display:grid;place-items:center;width:36px;height:36px;border:1px solid var(--border);border-radius:10px;color:var(--foreground)}[hidden]{display:none!important}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.auto-links{padding-top:28px}.auto-links .section-head{margin-bottom:16px}
+      @media(max-width:900px){.desktop-nav{display:none}.mobile-menu-button{display:inline-flex;align-items:center;justify-content:center}.hero-shell,.grid-4{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.container{width:min(calc(100% - 24px),var(--container))}.site-header-inner{min-height:64px}.brand-text{font-size:.95rem}.hero{padding:52px 0 34px}.hero-shell,.grid-2,.grid-3,.grid-4,.footer-grid{grid-template-columns:1fr}.section{padding:44px 0}.section-head{display:block}.section-head .button{margin-top:10px}.card{padding:18px}.actions{display:grid;grid-template-columns:1fr}.actions .button{width:100%}}
     </style>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="site-header">
       <div class="container site-header-inner">
-        <a class="brand" href="/" aria-label="Nexus Wave Technologies home">
-          <span class="brand-mark" aria-hidden="true"><span></span></span>
-          <span class="brand-text">Nexus Wave Technologies</span>
-        </a>
+        <a class="brand" href="/" aria-label="Nexus Wave Technologies home"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="brand-text">Nexus Wave Technologies</span></a>
         <nav class="desktop-nav" aria-label="Primary navigation">
-          <a href="/" aria-current={path === "/" ? "page" : undefined}>Home</a>
-          <a href="/apps" aria-current={path.startsWith("/apps") ? "page" : undefined}>Apps & Services</a>
-          <details class="nav-dropdown">
-            <summary>Explore</summary>
-            <div class="dropdown-panel">
-              <a href="/shlok">Bhagavad Gita</a>
-              <a href="/women-safety">Women Safety</a>
-              <a href="/community">Community</a>
-              <a href="/posts">Posts</a>
-              <a href="/utilities">Free Tools</a>
-              <a href="/join-team">Join the Team</a>
-              <a href="/contact">Contact</a>
-            </div>
-          </details>
-          <a href="/about" aria-current={path.startsWith("/about") ? "page" : undefined}>About</a>
+          <a href="/" aria-current={path === "/" ? "page" : undefined} data-i18n="nav.home">Home</a>
+          <a href="/apps" aria-current={path.startsWith("/apps") ? "page" : undefined} data-i18n="nav.apps">Apps & Services</a>
+          <details class="nav-dropdown"><summary data-i18n="nav.explore">Explore</summary><div class="dropdown-panel">
+            <a href="/shlok" data-i18n="nav.gita">Bhagavad Gita</a><a href="/women-safety" data-i18n="nav.safety">Women Safety</a><a href="/community" data-i18n="nav.community">Community</a><a href="/posts" data-i18n="nav.posts">Posts</a><a href="/utilities" data-i18n="nav.tools">Free Tools</a><a href="/join-team" data-i18n="nav.team">Join the Team</a><a href="/contact" data-i18n="nav.contact">Contact</a>
+          </div></details>
+          <a href="/about" aria-current={path.startsWith("/about") ? "page" : undefined} data-i18n="nav.about">About</a>
         </nav>
         <div class="header-actions">
-          <a id="login-link" class="button" href="/login">Log in</a>
-          <a id="account-link" class="button primary" href="/account" hidden>My Account</a>
+          <a id="login-link" class="button" href="/login" data-i18n="nav.login">Log in</a>
+          <a id="account-link" class="button primary" href="/account" hidden data-i18n="nav.account">My Account</a>
           <ThemeToggle />
-          <button class="mobile-menu-button button" type="button" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+          <button class="mobile-menu-button button" type="button" aria-expanded="false" aria-controls="mobile-nav" data-i18n="nav.menu">Menu</button>
         </div>
       </div>
       <nav id="mobile-nav" hidden class="container mobile-nav" aria-label="Mobile navigation">
-        <a href="/">Home</a><a href="/apps">Apps & Services</a><a href="/shlok">Bhagavad Gita</a><a href="/women-safety">Women Safety</a><a href="/community">Community</a><a href="/posts">Posts</a><a href="/utilities">Free Tools</a><a href="/join-team">Join the Team</a><a href="/about">About</a><a href="/contact">Contact</a>
-        <a id="mobile-login-link" href="/login">Log in</a><a id="mobile-account-link" href="/account" hidden>My Account</a>
+        <a href="/" data-i18n="nav.home">Home</a><a href="/apps" data-i18n="nav.apps">Apps & Services</a><a href="/shlok" data-i18n="nav.gita">Bhagavad Gita</a><a href="/women-safety" data-i18n="nav.safety">Women Safety</a><a href="/community" data-i18n="nav.community">Community</a><a href="/posts" data-i18n="nav.posts">Posts</a><a href="/utilities" data-i18n="nav.tools">Free Tools</a><a href="/join-team" data-i18n="nav.team">Join the Team</a><a href="/about" data-i18n="nav.about">About</a><a href="/contact" data-i18n="nav.contact">Contact</a>
+        <a id="mobile-login-link" href="/login" data-i18n="nav.login">Log in</a><a id="mobile-account-link" href="/account" hidden data-i18n="nav.account">My Account</a>
       </nav>
     </header>
     <main id="main-content"><slot /></main>
+    <AutoLinks screen={linkScreen} />
     <SiteFooter />
-    <script is:inline>
+    <script>
+      import { browserSupabase } from "../lib/browser-auth";
+      import { applyTranslations } from "../lib/i18n";
+
+      const syncAccountLinks = (session = null) => {
+        const active = Boolean(session);
+        document.querySelectorAll("#account-link,#mobile-account-link").forEach((el) => { el.hidden = !active; });
+        document.querySelectorAll("#login-link,#mobile-login-link").forEach((el) => { el.hidden = active; });
+      };
+
+      const initShell = () => {
+        applyTranslations();
+        const mobileButton = document.querySelector(".mobile-menu-button");
+        const mobileNav = document.getElementById("mobile-nav");
+        if (mobileButton && !mobileButton.hasAttribute("data-ready")) {
+          mobileButton.setAttribute("data-ready", "true");
+          mobileButton.addEventListener("click", () => {
+            const expanded = mobileButton.getAttribute("aria-expanded") === "true";
+            mobileButton.setAttribute("aria-expanded", String(!expanded));
+            if (mobileNav) mobileNav.hidden = expanded;
+          });
+        }
+        browserSupabase?.auth.getSession().then(({ data }) => syncAccountLinks(data.session));
+      };
+
+      browserSupabase?.auth.onAuthStateChange((_event, session) => syncAccountLinks(session));
+      document.addEventListener("astro:page-load", initShell);
+      initShell();
+
       window.NexusSpeak = (text) => {
         if (!("speechSynthesis" in window)) return;
         window.speechSynthesis.cancel();
         window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
       };
-      const mobileButton = document.querySelector(".mobile-menu-button");
-      const mobileNav = document.getElementById("mobile-nav");
-      mobileButton?.addEventListener("click", () => {
-        const expanded = mobileButton.getAttribute("aria-expanded") === "true";
-        mobileButton.setAttribute("aria-expanded", String(!expanded));
-        if (mobileNav) mobileNav.hidden = expanded;
-      });
-      const loggedIn = () => Boolean(localStorage.getItem("nexus-access-token"));
-      const syncAccountLinks = () => {
-        const active = loggedIn();
-        document.querySelectorAll("#account-link,#mobile-account-link").forEach(el => el.hidden = !active);
-        document.querySelectorAll("#login-link,#mobile-login-link").forEach(el => el.hidden = active);
-      };
-      syncAccountLinks();
-      window.addEventListener("storage", syncAccountLinks);
     </script>
   </body>
 </html>
