@@ -1,157 +1,84 @@
 ---
 import Layout from "../layouts/Layout.astro";
 ---
-<Layout title="Nexus Wave Technologies" description="Accessible software, AI, utilities and spiritual learning from Nexus Wave Technologies.">
+<Layout title="Nexus Wave Technologies" description="Simple, accessible digital products, helpful services and spiritual learning.">
   <section class="hero">
     <div class="container hero-shell">
       <div>
         <p class="eyebrow">Nexus Wave Technologies</p>
-        <h1>User-friendly software. Built for real life.</h1>
-        <p class="lead">Accessible digital products for productivity, AI, media, community and spiritual learning.</p>
+        <h1>Technology that feels simple.</h1>
+        <p class="lead">Accessible apps, helpful services, audio tools and spiritual learning—designed for real people.</p>
         <div class="actions">
-          <a class="button primary" href="/apps">Explore Nexus Apps</a>
-          <a class="button" href="/utilities">Open Free Utilities</a>
-        </div>
-        <div class="grid-3" style="margin-top:1.5rem">
-          <div class="stat"><strong>Accessible</strong><span class="muted">Screen-reader and keyboard-friendly UI</span></div>
-          <div class="stat"><strong>Practical</strong><span class="muted">Useful tools without unnecessary complexity</span></div>
-          <div class="stat"><strong>Connected</strong><span class="muted">Supabase-backed website services</span></div>
+          <a class="button primary" href="/apps">Explore apps & services</a>
+          <a class="button" href="/women-safety">Women Safety</a>
         </div>
       </div>
       <div class="hero-panel">
-        <img src="/assets/hero-workspace.jpg" alt="Nexus workspace preview" />
-        <p class="muted" style="margin:.8rem 0 0">A cleaner, responsive website foundation ready for the Nexus ecosystem.</p>
+        <p class="eyebrow">Made for people</p>
+        <h2>Clear. Accessible. Useful.</h2>
+        <p class="muted">Simple screens, readable controls and practical features across the Nexus experience.</p>
       </div>
     </div>
   </section>
+
   <section class="section">
     <div class="container">
-      <div class="section-head"><div><p class="eyebrow">Products</p><h2>Nexus Plus and Geeta Nexus</h2></div><a class="button ghost" href="/apps">View all apps</a></div>
-      <div class="grid-2">
-        <article class="card"><img src="/assets/nexus-plus-mockup.jpg" alt="Nexus Plus app preview" style="width:100%;border-radius:14px;margin-bottom:1rem" /><h3>Nexus Plus</h3><p class="muted">AI assistant, audio and media tools, PDF utilities, e-paper workflows and accessibility-focused features.</p><a class="button primary" href="/apps#nexus-plus">Explore Nexus Plus</a></article>
-        <article class="card"><img src="/assets/geeta-nexus-mockup.jpg" alt="Geeta Nexus app preview" style="width:100%;border-radius:14px;margin-bottom:1rem" /><h3>Geeta Nexus</h3><p class="muted">Accessible Bhagavad Gita reading and spiritual learning with a clear, user-friendly experience.</p><a class="button" href="/apps#geeta-nexus">Explore Geeta Nexus</a></article>
+      <div class="section-head"><div><p class="eyebrow">What you can do</p><h2>Start with what you need.</h2></div></div>
+      <div class="grid-4">
+        <article class="card"><h3>AI & everyday tools</h3><p class="muted">Get help with writing, ideas, documents and everyday tasks.</p><a href="/apps">Explore apps →</a></article>
+        <article class="card"><h3>Audio & listening</h3><p class="muted">Record, edit and listen to voice and spiritual audio.</p><a href="/apps">Explore audio →</a></article>
+        <article class="card"><h3>Women Safety</h3><p class="muted">Find immediate-help information and request private support.</p><a href="/women-safety">Open safety center →</a></article>
+        <article class="card"><h3>Community</h3><p class="muted">A calmer place for useful conversations and shared ideas.</p><a href="/community">Visit community →</a></article>
       </div>
     </div>
   </section>
-  <section class="section surface-soft" aria-labelledby="hero-month-title">
-    <div class="container">
-      <div class="section-head">
-        <div><p class="eyebrow">Community recognition</p><h2 id="hero-month-title">Hero of the Month</h2></div>
-        <a class="button" href="/community">Meet the community</a>
-      </div>
-      <article class="card hero-month-card">
-        <p id="hero-month-name" class="gita-ref">Loading community recognition…</p>
-        <p id="hero-month-contribution" class="lead">The current recognition will appear here when a reviewed contribution is available.</p>
-        <p id="hero-month-proof" class="muted"></p>
+
+  <section class="section surface-soft">
+    <div class="container grid-2">
+      <article class="card">
+        <p class="eyebrow">Nexus Plus</p>
+        <h2>AI, audio, media and useful tools in one app.</h2>
+        <p class="muted">Built to make everyday digital work easier, with accessibility at the center.</p>
+        <a class="button primary" href="/apps#nexus-plus">See Nexus Plus</a>
+      </article>
+      <article class="card">
+        <p class="eyebrow">Geeta Nexus</p>
+        <h2>Read and listen at your own pace.</h2>
+        <p class="muted">Explore Bhagavad Gita and other spiritual learning content in a clear, accessible experience.</p>
+        <a class="button" href="/shlok">Read Bhagavad Gita</a>
       </article>
     </div>
   </section>
-  <section class="section daily-section" aria-labelledby="daily-shlok-title">
+
+  <section class="section">
     <div class="container">
-      <div class="section-head">
-        <div><p class="eyebrow">Geeta Nexus</p><h2 id="daily-shlok-title">आज का श्लोक</h2></div>
-        <a class="button primary" href="/shlok">सभी श्लोक पढ़ें</a>
-      </div>
-      <article class="card daily-shlok-card">
+      <div class="section-head"><div><p class="eyebrow">Today's reading</p><h2>आज का श्लोक</h2></div><a class="button" href="/shlok">सभी श्लोक</a></div>
+      <article class="card">
         <p id="daily-shlok-ref" class="gita-ref">श्लोक लोड हो रहा है…</p>
         <h3 id="daily-shlok-text" class="gita-sanskrit" lang="sa">कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।</h3>
         <p id="daily-shlok-meaning" class="gita-meaning" lang="hi">कर्म करने में ही तुम्हारा अधिकार है, उसके फल पर नहीं।</p>
         <div class="actions">
           <button id="daily-shlok-listen" class="button primary" type="button">श्लोक सुनें</button>
           <button id="daily-shlok-copy" class="button" type="button">कॉपी करें</button>
-          <a class="button ghost" href="/shlok">Read All Shlokas</a>
         </div>
-        <p id="daily-shlok-status" class="note" aria-live="polite">हर दिन श्लोक का चयन अपने आप बदलेगा।</p>
+        <p id="daily-shlok-status" class="note" aria-live="polite">हर दिन एक नया श्लोक चुना जाता है।</p>
       </article>
     </div>
   </section>
-  <section class="section surface-soft" aria-labelledby="latest-posts-title">
+
+  <section class="section surface-soft">
     <div class="container">
-      <div class="section-head">
-        <div><p class="eyebrow">Nexus Posts</p><h2 id="latest-posts-title">Latest from the Nexus team.</h2><p class="muted">Product updates, accessibility notes, community highlights and useful guides.</p></div>
-        <a class="button ghost" href="/posts">View All Posts</a>
-      </div>
-      <div class="grid-3">
-        <article class="card post-card"><p class="eyebrow">Product</p><h3>What is Nexus Plus?</h3><p class="muted">A practical look at the AI, media, document and accessibility tools being brought together in one product.</p><a class="button" href="/posts">Read post →</a></article>
-        <article class="card post-card"><p class="eyebrow">Accessibility</p><h3>Designing for independent use.</h3><p class="muted">How clearer headings, keyboard flow, speech support and predictable controls can make software easier to use.</p><a class="button" href="/posts">Read post →</a></article>
-        <article class="card post-card"><p class="eyebrow">Community</p><h3>Building a calmer community space.</h3><p class="muted">A look at the current community structure, moderation principles and what is intentionally being kept offline for now.</p><a class="button" href="/posts">Read post →</a></article>
-      </div>
+      <div class="section-head"><div><p class="eyebrow">Join us</p><h2>Want to help build something useful?</h2><p class="muted">Record audio, translate, improve accessibility, join the Women Safety campaign or help the community.</p></div><a class="button primary" href="/join-team">Join the team</a></div>
     </div>
   </section>
-  <section class="section" aria-labelledby="explore-title">
-    <div class="container">
-      <div class="section-head"><div><p class="eyebrow">Explore</p><h2 id="explore-title">More to discover.</h2></div></div>
-      <div class="grid-4">
-        <article class="card"><h3>Utilities</h3><p class="muted">Small browser-based helpers for everyday work.</p><a href="/utilities">Open utilities →</a></article>
-        <article class="card"><h3>Community</h3><p class="muted">A quieter community hub focused on people, ideas and future participation.</p><a href="/community">Explore community →</a></article>
-        <article class="card"><h3>Women Safety</h3><p class="muted">A dedicated support and awareness center with clear safety boundaries.</p><a href="/women-safety">Open safety center →</a></article>
-        <article class="card"><h3>Join Team</h3><p class="muted">Contribute through accessibility, audio, teaching, moderation and more.</p><a href="/join-team">Join the team →</a></article>
-      </div>
-    </div>
-  </section>
+
   <script is:inline>
-    const fallback = [
-      {chapter_number:2,verse_number:47,text:"कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।",translation:"कर्म करने में ही तुम्हारा अधिकार है, उसके फल पर कभी नहीं।"},
-      {chapter_number:2,verse_number:48,text:"योगस्थः कुरु कर्माणि सङ्गं त्यक्त्वा धनञ्जय।",translation:"हे धनंजय, आसक्ति छोड़कर समत्व-बुद्धि से कर्म करो।"},
-      {chapter_number:4,verse_number:7,text:"यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।",translation:"हे भारत, जब-जब धर्म की हानि और अधर्म की वृद्धि होती है।"},
-      {chapter_number:4,verse_number:8,text:"परित्राणाय साधूनां विनाशाय च दुष्कृताम्।",translation:"सज्जनों की रक्षा और दुष्कर्मियों के विनाश के लिए।"},
-      {chapter_number:18,verse_number:66,text:"सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज।",translation:"सभी प्रकार के आश्रयों को छोड़कर केवल मेरी शरण में आओ।"}
-    ];
-    const ref = document.getElementById("daily-shlok-ref");
-    const text = document.getElementById("daily-shlok-text");
-    const meaning = document.getElementById("daily-shlok-meaning");
-    const status = document.getElementById("daily-shlok-status");
-    let currentVerse = fallback[0];
-
-    const dayNumber = () => {
-      const now = new Date();
-      const start = new Date(now.getFullYear(), 0, 0);
-      return Math.floor((now - start) / 86400000);
-    };
-
-    const applyDaily = (verses) => {
-      if (!verses.length) return;
-      currentVerse = verses[dayNumber() % verses.length];
-      ref.textContent = `भगवद्गीता ${currentVerse.chapter_number}.${currentVerse.verse_number}`;
-      text.textContent = currentVerse.text;
-      meaning.textContent = currentVerse.translation || "हिंदी अर्थ उपलब्ध नहीं है।";
-      status.textContent = `आज का चयन: श्लोक ${currentVerse.chapter_number}.${currentVerse.verse_number}`;
-    };
-
-    document.getElementById("daily-shlok-listen")?.addEventListener("click", () => {
-      const speakText = `भगवद्गीता अध्याय ${currentVerse.chapter_number}, श्लोक ${currentVerse.verse_number}. ${currentVerse.text}. ${currentVerse.translation || ""}`;
-      window.NexusSpeak?.(speakText);
-    });
-
-    document.getElementById("daily-shlok-copy")?.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(`भगवद्गीता ${currentVerse.chapter_number}.${currentVerse.verse_number}\n${currentVerse.text}\n${currentVerse.translation || ""}`.trim());
-        status.textContent = "आज का श्लोक कॉपी हो गया।";
-      } catch {
-        status.textContent = "श्लोक कॉपी नहीं हो सका।";
-      }
-    });
-
-    (async () => {
-      try {
-        const responses = await Promise.all(Array.from({length:18}, (_, i) => fetch(`https://raw.githubusercontent.com/gita/gita/master/data/json/chapter_${i+1}.json`)));
-        if (responses.some(r => !r.ok)) throw new Error("remote unavailable");
-        const payloads = await Promise.all(responses.map(r => r.json()));
-        const verses = payloads.flatMap((payload, index) => {
-          const items = Array.isArray(payload) ? payload : (payload.verses || payload.data || []);
-          return items.map(v => ({
-            chapter_number: Number(v.chapter_number ?? index + 1),
-            verse_number: Number(v.verse_number ?? v.verse ?? v.id ?? 0),
-            text: v.text ?? v.slok ?? v.sanskrit ?? "",
-            translation: v.translation ?? v.hindi_translation ?? v.meaning ?? ""
-          }));
-        }).filter(v => v.text);
-        applyDaily(verses.length ? verses : fallback);
-      } catch {
-        applyDaily(fallback);
-        status.textContent = "पूरा संग्रह अभी उपलब्ध नहीं था; आज के लिए सुरक्षित fallback श्लोक दिखाया गया है।";
-      }
-    })();
+    const fallback=[{chapter_number:2,verse_number:47,text:"कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।",translation:"कर्म करने में ही तुम्हारा अधिकार है, उसके फल पर नहीं।"},{chapter_number:2,verse_number:48,text:"योगस्थः कुरु कर्माणि सङ्गं त्यक्त्वा धनञ्जय।",translation:"हे धनंजय, आसक्ति छोड़कर समत्व-बुद्धि से कर्म करो।"},{chapter_number:4,verse_number:7,text:"यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।",translation:"हे भारत, जब-जब धर्म की हानि और अधर्म की वृद्धि होती है।"},{chapter_number:18,verse_number:66,text:"सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज।",translation:"सभी प्रकार के आश्रयों को छोड़कर केवल मेरी शरण में आओ।"}];
+    let currentVerse=fallback[0];
+    const ref=document.getElementById("daily-shlok-ref"),text=document.getElementById("daily-shlok-text"),meaning=document.getElementById("daily-shlok-meaning"),status=document.getElementById("daily-shlok-status");
+    const apply=verses=>{if(!verses.length)return;currentVerse=verses[Math.floor(Date.now()/86400000)%verses.length];ref.textContent=`भगवद्गीता ${currentVerse.chapter_number}.${currentVerse.verse_number}`;text.textContent=currentVerse.text;meaning.textContent=currentVerse.translation||"";};
+    document.getElementById("daily-shlok-listen")?.addEventListener("click",()=>window.NexusSpeak?.(`भगवद्गीता अध्याय ${currentVerse.chapter_number}, श्लोक ${currentVerse.verse_number}. ${currentVerse.text}. ${currentVerse.translation||""}`));
+    document.getElementById("daily-shlok-copy")?.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(`भगवद्गीता ${currentVerse.chapter_number}.${currentVerse.verse_number}\n${currentVerse.text}\n${currentVerse.translation||""}`);status.textContent="श्लोक कॉपी हो गया।";}catch{status.textContent="कॉपी नहीं हो सका।";}});
+    (async()=>{try{const responses=await Promise.all(Array.from({length:18},(_,i)=>fetch(`https://raw.githubusercontent.com/gita/gita/master/data/json/chapter_${i+1}.json`)));if(responses.some(r=>!r.ok))throw 0;const payloads=await Promise.all(responses.map(r=>r.json()));const verses=payloads.flatMap((p,i)=>(Array.isArray(p)?p:(p.verses||p.data||[])).map(v=>({chapter_number:Number(v.chapter_number??i+1),verse_number:Number(v.verse_number??v.verse??v.id??0),text:v.text??v.slok??v.sanskrit??"",translation:v.translation??v.hindi_translation??v.meaning??""}))).filter(v=>v.text);apply(verses.length?verses:fallback);}catch{apply(fallback);status.textContent="आज के लिए एक छोटा सुरक्षित संग्रह दिखाया गया है।";}})();
   </script>
 </Layout>
-  
