@@ -11,7 +11,7 @@ export const supabase = supabaseUrl && supabaseKey
 
 export function requireSupabase() {
   if (!supabase) {
-    throw new Error("Supabase is not configured. Add PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_PUBLISHABLE_KEY.");
+    throw new Error("This feature is not ready yet. Please try again shortly.");
   }
   return supabase;
 }
