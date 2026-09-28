@@ -27,5 +27,5 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 <script is:inline>
   const form=document.getElementById("verify-form"), status=document.getElementById("verify-status");
-  form?.addEventListener("submit",async e=>{e.preventDefault();status.textContent="Submitting your free verification request…";status.textContent="Verification request prepared. The admin review endpoint must be connected before it can be submitted.";});
+  form?.addEventListener("submit",async e=>{e.preventDefault();status.textContent="Submitting your free verification request…";status.textContent="Your request is ready for review. Community verification is currently handled by the Nexus team.";});
 </script>
