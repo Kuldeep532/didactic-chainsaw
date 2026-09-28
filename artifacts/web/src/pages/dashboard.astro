@@ -4,34 +4,3 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="Workspace access disabled — Nexus Wave Technologies">
   <section class="hero"><div class="container"><p class="eyebrow">Public website</p><h1>Workspace access is currently disabled.</h1><p class="lead">The public website is intentionally limited to the main Nexus website experience.</p></div></section>
 </Layout>
-<script>
-  const load = async () => {
-    const status = document.querySelector("#dashboard-status");
-    const user = document.querySelector("#dashboard-user");
-    const email = document.querySelector("#dashboard-email");
-    try {
-      const { requireSupabase } = await import("../lib/supabase.js");
-      const client = requireSupabase();
-      const { data } = await client.auth.getUser();
-      if (!data.user) {
-        status.textContent = "You are not signed in. Sign in to access your account data.";
-        user.textContent = "Guest";
-        email.textContent = "No active session";
-        return;
-      }
-      user.textContent = data.user.user_metadata?.full_name || data.user.email || "Nexus user";
-      email.textContent = data.user.email || "";
-      status.textContent = "Your Supabase session is active.";
-    } catch (error) {
-      status.textContent = error instanceof Error ? error.message : "Unable to connect to Supabase.";
-    }
-  };
-  load();
-  document.querySelector("#dashboard-signout")?.addEventListener("click", async () => {
-    try {
-      const { requireSupabase } = await import("../lib/supabase.js");
-      await requireSupabase().auth.signOut();
-      window.location.href = "/login";
-    } catch {}
-  });
-</script>
