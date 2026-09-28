@@ -1,24 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 ---
-<Layout title="Dashboard — Nexus Wave Technologies" description="Your Nexus Wave Technologies account dashboard.">
-  <section class="section">
-    <div class="container">
-      <div class="page-title-row">
-        <div><p class="eyebrow">Workspace</p><h1 class="page-title">Dashboard</h1><p class="lead">Your account, community activity and saved Nexus services in one place.</p></div>
-        <a class="button" href="/account">Account settings</a>
-      </div>
-      <div class="grid-3">
-        <article class="card"><p class="eyebrow">Account</p><h3 id="dashboard-user">Loading…</h3><p class="muted" id="dashboard-email">Checking your Supabase session.</p></article>
-        <article class="card"><p class="eyebrow">Community</p><h3>Accessible conversations</h3><p class="muted">Open community posts, listen to content and manage your contributions.</p><a class="button" href="/community">Open community</a></article>
-        <article class="card"><p class="eyebrow">Apps</p><h3>Nexus ecosystem</h3><p class="muted">Explore Nexus Plus and Geeta Nexus services.</p><a class="button primary" href="/apps">View apps</a></article>
-      </div>
-      <div class="section-card">
-        <div class="section-head"><div><p class="eyebrow">Session</p><h2>Signed-in status</h2></div><button class="button" id="dashboard-signout" type="button">Sign out</button></div>
-        <div id="dashboard-status" class="note">Checking Supabase…</div>
-      </div>
-    </div>
-  </section>
+<Layout title="Workspace access disabled — Nexus Wave Technologies">
+  <section class="hero"><div class="container"><p class="eyebrow">Public website</p><h1>Workspace access is currently disabled.</h1><p class="lead">The public website is intentionally limited to the main Nexus website experience.</p></div></section>
 </Layout>
 <script>
   const load = async () => {
