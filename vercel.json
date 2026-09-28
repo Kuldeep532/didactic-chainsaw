@@ -1,12 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "installCommand": "cd artifacts/web && npm install --no-package-lock",
-  "buildCommand": "cd artifacts/web && npm run build",
+  "framework": "astro",
+  "installCommand": "npm install --prefix artifacts/web --no-package-lock",
+  "buildCommand": "npm run build --prefix artifacts/web",
   "outputDirectory": "artifacts/web/dist",
-  "cleanUrls": true,
-  "git": { "deploymentEnabled": true },
-  "headers": [
-    { "source": "/admin(?:/.*)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }] }
-  ]
+  "cleanUrls": true
 }
