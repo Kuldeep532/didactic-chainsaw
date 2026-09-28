@@ -13,7 +13,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 <main style="max-width:920px;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
 <p>Private administration</p><h1>Nexus Control Center</h1><p id="status">Checking secure session…</p>
 <section id="login-panel" hidden><h2>Administrator sign in</h2><form id="login-form"><label>Email <input id="email" type="email" required></label><br><label>Password <input id="password" type="password" required></label><br><button type="submit">Sign in</button></form><p id="login-status"></p></section>
-<section id="admin-panel" hidden><p id="identity"></p><h2>Private workspace</h2><div><button type="button" data-action="verification">Community verification</button> <button type="button" data-action="moderation">Post moderation</button> <button type="button" data-action="team">Team applications</button> <button type="button" data-action="safety">Safety reports</button></div><div id="result" style="white-space:pre-wrap;margin-top:1rem"></div><button id="sign-out" type="button">Sign out</button></section>
+<section id="admin-panel" hidden><p id="identity"></p><h2>Private workspace</h2><p>Support cases use a privacy boundary: the administrator can manage an anonymous case ID and availability, but cannot browse a person’s public profile or unrelated account data.</p><div><button type="button" data-action="verification">Community verification</button> <button type="button" data-action="moderation">Post moderation</button> <button type="button" data-action="team">Team applications</button> <button type="button" data-action="safety">Safety reports</button> <button type="button" data-action="support-hub">Private support hub</button></div><div id="result" style="white-space:pre-wrap;margin-top:1rem"></div><button id="sign-out" type="button">Sign out</button></section>
 </main>
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
@@ -30,7 +30,7 @@ async function render(){
 }
 document.getElementById("login-form")?.addEventListener("submit",async e=>{e.preventDefault();loginStatus.textContent="Signing in…";const {error}=await supabase.auth.signInWithPassword({email:document.getElementById("email").value.trim(),password:document.getElementById("password").value});loginStatus.textContent=error?"Sign in failed. Check your credentials.":"Signed in.";await render();});
 document.getElementById("sign-out")?.addEventListener("click",async()=>{await supabase?.auth.signOut();await render();});
-document.querySelectorAll("[data-action]").forEach(b=>b.addEventListener("click",()=>{result.textContent="Private module: "+b.dataset.action+"\n\nAll privileged reads and writes must be enforced by Supabase RLS, RPCs or Edge Functions. Never place a service-role key in this client app.";}));
+document.querySelectorAll("[data-action]").forEach(b=>b.addEventListener("click",()=>{result.textContent="Private module: "+b.dataset.action+"\n\nSupport case identities remain separated from public profiles. Staff should receive only the case alias, case status, conversation token and minimum information needed for support. All privileged reads and writes must be enforced by Supabase RLS, RPCs or Edge Functions. Never place a service-role key in this client app.";}));
 void render();
 </script>
 </body></html>
