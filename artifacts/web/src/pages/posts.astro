@@ -10,6 +10,13 @@ import Layout from "../layouts/Layout.astro";
     </div>
   </section>
 
+  <section id="live-posts" class="section surface-soft" hidden>
+    <div class="container">
+      <div class="section-head"><div><p class="eyebrow">Latest from Nexus</p><h2>New posts</h2><p class="muted">Posts published by the Nexus team appear here automatically.</p></div></div>
+      <div id="live-post-grid" class="grid-3"></div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="container">
       <div class="section-head">
@@ -82,3 +89,24 @@ import Layout from "../layouts/Layout.astro";
     </div>
   </section>
 </Layout>
+<script>
+  import { browserSupabase } from "../lib/browser-auth";
+  const loadPublishedPosts = async () => {
+    const section=document.getElementById("live-posts"),grid=document.getElementById("live-post-grid");
+    if(!section||!grid||!browserSupabase)return;
+    const {data}=await browserSupabase.from("site_posts").select("id,title,category,excerpt,body,slug,created_at").eq("published",true).order("created_at",{ascending:false}).limit(12);
+    if(!data?.length){section.hidden=true;return;}
+    grid.replaceChildren();
+    for(const post of data){
+      const card=document.createElement("article");card.className="card";
+      const category=document.createElement("p");category.className="eyebrow";category.textContent=post.category||"Nexus";
+      const title=document.createElement("h3");title.textContent=post.title;
+      const excerpt=document.createElement("p");excerpt.className="muted";excerpt.textContent=post.excerpt||post.body.slice(0,180);
+      card.append(category,title,excerpt);
+      grid.append(card);
+    }
+    section.hidden=false;
+  };
+  document.addEventListener("astro:page-load",loadPublishedPosts);
+  loadPublishedPosts();
+</script>
