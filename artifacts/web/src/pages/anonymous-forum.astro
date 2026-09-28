@@ -40,7 +40,7 @@ import Layout from "../layouts/Layout.astro";
       e.preventDefault();
       const text=msg.value.trim();
       if(blocked.some(rx=>rx.test(text))){ status.textContent="Please remove personal, credential, payment or private-contact information before submitting."; return; }
-      status.textContent="The anonymous submission is ready for the protected moderation endpoint.";
+      status.textContent="Anonymous submission is ready. The protected moderation service must validate and store it without exposing your account identity.";
     });
   </script>
 </Layout>
