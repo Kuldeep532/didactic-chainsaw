@@ -1,6 +1,18 @@
 ---
 import Layout from "../layouts/Layout.astro";
 ---
-<Layout title="Account access disabled — Nexus Wave Technologies">
-  <section class="hero"><div class="container"><p class="eyebrow">Public website</p><h1>Account access is currently disabled.</h1><p class="lead">The main Nexus website is available here. Account and workspace features are not exposed through the public website right now.</p></div></section>
+<Layout title="My Account — Nexus Wave Technologies" description="Your Nexus account and private service access.">
+  <section class="hero"><div class="container">
+    <p class="eyebrow">Nexus Account</p><h1 id="account-name">My Account</h1><p class="lead">Authenticated services, notifications and private support access are managed from this account context.</p>
+  </div></section>
+  <section class="section"><div class="container grid-3">
+    <article class="card"><p class="eyebrow">Identity</p><h3 id="account-email">Checking account…</h3><p class="muted">Public pages should not expose your private account information.</p></article>
+    <article class="card"><p class="eyebrow">Notifications</p><h3>Stay updated</h3><p class="muted">View support and account notifications.</p><a class="button" href="/notifications">Open Notifications</a></article>
+    <article class="card"><p class="eyebrow">Private Support</p><h3>Protected by login</h3><p class="muted">Private complaints and future support flows use the authenticated Nexus identity boundary.</p><a class="button primary" href="/women-safety">Women Safety</a></article>
+  </div></section>
+  <section class="section surface-soft"><div class="container"><button id="signout" class="button">Sign out</button><p id="status" class="note" aria-live="polite"></p></div></section>
 </Layout>
+<script is:inline>
+const token=localStorage.getItem("nexus-access-token");const emailEl=document.getElementById("account-email");const status=document.getElementById("status");
+if(!token){location.href="/login";}else{emailEl.textContent="Authenticated Nexus user";status.textContent="Session token present.";document.getElementById("signout")?.addEventListener("click",()=>{localStorage.removeItem("nexus-access-token");localStorage.removeItem("nexus-refresh-token");location.href="/login";});}
+</script>
