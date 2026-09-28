@@ -1,0 +1,61 @@
+---
+const screen = Astro.props.screen ?? "home";
+---
+<section id="auto-links" class="section" data-link-screen={screen} hidden aria-labelledby="auto-links-title">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">More to explore</p>
+        <h2 id="auto-links-title">Useful links</h2>
+      </div>
+    </div>
+    <div id="auto-links-grid" class="grid-3"></div>
+  </div>
+</section>
+
+<script>
+  import { browserSupabase } from "../lib/browser-auth";
+
+  const loadAutoLinks = async () => {
+    const section = document.getElementById("auto-links");
+    const grid = document.getElementById("auto-links-grid");
+    if (!section || !grid || !browserSupabase) return;
+    const screen = section.dataset.linkScreen ?? "home";
+    const { data } = await browserSupabase
+      .from("site_links")
+      .select("id,label,url,description,sort_order")
+      .in("screen", [screen, "all"])
+      .eq("active", true)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false })
+      .limit(12);
+
+    if (!data?.length) {
+      section.hidden = true;
+      return;
+    }
+
+    grid.replaceChildren();
+    for (const link of data) {
+      const article = document.createElement("article");
+      article.className = "card";
+      const title = document.createElement("h3");
+      title.textContent = link.label;
+      const description = document.createElement("p");
+      description.className = "muted";
+      description.textContent = link.description || "Open this link.";
+      const anchor = document.createElement("a");
+      anchor.className = "button";
+      anchor.href = link.url;
+      anchor.target = "_blank";
+      anchor.rel = "noopener noreferrer";
+      anchor.textContent = "Open link";
+      article.append(title, description, anchor);
+      grid.appendChild(article);
+    }
+    section.hidden = false;
+  };
+
+  document.addEventListener("astro:page-load", loadAutoLinks);
+  loadAutoLinks();
+</script>
