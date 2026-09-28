@@ -55,6 +55,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 POST /functions/v1/women-safety-campaign
 GET  /functions/v1/women-safety-guidance</code></pre></div>
   </div></section>
+
+  <section class="section surface-soft" id="private-support"><div class="container"><div class="section-head"><div><p class="eyebrow">Private support access</p><h2>A confidential route for follow-up support.</h2><p class="muted">After a private report is submitted, the support system can issue an opaque case link. That link—not a phone number or public profile—becomes the conversation entry point.</p></div></div><div class="grid-3"><article class="card"><h3>Private case link</h3><p class="muted">A random, revocable invitation token can open the case workspace without exposing the person's normal profile or phone number.</p></article><article class="card"><h3>Chat or voice</h3><p class="muted">When an approved support worker becomes available, the same case can support secure messaging or an ephemeral voice session.</p></article><article class="card"><h3>Minimum information</h3><p class="muted">Support staff should see only the active case context required for assistance, not the person's unrelated account history.</p></article></div></div></section>
 </Layout>
 <script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
   const reportForm=document.getElementById("safety-report-form"), reportStatus=document.getElementById("report-status");
