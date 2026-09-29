@@ -13,8 +13,8 @@ import Layout from "../../layouts/Layout.astro";
     const input=document.getElementById("base64-input"),status=document.getElementById("status");
     const toBase64=value=>{const bytes=new TextEncoder().encode(value);let binary="";for(const byte of bytes)binary+=String.fromCharCode(byte);return btoa(binary)};
     const fromBase64=value=>{const binary=atob(value.trim());const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));return new TextDecoder().decode(bytes)};
-    document.getElementById("encode").addEventListener("click",()=>{try{input.value=toBase64(input.value);status.textContent="Text encoded successfully."}catch{status.textContent="The text could not be encoded."}});
-    document.getElementById("decode").addEventListener("click",()=>{try{input.value=fromBase64(input.value);status.textContent="Base64 decoded successfully."}catch{status.textContent="The Base64 text is not valid. Please check it and try again."}});
+    document.getElementById("encode").addEventListener("click",()=>{try{input.value=toBase64(input.value);status.textContent="Your text is encoded."}catch{status.textContent="We couldn't encode that text."}});
+    document.getElementById("decode").addEventListener("click",()=>{try{input.value=fromBase64(input.value);status.textContent="Your Base64 text is decoded."}catch{status.textContent="That Base64 text isn't valid. Please check it and try again."}});
     document.getElementById("copy").addEventListener("click",async()=>{if(!input.value){status.textContent="There is nothing to copy yet.";return}try{await navigator.clipboard.writeText(input.value);status.textContent="Result copied."}catch{status.textContent="Copy is not available. You can select the text and copy it manually."}});
   </script>
 </Layout>
