@@ -12,8 +12,8 @@ import Layout from "../../layouts/Layout.astro";
   <script>
     const input=document.getElementById("json-input"),status=document.getElementById("status");
     const parse=()=>{try{return JSON.parse(input.value)}catch{return null}};
-    document.getElementById("format").addEventListener("click",()=>{const value=parse();if(value===null){status.textContent="Please check the JSON format and try again.";return}input.value=JSON.stringify(value,null,2);status.textContent="JSON formatted successfully."});
-    document.getElementById("minify").addEventListener("click",()=>{const value=parse();if(value===null){status.textContent="Please check the JSON format and try again.";return}input.value=JSON.stringify(value);status.textContent="JSON minified successfully."});
+    document.getElementById("format").addEventListener("click",()=>{const value=parse();if(value===null){status.textContent="That JSON doesn't look right. Please check it and try again.";return}input.value=JSON.stringify(value,null,2);status.textContent="Your JSON is formatted and ready."});
+    document.getElementById("minify").addEventListener("click",()=>{const value=parse();if(value===null){status.textContent="Please check the JSON format and try again.";return}input.value=JSON.stringify(value);status.textContent="Your JSON is now compact."});
     document.getElementById("copy").addEventListener("click",async()=>{if(!input.value.trim()){status.textContent="There is nothing to copy yet.";return}try{await navigator.clipboard.writeText(input.value);status.textContent="Result copied."}catch{status.textContent="Copy is not available. You can select the text and copy it manually."}});
   </script>
 </Layout>
