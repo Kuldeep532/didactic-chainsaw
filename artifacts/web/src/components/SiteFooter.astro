@@ -15,8 +15,18 @@
     <div class="footer-links"><strong>Legal</strong><a href="/legal/privacy">Privacy Policy</a><a href="/legal/terms">Terms and Conditions</a><a href="/legal/refund">Refund Policy</a><a href="/legal/disclaimer">Disclaimer</a><a href="/legal/accessibility">Accessibility</a></div>
   </div>
   <div id="footer-auto-links" class="container footer-links" hidden style="margin-top:26px;padding-top:20px;border-top:1px solid var(--color-border)"><strong>More links</strong><div id="footer-auto-link-list" class="footer-links"></div></div>
-  <div class="container footer-bottom">© {new Date().getFullYear()} Nexus Wave Technologies.</div>
+  <div class="container footer-bottom">
+    <span>© {new Date().getFullYear()} Nexus Wave Technologies.</span>
+  </div>
+  <div class="container footer-back-top">
+    <button id="back-to-top" class="back-to-top" type="button">Back to top <span aria-hidden="true">↑</span></button>
+  </div>
 </footer>
+<style>
+  .footer-back-top{display:flex;justify-content:center;padding-top:18px}
+  .back-to-top{min-height:44px;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--color-border);border-radius:10px;background:var(--color-surface);color:var(--color-text);font:inherit;font-weight:700;cursor:pointer}
+  .back-to-top:hover{background:var(--color-surface-soft);border-color:var(--color-border-strong)}
+</style>
 <script>
   const loadFooterLinks=async()=>{
     try {
@@ -30,6 +40,7 @@
       section.hidden=false;
     } catch {}
   };
+  document.getElementById("back-to-top")?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
   document.addEventListener("astro:page-load",()=>{setTimeout(loadFooterLinks,700)});
   setTimeout(loadFooterLinks,700);
 </script>
