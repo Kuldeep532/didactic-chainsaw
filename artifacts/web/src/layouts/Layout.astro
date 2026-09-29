@@ -860,12 +860,12 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
       <div class="container site-header-inner">
         <a class="brand nexus-brand" href="/" aria-label="Nexus Wave Technologies home"><span class="brand-text">Nexus Wave Technologies</span></a>
         <nav class="desktop-nav" aria-label="Primary navigation">
-          <a href="/" aria-current={path === "/" ? "page" : undefined} data-i18n="nav.home">Home</a>
-          <a href="/apps" aria-current={path.startsWith("/apps") ? "page" : undefined} data-i18n="nav.apps">Apps & Services</a>
-          <details class="nav-dropdown"><summary data-i18n="nav.explore">Explore</summary><div class="dropdown-panel">
-            <a href="/shlok" data-i18n="nav.gita">Bhagavad Gita</a><a href="/women-safety" data-i18n="nav.safety">Women Safety</a><a href="/safety-resources">Safety Resources</a><a href="/community" data-i18n="nav.community">Community</a><a href="/posts" data-i18n="nav.posts">Posts</a><a href="/tools" data-i18n="nav.tools">Tools</a><a href="/join-team" data-i18n="nav.team">Join the Team</a><a href="/contact" data-i18n="nav.contact">Contact</a>
-          </div></details>
-          <a href="/about" aria-current={path.startsWith("/about") ? "page" : undefined} data-i18n="nav.about">About</a>
+          <a href="/" aria-current={path === "/" ? "page" : undefined}>Home</a>
+          <a href="/apps" aria-current={path.startsWith("/apps") ? "page" : undefined}>Apps</a>
+          <a href="/women-safety" aria-current={path.startsWith("/women-safety") || path.startsWith("/safety-resources") ? "page" : undefined}>Women Safety</a>
+          <a href="/community" aria-current={path.startsWith("/community") ? "page" : undefined}>Community</a>
+          <a href="/tools" aria-current={path.startsWith("/tools") ? "page" : undefined}>Tools</a>
+          <a href="/about" aria-current={path.startsWith("/about") ? "page" : undefined}>About</a>
         </nav>
         <div class="header-actions">
           <a id="login-link" class="button" href="/login" data-i18n="nav.login">Log in</a>
@@ -875,7 +875,7 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
         </div>
       </div>
       <nav id="mobile-nav" hidden class="container mobile-nav" aria-label="Mobile navigation">
-        <a href="/" data-i18n="nav.home">Home</a><a href="/apps" data-i18n="nav.apps">Apps & Services</a><a href="/shlok" data-i18n="nav.gita">Bhagavad Gita</a><a href="/women-safety" data-i18n="nav.safety">Women Safety</a><a href="/safety-resources">Safety Resources</a><a href="/community" data-i18n="nav.community">Community</a><a href="/posts" data-i18n="nav.posts">Posts</a><a href="/tools" data-i18n="nav.tools">Tools</a><a href="/join-team" data-i18n="nav.team">Join the Team</a><a href="/about" data-i18n="nav.about">About</a><a href="/contact" data-i18n="nav.contact">Contact</a>
+        <a href="/">Home</a><a href="/apps">Apps</a><a href="/women-safety">Women Safety</a><a href="/community">Community</a><a href="/tools">Tools</a><a href="/about">About</a><a href="/shlok">Gita Nexus</a><a href="/join-team">Join the Team</a><a href="/contact">Contact</a>
         <a id="mobile-login-link" href="/login" data-i18n="nav.login">Log in</a><a id="mobile-account-link" href="/account" hidden data-i18n="nav.account">My Account</a>
       </nav>
     </header>
