@@ -1,0 +1,19 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+<Layout title="JSON Formatter — Nexus Wave Technologies" description="Format and validate JSON locally in your browser.">
+  <section class="hero tool-hero"><div class="container"><p class="eyebrow">Tools</p><h1>JSON Formatter</h1><p class="lead">Format and validate JSON locally. Nothing needs to be uploaded.</p></div></section>
+  <section class="section"><div class="container"><a class="button ghost back-link" href="/tools">Back to Tools</a><article class="card">
+    <label for="json-input">JSON</label><textarea id="json-input" class="tool-control" rows="14" placeholder='{"name":"Nexus","ready":true}'></textarea>
+    <div class="actions"><button id="format" class="button primary" type="button">Format JSON</button><button id="minify" class="button" type="button">Minify</button><button id="copy" class="button" type="button">Copy result</button></div>
+    <p id="status" class="note" aria-live="polite"></p>
+  </article></div></section>
+  <style>.tool-hero{padding-bottom:32px}.back-link{margin-bottom:18px}.tool-control{width:100%;border:1px solid var(--color-border);border-radius:12px;padding:12px;background:var(--color-surface);color:var(--color-text);font:inherit;resize:vertical}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}</style>
+  <script>
+    const input=document.getElementById("json-input"),status=document.getElementById("status");
+    const parse=()=>{try{return JSON.parse(input.value)}catch{return null}};
+    document.getElementById("format").addEventListener("click",()=>{const value=parse();if(value===null){status.textContent="Please check the JSON format and try again.";return}input.value=JSON.stringify(value,null,2);status.textContent="JSON formatted successfully."});
+    document.getElementById("minify").addEventListener("click",()=>{const value=parse();if(value===null){status.textContent="Please check the JSON format and try again.";return}input.value=JSON.stringify(value);status.textContent="JSON minified successfully."});
+    document.getElementById("copy").addEventListener("click",async()=>{if(!input.value.trim()){status.textContent="There is nothing to copy yet.";return}try{await navigator.clipboard.writeText(input.value);status.textContent="Result copied."}catch{status.textContent="Copy is not available. You can select the text and copy it manually."}});
+  </script>
+</Layout>
