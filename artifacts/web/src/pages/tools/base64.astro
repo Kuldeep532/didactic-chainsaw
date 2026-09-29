@@ -1,0 +1,20 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+<Layout title="Base64 Encoder & Decoder — Nexus Wave Technologies" description="Encode or decode text as Base64 locally in your browser.">
+  <section class="hero tool-hero"><div class="container"><p class="eyebrow">Tools</p><h1>Base64 Encoder & Decoder</h1><p class="lead">Convert text to and from Base64 directly in your browser.</p></div></section>
+  <section class="section"><div class="container"><a class="button ghost back-link" href="/tools">Back to Tools</a><article class="card">
+    <label for="base64-input">Text or Base64</label><textarea id="base64-input" class="tool-control" rows="10" placeholder="Enter text…"></textarea>
+    <div class="actions"><button id="encode" class="button primary" type="button">Encode</button><button id="decode" class="button" type="button">Decode</button><button id="copy" class="button" type="button">Copy result</button></div>
+    <p id="status" class="note" aria-live="polite"></p>
+  </article></div></section>
+  <style>.tool-hero{padding-bottom:32px}.back-link{margin-bottom:18px}.tool-control{width:100%;border:1px solid var(--color-border);border-radius:12px;padding:12px;background:var(--color-surface);color:var(--color-text);font:inherit;resize:vertical}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}</style>
+  <script>
+    const input=document.getElementById("base64-input"),status=document.getElementById("status");
+    const toBase64=value=>{const bytes=new TextEncoder().encode(value);let binary="";for(const byte of bytes)binary+=String.fromCharCode(byte);return btoa(binary)};
+    const fromBase64=value=>{const binary=atob(value.trim());const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));return new TextDecoder().decode(bytes)};
+    document.getElementById("encode").addEventListener("click",()=>{try{input.value=toBase64(input.value);status.textContent="Text encoded successfully."}catch{status.textContent="The text could not be encoded."}});
+    document.getElementById("decode").addEventListener("click",()=>{try{input.value=fromBase64(input.value);status.textContent="Base64 decoded successfully."}catch{status.textContent="The Base64 text is not valid. Please check it and try again."}});
+    document.getElementById("copy").addEventListener("click",async()=>{if(!input.value){status.textContent="There is nothing to copy yet.";return}try{await navigator.clipboard.writeText(input.value);status.textContent="Result copied."}catch{status.textContent="Copy is not available. You can select the text and copy it manually."}});
+  </script>
+</Layout>
