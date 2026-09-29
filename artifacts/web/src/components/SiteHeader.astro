@@ -1,5 +1,4 @@
 ---
-import ThemeToggle from "./ThemeToggle.astro";
 const path = Astro.url.pathname;
 ---
 <header class="site-header">
@@ -8,28 +7,33 @@ const path = Astro.url.pathname;
       <span class="brand-mark" aria-hidden="true"><span></span></span>
       <span class="brand-text">Nexus Wave Technologies</span>
     </a>
+    <p class="header-greeting" aria-label="Radhe Radhe">Radhe Radhe</p>
     <nav class="desktop-nav" aria-label="Primary navigation">
       <a href="/" aria-current={path === "/" ? "page" : undefined}>Home</a>
       <a href="/apps" aria-current={path.startsWith("/apps") ? "page" : undefined}>Apps</a>
       <details class="nav-dropdown">
-        <summary>Explore</summary>
+        <summary>Women Safety</summary>
         <div class="dropdown-panel">
-          <a href="/tools">Tools</a>
-          <a href="/community">Community</a>
-          <a href="/join-team">Join Our Team</a>
-          <a href="/contact">Contact</a>
+          <a href="/women-safety">Women Safety Home</a>
+          <a href="/women-safety/report">Private Complaint</a>
+          <a href="/women-safety/resources">Resource Center</a>
+          <a href="/women-safety/digital-safety">Digital Safety</a>
+          <a href="/women-safety/self-defence">Safety & Self-defence</a>
+          <a href="/private-support">Private Support</a>
         </div>
       </details>
+      <a href="/community" aria-current={path.startsWith("/community") ? "page" : undefined}>Community</a>
+      <a href="/tools" aria-current={path.startsWith("/tools") ? "page" : undefined}>Tools</a>
       <a href="/about" aria-current={path.startsWith("/about") ? "page" : undefined}>About</a>
     </nav>
     <div class="header-actions">
+      <a class="button" href="/login">Log in</a>
       <ThemeToggle />
       <button class="mobile-menu-button button" type="button" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
     </div>
   </div>
   <nav id="mobile-nav" hidden class="container mobile-nav" aria-label="Mobile navigation">
-    <a href="/">Home</a><a href="/apps">Apps</a><a href="/tools">Tools</a><a href="/community">Community</a><a href="/about">About</a><a href="/join-team">Join Our Team</a>
-    <a href="/contact">Contact</a>
+    <a href="/">Home</a><a href="/apps">Apps</a><a href="/women-safety">Women Safety</a><a href="/women-safety/report">Private Complaint</a><a href="/women-safety/resources">Resource Center</a><a href="/women-safety/digital-safety">Digital Safety</a><a href="/women-safety/self-defence">Safety & Self-defence</a><a href="/private-support">Private Support</a><a href="/community">Community</a><a href="/tools">Tools</a><a href="/about">About</a><a href="/contact">Contact</a>
   </nav>
 </header>
 <script is:inline>
@@ -49,3 +53,7 @@ const path = Astro.url.pathname;
     });
   });
 </script>
+<style>
+  .header-greeting{margin:0;color:var(--color-primary);font-weight:800;font-size:var(--text-sm);white-space:nowrap}
+  @media(max-width:959px){.header-greeting{display:none}}
+</style>
