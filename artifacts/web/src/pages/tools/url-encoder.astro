@@ -11,7 +11,7 @@ import Layout from "../../layouts/Layout.astro";
   <style>.tool-hero{padding-bottom:32px}.back-link{margin-bottom:18px}.tool-control{width:100%;border:1px solid var(--color-border);border-radius:12px;padding:12px;background:var(--color-surface);color:var(--color-text);font:inherit;resize:vertical}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}</style>
   <script>
     const input=document.getElementById("url-input"),status=document.getElementById("status");
-    const run=(mode)=>{try{input.value=mode==="encode"?encodeURIComponent(input.value):decodeURIComponent(input.value);status.textContent=mode==="encode"?"Text encoded successfully.":"Text decoded successfully."}catch{status.textContent="The text could not be decoded. Please check it and try again."}};
+    const run=(mode)=>{try{input.value=mode==="encode"?encodeURIComponent(input.value):decodeURIComponent(input.value);status.textContent=mode==="encode"?"Your text is encoded.":"Your text is decoded."}catch{status.textContent="We couldn't decode that text. Please check it and try again."}};
     document.getElementById("encode").addEventListener("click",()=>run("encode"));document.getElementById("decode").addEventListener("click",()=>run("decode"));
     document.getElementById("copy").addEventListener("click",async()=>{if(!input.value){status.textContent="There is nothing to copy yet.";return}try{await navigator.clipboard.writeText(input.value);status.textContent="Result copied."}catch{status.textContent="Copy is not available. You can select the text and copy it manually."}});
   </script>
