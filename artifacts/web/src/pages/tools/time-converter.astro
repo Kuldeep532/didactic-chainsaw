@@ -1,0 +1,21 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+<Layout title="Time Converter — Nexus Wave Technologies" description="Convert Unix timestamps to readable dates and back in your browser.">
+  <section class="hero"><div class="container"><p class="eyebrow">Tools · Time</p><h1>Time Converter</h1><p class="lead">Convert a Unix timestamp into a date, or turn a date into a timestamp.</p></div></section>
+  <section class="section"><div class="container grid-2">
+    <article class="card"><div class="form">
+      <label>Timestamp (seconds)<input id="timestamp" inputmode="numeric" placeholder="Example: 1780000000" /></label>
+      <button id="toDate" class="button primary" type="button">Convert to date</button>
+      <label>Date and time<input id="date" type="datetime-local" /></label>
+      <button id="toTimestamp" class="button" type="button">Convert to timestamp</button>
+      <p id="status" class="note" aria-live="polite"></p>
+    </div></article>
+    <article class="card"><p class="eyebrow">Quick help</p><h2>Use seconds, not milliseconds.</h2><p class="muted">If you have a 13-digit timestamp, it is usually in milliseconds. This tool keeps the main field in seconds so the result is easy to read.</p></article>
+  </div></section>
+</Layout>
+<script is:inline>
+const $=id=>document.getElementById(id);
+$("toDate")?.addEventListener("click",()=>{const n=Number($("timestamp").value);if(!Number.isFinite(n)){ $("status").textContent="Enter a valid timestamp first.";return } const d=new Date(n*1000);if(Number.isNaN(d.getTime())){$("status").textContent="That timestamp could not be converted.";return}$("date").value=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);$("status").textContent="The date and time are ready."});
+$("toTimestamp")?.addEventListener("click",()=>{if(!$("date").value){$("status").textContent="Choose a date and time first.";return}const n=Math.floor(new Date($("date").value).getTime()/1000);$("timestamp").value=String(n);$("status").textContent="The timestamp is ready."});
+</script>
