@@ -1,34 +1,65 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 ---
-<Layout title="QR Code Generator — Nexus Wave Technologies" description="Create a scannable QR code for text, Wi‑Fi or UPI directly in your browser.">
-  <section class="hero tool-hero"><div class="container"><p class="eyebrow">Tools</p><h1>QR Code Generator</h1><p class="lead">Create a scannable QR code in your browser. Your content stays on your device.</p></div></section>
+<Layout title="QR Code Generator — Nexus Wave Technologies" description="Create QR codes for text, Wi-Fi or UPI directly in your browser.">
+  <section class="hero tool-hero"><div class="container"><p class="eyebrow">Tools</p><h1>QR Code Generator</h1><p class="lead">Create a QR code for text, a link, Wi‑Fi or UPI. Everything stays in your browser.</p></div></section>
   <section class="section"><div class="container">
-    <a class="button ghost back-link" href="/tools">Back to Tools</a>
-    <article class="card qr-layout">
-      <div class="tool-form">
-        <label for="qr-type">QR type</label>
-        <select id="qr-type" class="tool-control"><option value="text">Text or link</option><option value="wifi">Wi‑Fi</option><option value="upi">UPI</option></select>
-        <label for="qr-content">Content</label>
-        <textarea id="qr-content" class="tool-control" rows="7" placeholder="Enter text or a link…"></textarea>
-        <p class="note" id="qr-help">For Wi‑Fi, enter a standard WIFI: payload. For UPI, enter your UPI ID.</p>
-        <button id="qr-generate" class="button primary" type="button">Generate QR Code</button>
+    <a class="button ghost back-link" href="/tools">← Back to Tools</a>
+    <article class="card qr-card">
+      <div class="qr-tabs" role="tablist" aria-label="QR code type">
+        <button class="qr-tab is-active" type="button" role="tab" aria-selected="true" data-type="text">Text</button>
+        <button class="qr-tab" type="button" role="tab" aria-selected="false" data-type="wifi">Wi‑Fi</button>
+        <button class="qr-tab" type="button" role="tab" aria-selected="false" data-type="upi">UPI</button>
       </div>
-      <div class="qr-result" aria-live="polite">
-        <div class="qr-stage"><canvas id="qr-canvas" width="320" height="320" aria-label="Generated QR code" hidden></canvas><div id="qr-placeholder" class="qr-placeholder"><strong>Your QR code will appear here</strong><span>Generate a code to see the result.</span></div></div>
-        <div id="qr-actions" class="qr-actions" hidden><button id="qr-download" class="button" type="button">Download</button><button id="qr-share" class="button" type="button">Share</button><button id="qr-regenerate" class="button primary" type="button">Regenerate</button></div>
-        <p id="qr-status" class="note"></p>
+      <div class="qr-layout">
+        <div class="tool-form">
+          <div id="text-fields">
+            <label for="qr-content">Text or link</label>
+            <textarea id="qr-content" class="tool-control" rows="7" placeholder="Enter text or paste a link…"></textarea>
+          </div>
+          <div id="wifi-fields" hidden>
+            <label for="wifi-name">Wi‑Fi name</label><input id="wifi-name" class="tool-control" type="text" autocomplete="off" placeholder="Enter Wi‑Fi name">
+            <label for="wifi-password">Wi‑Fi password</label><input id="wifi-password" class="tool-control" type="text" autocomplete="off" placeholder="Enter Wi‑Fi password">
+            <label for="wifi-security">Security</label><select id="wifi-security" class="tool-control"><option value="WPA">WPA/WPA2</option><option value="WEP">WEP</option><option value="nopass">No password</option></select>
+            <label><input id="wifi-hidden" type="checkbox"> Hidden network</label>
+          </div>
+          <div id="upi-fields" hidden>
+            <label for="upi-id">UPI ID</label><input id="upi-id" class="tool-control" type="text" inputmode="email" placeholder="example@upi">
+            <label for="upi-name">Payee name <span class="muted">(optional)</span></label><input id="upi-name" class="tool-control" type="text" placeholder="Name">
+            <label for="upi-amount">Amount <span class="muted">(optional)</span></label><input id="upi-amount" class="tool-control" type="number" min="0" step="0.01" placeholder="0.00">
+          </div>
+          <button id="qr-generate" class="button primary" type="button">Generate QR Code</button>
+          <p id="qr-status" class="note" aria-live="polite"></p>
+        </div>
+        <div class="qr-result" aria-live="polite">
+          <div class="qr-stage"><canvas id="qr-canvas" width="320" height="320" aria-label="Your QR code" hidden></canvas><div id="qr-placeholder" class="qr-placeholder"><strong>Your QR code will appear here</strong><span>Enter your details and select Generate QR Code.</span></div></div>
+          <div id="qr-actions" class="qr-actions" hidden><button id="qr-download" class="button" type="button">Download</button><button id="qr-regenerate" class="button primary" type="button">Regenerate</button><button id="qr-close" class="button" type="button">Close</button></div>
+        </div>
       </div>
     </article>
   </div></section>
-  <style>.tool-hero{padding-bottom:32px}.back-link{margin-bottom:18px}.qr-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,420px);gap:24px}.tool-form{display:grid;align-content:start;gap:10px}.tool-form label{font-size:14px;font-weight:700;margin-top:8px}.tool-control{width:100%;min-height:46px;border:1px solid var(--color-border);border-radius:12px;background:var(--color-surface);color:var(--color-text);padding:10px 12px;font:inherit}.tool-control:focus-visible{outline:3px solid color-mix(in srgb,var(--color-primary) 22%,transparent);border-color:var(--color-primary)}.tool-form textarea{resize:vertical;min-height:170px}.qr-result{display:grid;align-content:start;gap:14px}.qr-stage{min-height:380px;display:grid;place-items:center;padding:18px;border:1px solid var(--color-border);border-radius:18px;background:var(--color-surface-soft)}#qr-canvas{display:block;width:min(100%,320px);height:auto;border-radius:10px;background:#fff}.qr-placeholder{display:grid;gap:8px;text-align:center;max-width:250px}.qr-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.qr-actions .button{width:100%}@media(max-width:900px){.qr-layout{grid-template-columns:1fr}}@media(max-width:600px){.qr-actions{grid-template-columns:1fr}.qr-stage{min-height:300px}}</style>
+  <style>
+    .tool-hero{padding-bottom:32px}.back-link{margin-bottom:18px}.qr-card{display:grid;gap:24px}
+    .qr-tabs{display:flex;gap:8px;border-bottom:1px solid var(--color-border);padding-bottom:10px;overflow:auto}
+    .qr-tab{border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);border-radius:999px;padding:10px 18px;font:inherit;font-weight:700;cursor:pointer;white-space:nowrap}
+    .qr-tab.is-active{background:var(--color-primary);color:var(--color-on-primary,#fff);border-color:var(--color-primary)}
+    .qr-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,420px);gap:24px}.tool-form{display:grid;align-content:start;gap:10px}.tool-form label{font-size:14px;font-weight:700;margin-top:8px}.tool-control{width:100%;min-height:46px;border:1px solid var(--color-border);border-radius:12px;background:var(--color-surface);color:var(--color-text);padding:10px 12px;font:inherit}.tool-control:focus-visible{outline:3px solid color-mix(in srgb,var(--color-primary) 22%,transparent);border-color:var(--color-primary)}.tool-form textarea{resize:vertical;min-height:170px}.qr-result{display:grid;align-content:start;gap:14px}.qr-stage{min-height:380px;display:grid;place-items:center;padding:18px;border:1px solid var(--color-border);border-radius:18px;background:var(--color-surface-soft)}#qr-canvas{display:block;width:min(100%,320px);height:auto;border-radius:10px;background:#fff}.qr-placeholder{display:grid;gap:8px;text-align:center;max-width:250px}.qr-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.qr-actions .button{width:100%}@media(max-width:900px){.qr-layout{grid-template-columns:1fr}}@media(max-width:600px){.qr-actions{grid-template-columns:1fr}.qr-stage{min-height:300px}}
+  </style>
   <script>
     import QRCode from "qrcode";
-    const type=document.getElementById("qr-type"),content=document.getElementById("qr-content"),canvas=document.getElementById("qr-canvas"),placeholder=document.getElementById("qr-placeholder"),actions=document.getElementById("qr-actions"),status=document.getElementById("qr-status");
-    const payload=()=>{const v=content.value.trim();if(!v)return "";return type.value==="upi"&&!v.startsWith("upi://")?"upi://pay?pa="+encodeURIComponent(v):v};
-    const generate=async()=>{const value=payload();if(!value){status.textContent="Enter some content first.";return;}try{await QRCode.toCanvas(canvas,value,{width:320,margin:3,errorCorrectionLevel:"M"});canvas.hidden=false;placeholder.hidden=true;actions.hidden=false;status.textContent="Your QR code is ready.";}catch{status.textContent="We could not create the QR code. Please check your content and try again.";}};
+    const tabs=document.querySelectorAll(".qr-tab"), textFields=document.getElementById("text-fields"), wifiFields=document.getElementById("wifi-fields"), upiFields=document.getElementById("upi-fields");
+    const canvas=document.getElementById("qr-canvas"),placeholder=document.getElementById("qr-placeholder"),actions=document.getElementById("qr-actions"),status=document.getElementById("qr-status");
+    let activeType="text";
+    const showType=type=>{activeType=type;tabs.forEach(tab=>{const active=tab.dataset.type===type;tab.classList.toggle("is-active",active);tab.setAttribute("aria-selected",String(active))});textFields.hidden=type!=="text";wifiFields.hidden=type!=="wifi";upiFields.hidden=type!=="upi";status.textContent=""};
+    tabs.forEach(tab=>tab.addEventListener("click",()=>showType(tab.dataset.type)));
+    const payload=()=>{
+      if(activeType==="text") return document.getElementById("qr-content").value.trim();
+      if(activeType==="wifi"){const ssid=document.getElementById("wifi-name").value.trim(),password=document.getElementById("wifi-password").value,security=document.getElementById("wifi-security").value,hidden=document.getElementById("wifi-hidden").checked?"true":"false";if(!ssid)return "";return `WIFI:T:${security};S:${ssid};P:${password};H:${hidden};;`;}
+      const id=document.getElementById("upi-id").value.trim();if(!id)return "";const name=document.getElementById("upi-name").value.trim(),amount=document.getElementById("upi-amount").value.trim();const params=new URLSearchParams({pa:id});if(name)params.set("pn",name);if(amount)params.set("am",amount);params.set("cu","INR");return "upi://pay?"+params.toString();
+    };
+    const generate=async()=>{const value=payload();if(!value){status.textContent=activeType==="text"?"Enter some text or a link first.":activeType==="wifi"?"Enter the Wi‑Fi name first.":"Enter a UPI ID first.";return}try{await QRCode.toCanvas(canvas,value,{width:320,margin:3,errorCorrectionLevel:"M"});canvas.hidden=false;placeholder.hidden=true;actions.hidden=false;status.textContent="Your QR code is ready."}catch{status.textContent="We could not create the QR code. Please check the details and try again."}};
     document.getElementById("qr-generate").addEventListener("click",generate);document.getElementById("qr-regenerate").addEventListener("click",generate);
-    document.getElementById("qr-download").addEventListener("click",()=>{const a=document.createElement("a");a.download="nexus-qr-code.png";a.href=canvas.toDataURL("image/png");a.click();status.textContent="QR code downloaded."});
-    document.getElementById("qr-share").addEventListener("click",async()=>{try{const blob=await new Promise(r=>canvas.toBlob(r,"image/png"));if(navigator.share&&blob){const file=new File([blob],"nexus-qr-code.png",{type:"image/png"});if(!navigator.canShare||navigator.canShare({files:[file]})){await navigator.share({title:"QR Code",files:[file]});status.textContent="QR code shared.";return}}await navigator.clipboard.writeText(payload());status.textContent="QR content copied to your clipboard."}catch{status.textContent="The QR code is ready. You can download it instead."}});
+    document.getElementById("qr-download").addEventListener("click",()=>{const a=document.createElement("a");a.download="nexus-qr-code.png";a.href=canvas.toDataURL("image/png");a.click();status.textContent="Your QR code has been downloaded."});
+    document.getElementById("qr-close").addEventListener("click",()=>{canvas.hidden=true;placeholder.hidden=false;actions.hidden=true;document.querySelectorAll(".tool-control").forEach(el=>{if(el.tagName==="TEXTAREA"||el.tagName==="INPUT")el.value=""});document.getElementById("wifi-hidden").checked=false;status.textContent="QR code closed. You can create a new one anytime."});
   </script>
 </Layout>
