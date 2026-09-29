@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title="Nexus Help Assistant — Nexus Wave Technologies" description="Ask questions about Nexus Wave Technologies, Nexus Plus, Geeta Nexus and available tools.">
+  <section class="hero"><div class="container hero-shell">
+    <div><p class="eyebrow">Nexus Help Assistant</p><h1>Ask your question. Get a clear answer.</h1><p class="lead">Use chat for quick questions about Nexus, Nexus Plus, Geeta Nexus, website features and tools. Voice support can use your device's built-in speech controls.</p></div>
+    <div class="hero-panel"><h2>What can I ask?</h2><p class="muted">You can ask how a feature works, where to find it, what a tool does, or how to solve a common user problem.</p></div>
+  </div></section>
+  <section class="section"><div class="container"><div class="card help-chat">
+    <div id="help-messages" class="help-messages" aria-live="polite"><p class="muted">Hello. I’m Nexus Help Assistant. What would you like to know?</p></div>
+    <form id="help-form" class="help-form">
+      <label class="sr-only" for="help-input">Your question</label>
+      <textarea id="help-input" rows="3" placeholder="Type your question here…" required></textarea>
+      <div class="actions"><button class="button primary" type="submit">Ask Nexus Help</button><button class="button" id="speak-answer" type="button">Read answer aloud</button></div>
+    </form>
+    <p class="note">For account-specific or private support matters, use the relevant account or private-support page instead of sharing sensitive information here.</p>
+  </div></div></section>
+</Layout>
+<script>
+const form=document.getElementById("help-form");
+const input=document.getElementById("help-input");
+const messages=document.getElementById("help-messages");
+const speak=document.getElementById("speak-answer");
+let lastAnswer="";
+const add=(who,text)=>{const p=document.createElement("p");p.className=who==="user"?"help-user":"help-assistant";p.textContent=text;messages?.appendChild(p);messages?.scrollTo({top:messages.scrollHeight,behavior:"smooth"});};
+form?.addEventListener("submit",async e=>{
+ e.preventDefault(); const question=input.value.trim(); if(!question)return; add("user",question); input.value="";
+ add("assistant","Let me look that up for you…");
+ const pending=messages?.lastElementChild;
+ try{
+  const r=await fetch("/api/help",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question})});
+  if(!r.ok)throw new Error();
+  const data=await r.json(); const answer=data.answer||"I could not find a clear answer yet. Please try asking in a different way.";
+  pending.textContent=answer; lastAnswer=answer;
+ }catch{pending.textContent="I’m having trouble reaching Nexus Help right now. Please try again, or use the Contact page for direct support.";}
+});
+speak?.addEventListener("click",()=>{if(lastAnswer&&window.NexusSpeak)window.NexusSpeak(lastAnswer);});
+</script>
+<style>
+.help-chat{max-width:820px;margin:auto}
+.help-messages{min-height:180px;max-height:420px;overflow:auto;display:grid;gap:10px;padding:4px}
+.help-user,.help-assistant{margin:0;padding:12px 14px;border:1px solid var(--color-border);border-radius:12px;line-height:1.6}
+.help-user{background:var(--color-surface-soft)}
+.help-assistant{background:var(--color-surface-accent)}
+.help-form{display:grid;gap:12px;margin-top:18px}
+</style>
