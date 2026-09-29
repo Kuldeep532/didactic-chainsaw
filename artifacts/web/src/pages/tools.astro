@@ -1,66 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
 ---
-
-<Layout title="Tools — Nexus Wave Technologies" description="Private browser tools for text, images, documents, links and everyday tasks.">
-  <section class="hero tools-hero">
-    <div class="container">
-      <p class="eyebrow">Tools</p>
-      <h1>Simple tools for everyday tasks.</h1>
-      <p class="lead">Use a tool when you need it. Your work stays in your browser, with no account needed for these tools.</p>
+<Layout title="Tools — Nexus Wave Technologies" description="Private browser tools for everyday tasks.">
+  <section class="hero tools-hero"><div class="container"><p class="eyebrow">Tools</p><h1>Simple tools for everyday tasks.</h1><p class="lead">Choose a tool below. Your work stays in your browser, with no account needed for these tools.</p></div></section>
+  <section class="section"><div class="container">
+    <a class="button ghost page-back" href="/">← Back to Home</a>
+    <div class="section-head"><div><p class="eyebrow">All tools</p><h2>Choose a tool</h2><p class="muted">Every tool is shown here so you can find what you need quickly.</p></div></div>
+    <div class="grid-3">
+      <article class="card tool-card"><p class="eyebrow">QR</p><h3>QR Code Generator</h3><p class="muted">Create QR codes for text, Wi‑Fi and UPI.</p><a class="button primary" href="/tools/qr-code-generator">Open tool</a></article>
+      <article class="card tool-card"><p class="eyebrow">Text</p><h3>Text Counter</h3><p class="muted">Count words, characters, lines and reading time.</p><a class="button" href="/tools/text-counter">Open tool</a></article>
+      <article class="card tool-card"><p class="eyebrow">Text</p><h3>Text Formatter</h3><p class="muted">Clean up and transform text with useful formatting options.</p><a class="button" href="/tools/text-formatter">Open tool</a></article>
+      <article class="card tool-card"><p class="eyebrow">Documents</p><h3>Document Converter</h3><p class="muted">Prepare supported text files locally in your browser.</p><a class="button" href="/tools/document-converter">Open tool</a></article>
+      <article class="card tool-card"><p class="eyebrow">Images</p><h3>Image Compressor</h3><p class="muted">Reduce image file size directly on your device.</p><a class="button" href="/tools/image-compressor">Open tool</a></article>
+      <article class="card tool-card"><p class="eyebrow">Data</p><h3>JSON Formatter</h3><p class="muted">Format and check JSON without uploading it.</p><a class="button" href="/tools/json-formatter">Open tool</a></article>
+      <article class="card tool-card"><p class="eyebrow">Web</p><h3>URL Encoder & Decoder</h3><p class="muted">Encode or decode URL text privately in your browser.</p><a class="button" href="/tools/url-encoder">Open tool</a></article>
+      <article class="card tool-card"><p class="eyebrow">Data</p><h3>Base64 Encoder & Decoder</h3><p class="muted">Convert text to and from Base64 on your device.</p><a class="button" href="/tools/base64">Open tool</a></article>
     </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <article class="card tool-picker">
-        <div>
-          <p class="eyebrow">Choose one tool</p>
-          <h2 id="tool-title">QR Code Generator</h2>
-          <p id="tool-description" class="muted">Create a QR code for text, links, Wi‑Fi or UPI.</p>
-        </div>
-        <label for="tool-select">Select a tool</label>
-        <select id="tool-select" class="tool-select">
-          <option value="/tools/qr-code-generator" data-title="QR Code Generator" data-description="Create a QR code for text, links, Wi‑Fi or UPI.">QR Code Generator</option>
-          <option value="/tools/text-counter" data-title="Text Counter" data-description="Count words, characters, lines and reading time instantly.">Text Counter</option>
-          <option value="/tools/text-formatter" data-title="Text Formatter" data-description="Clean up and transform text without sending it anywhere.">Text Formatter</option>
-          <option value="/tools/document-converter" data-title="Document Converter" data-description="Prepare supported text documents locally in your browser.">Document Converter</option>
-          <option value="/tools/image-compressor" data-title="Image Compressor" data-description="Reduce image file size directly on your device.">Image Compressor</option>
-          <option value="/tools/json-formatter" data-title="JSON Formatter" data-description="Format, validate and copy JSON locally in your browser.">JSON Formatter</option>
-          <option value="/tools/url-encoder" data-title="URL Encoder & Decoder" data-description="Encode or decode URL text without uploading it.">URL Encoder & Decoder</option>
-          <option value="/tools/base64" data-title="Base64 Encoder & Decoder" data-description="Convert text to and from Base64 locally.">Base64 Encoder & Decoder</option>
-        </select>
-        <a id="open-tool" class="button primary" href="/tools/qr-code-generator">Open selected tool</a>
-      </article>
-
-      <div class="tool-note">
-        <strong>Private by design</strong>
-        <p>These browser tools process supported input on your device. They do not need a third-party API.</p>
-      </div>
-    </div>
-  </section>
-
-  <style>
-    .tools-hero{padding-bottom:40px}
-    .tool-picker{display:grid;gap:16px;max-width:760px;margin-inline:auto}
-    .tool-picker h2{margin-top:4px}
-    .tool-select{width:100%;min-height:48px;border:1px solid var(--color-border);border-radius:12px;background:var(--color-surface);color:var(--color-text);padding:10px 12px;font:inherit}
-    .tool-note{max-width:760px;margin:20px auto 0;padding:18px;border:1px solid var(--color-border);border-radius:14px;background:var(--color-surface-soft)}
-    .tool-note p{margin-top:4px;color:var(--color-text-muted)}
-  </style>
-
-  <script>
-    const select = document.getElementById("tool-select");
-    const title = document.getElementById("tool-title");
-    const description = document.getElementById("tool-description");
-    const open = document.getElementById("open-tool");
-    const sync = () => {
-      const option = select?.selectedOptions?.[0];
-      if (!option) return;
-      title.textContent = option.dataset.title ?? option.textContent;
-      description.textContent = option.dataset.description ?? "";
-      open.href = option.value;
-    };
-    select?.addEventListener("change", sync);
-  </script>
+  </div></section>
+  <style>.tools-hero{padding-bottom:40px}.page-back{margin-bottom:22px}.tool-card{display:grid;gap:10px}.tool-card .button{width:max-content;max-width:100%}</style>
 </Layout>
