@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+<Layout title="UUID Generator — Nexus Wave Technologies" description="Create random UUIDs in your browser.">
+  <section class="hero"><div class="container"><p class="eyebrow">Tools · IDs</p><h1>UUID Generator</h1><p class="lead">Create random IDs quickly on your device.</p></div></section>
+  <section class="section"><div class="container grid-2">
+    <article class="card"><div class="form">
+      <label>How many? <input id="count" type="number" min="1" max="50" value="5" /></label>
+      <button id="generate" class="button primary" type="button">Generate UUIDs</button>
+      <textarea id="output" rows="10" readonly aria-label="Generated UUIDs"></textarea>
+      <div class="actions"><button id="copy" class="button" type="button">Copy all</button><button id="clear" class="button" type="button">Clear</button></div>
+      <p id="status" class="note" aria-live="polite"></p>
+    </div></article>
+    <article class="card"><p class="eyebrow">About these IDs</p><h2>Each generated value is different.</h2><p class="muted">These random UUIDs are useful when you need a unique-looking identifier for a record, file, note or other item.</p></article>
+  </div></section>
+</Layout>
+<script is:inline>
+const $=id=>document.getElementById(id);
+const make=()=>crypto.randomUUID?crypto.randomUUID():(()=>{const b=new Uint8Array(16);crypto.getRandomValues(b);b[6]=(b[6]&15)|64;b[8]=(b[8]&63)|128;const h=[...b].map(x=>x.toString(16).padStart(2,"0")).join("");return h.slice(0,8)+"-"+h.slice(8,12)+"-"+h.slice(12,16)+"-"+h.slice(16,20)+"-"+h.slice(20)})();
+const generate=()=>{$("output").value=Array.from({length:Math.min(50,Math.max(1,Number($("count").value)||5))},make).join("\n");$("status").textContent="Your UUIDs are ready.";};
+$("generate")?.addEventListener("click",generate);
+$("copy")?.addEventListener("click",async()=>{if(!$("output").value){$("status").textContent="Generate some UUIDs first.";return}try{await navigator.clipboard.writeText($("output").value);$("status").textContent="Copied to your clipboard."}catch{$("status").textContent="Copy is not available here. Select the values and copy them instead."}});
+$("clear")?.addEventListener("click",()=>{$("output").value="";$("status").textContent="Cleared.";});
+generate();
+</script>
