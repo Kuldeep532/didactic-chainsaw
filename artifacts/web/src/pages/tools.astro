@@ -2,23 +2,75 @@
 import Layout from "../layouts/Layout.astro";
 ---
 <Layout title="Tools — Nexus Wave Technologies" description="Simple browser tools for everyday tasks.">
-  <section class="hero tools-hero"><div class="container"><p class="eyebrow">Tools</p><h1>Simple tools for everyday tasks.</h1><p class="lead">Choose a tool below. Your work stays in your browser, with no account needed for these tools.</p></div></section>
-  <section class="section"><div class="container">
-    <a class="button ghost page-back" href="/">← Back to Home</a>
-    <div class="section-head"><div><p class="eyebrow">All tools</p><h2>Choose a tool</h2><p class="muted">Every tool is shown here so you can find what you need quickly.</p></div></div>
-    <div class="grid-3">
-      <article class="card tool-card"><p class="eyebrow">QR</p><h3>QR Code Generator</h3><p class="muted">Create QR codes for text, Wi‑Fi and UPI.</p><a class="button primary" href="/tools/qr-code-generator">Open tool</a></article>
-      <article class="card tool-card"><p class="eyebrow">Text</p><h3>Text Counter</h3><p class="muted">Count words, characters, lines and reading time.</p><a class="button" href="/tools/text-counter">Open tool</a></article>
-      <article class="card tool-card"><p class="eyebrow">Text</p><h3>Text Formatter</h3><p class="muted">Clean up and transform text with useful formatting options.</p><a class="button" href="/tools/text-formatter">Open tool</a></article>
-      <article class="card tool-card"><p class="eyebrow">Documents</p><h3>Document Converter</h3><p class="muted">Prepare supported text files locally in your browser.</p><a class="button" href="/tools/document-converter">Open tool</a></article>
-      <article class="card tool-card"><p class="eyebrow">Images</p><h3>Image Compressor</h3><p class="muted">Reduce image file size directly on your device.</p><a class="button" href="/tools/image-compressor">Open tool</a></article>
-      <article class="card tool-card"><p class="eyebrow">Data</p><h3>JSON Formatter</h3><p class="muted">Format and check JSON without uploading it.</p><a class="button" href="/tools/json-formatter">Open tool</a></article>
-      <article class="card tool-card"><p class="eyebrow">Web</p><h3>URL Encoder & Decoder</h3><p class="muted">Encode or decode URL text privately in your browser.</p><a class="button" href="/tools/url-encoder">Open tool</a></article>
-      <article class="card tool-card"><p class="eyebrow">Data</p><h3>Base64 Encoder & Decoder</h3><p class="muted">Convert text to and from Base64 on your device.</p><a class="button" href="/tools/base64">Open tool</a></article>
-      <article class="card tool-card"><p class="eyebrow">Security</p><h3>Password Generator</h3><p class="muted">Create a strong password on your device.</p><a class="button" href="/tools/password-generator">Open tool</a></article>
-      <article class="card tool-card"><p class="eyebrow">IDs</p><h3>UUID Generator</h3><p class="muted">Create random unique IDs in seconds.</p><a class="button" href="/tools/uuid-generator">Open tool</a></article>
-      <article class="card tool-card"><p class="eyebrow">Time</p><h3>Time Converter</h3><p class="muted">Convert timestamps and dates quickly.</p><a class="button" href="/tools/time-converter">Open tool</a></article>
+  <section class="hero tools-hero">
+    <div class="container">
+      <p class="eyebrow">Tools</p>
+      <h1>Useful tools, all in one place.</h1>
+      <p class="lead">Pick a category, then open the tool you need. No extra clutter.</p>
     </div>
-  </div></section>
-  <style>.tools-hero{padding-bottom:40px}.page-back{margin-bottom:22px}.tool-card{display:grid;gap:10px}.tool-card .button{width:max-content;max-width:100%}</style>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="tool-list">
+        <article class="card tool-group">
+          <h2>Text tools</h2>
+          <div class="tool-items">
+            <a class="tool-item" href="/tools/text-counter"><strong>Text Counter</strong><span>Count words, characters, lines and reading time.</span></a>
+            <a class="tool-item" href="/tools/text-formatter"><strong>Text Formatter</strong><span>Clean and transform text with useful formatting options.</span></a>
+          </div>
+        </article>
+
+        <article class="card tool-group">
+          <h2>Image tools</h2>
+          <div class="tool-items">
+            <a class="tool-item" href="/tools/image-compressor"><strong>Image Compressor</strong><span>Reduce image file size directly on your device.</span></a>
+          </div>
+        </article>
+
+        <article class="card tool-group">
+          <h2>Document tools</h2>
+          <div class="tool-items">
+            <a class="tool-item" href="/tools/document-converter"><strong>Document Converter</strong><span>Prepare supported text files locally in your browser.</span></a>
+          </div>
+        </article>
+
+        <article class="card tool-group">
+          <h2>Data tools</h2>
+          <div class="tool-items">
+            <a class="tool-item" href="/tools/json-formatter"><strong>JSON Formatter</strong><span>Format and check JSON without uploading it.</span></a>
+            <a class="tool-item" href="/tools/base64"><strong>Base64 Encoder & Decoder</strong><span>Convert text to and from Base64 on your device.</span></a>
+          </div>
+        </article>
+
+        <article class="card tool-group">
+          <h2>Web & QR tools</h2>
+          <div class="tool-items">
+            <a class="tool-item" href="/tools/qr-code-generator"><strong>QR Code Generator</strong><span>Create QR codes for text, Wi-Fi and UPI.</span></a>
+            <a class="tool-item" href="/tools/url-encoder"><strong>URL Encoder & Decoder</strong><span>Encode or decode URL text privately in your browser.</span></a>
+          </div>
+        </article>
+
+        <article class="card tool-group">
+          <h2>Security & utility tools</h2>
+          <div class="tool-items">
+            <a class="tool-item" href="/tools/password-generator"><strong>Password Generator</strong><span>Create a strong password on your device.</span></a>
+            <a class="tool-item" href="/tools/uuid-generator"><strong>UUID Generator</strong><span>Create random unique IDs in seconds.</span></a>
+            <a class="tool-item" href="/tools/time-converter"><strong>Time Converter</strong><span>Convert timestamps and dates quickly.</span></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .tools-hero{padding-bottom:36px}
+    .tool-list{display:grid;gap:16px}
+    .tool-group{padding:22px}
+    .tool-group h2{margin:0 0 14px}
+    .tool-items{display:grid;gap:10px}
+    .tool-item{display:grid;gap:4px;padding:15px 16px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);color:var(--color-text);text-decoration:none}
+    .tool-item:hover{border-color:var(--color-border-strong);background:var(--color-surface-soft)}
+    .tool-item span{color:var(--color-text-muted);line-height:1.55}
+  </style>
 </Layout>
