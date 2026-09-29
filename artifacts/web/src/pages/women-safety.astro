@@ -20,7 +20,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
         <p class="eyebrow">If you are in immediate danger</p>
         <h2>Get emergency help first.</h2>
         <p class="muted">For an emergency in India, call 112 or contact your local emergency service.</p>
-        <a class="button primary" href="tel:112">Call 112</a>
+        <div class="actions"><a class="button primary" href="tel:112">Call 112</a><a class="button" href="tel:181">Women Helpline 181</a></div>
       </div>
     </div>
   </section>
@@ -88,6 +88,17 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
       </div>
     </div>
   </section>
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><div><p class="eyebrow">Quick help</p><h2>Useful official routes</h2><p class="muted">If your concern is urgent, use emergency services first. These links open official services directly.</p></div></div>
+      <div class="grid-3">
+        <article class="card"><h3>Women Helpline 181</h3><p class="muted">Women-focused support and referrals.</p><a class="button" href="tel:181">Call 181</a></article>
+        <article class="card"><h3>Cyber crime support</h3><p class="muted">For cyber financial fraud, call 1930 as soon as possible and report through the official portal.</p><div class="actions"><a class="button" href="tel:1930">Call 1930</a><a class="button" href="https://www.cybercrime.gov.in/" target="_blank" rel="noopener noreferrer">Open portal</a></div></article>
+        <article class="card"><h3>Free legal aid</h3><p class="muted">NALSA and State Legal Services Authorities provide legal-aid pathways.</p><a class="button" href="tel:15100">Call 15100</a></article>
+      </div>
+    </div>
+  </section>
+
 </Layout>
 
 <script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
