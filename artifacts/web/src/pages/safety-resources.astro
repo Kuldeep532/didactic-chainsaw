@@ -33,6 +33,21 @@ import Layout from "../layouts/Layout.astro";
     </div>
   </section>
 
+  <section class="section safety-overview">
+    <div class="container">
+      <div class="safety-guide">
+        <div><p class="eyebrow">Safety guide</p><h2>Choose what you need right now.</h2><p class="muted">You do not need to read the whole page. Start with the section that matches your situation.</p></div>
+        <nav class="safety-guide-links" aria-label="Women safety sections">
+          <a href="#emergency"><strong>Emergency</strong><span>112 · 181 · 1930</span></a>
+          <a href="#resources"><strong>Official help</strong><span>Government services</span></a>
+          <a href="#safety-plan"><strong>Safety plan</strong><span>Prepare ahead</span></a>
+          <a href="#digital-safety"><strong>Digital safety</strong><span>Accounts · evidence</span></a>
+          <a href="#self-defence"><strong>Self-defence</strong><span>Training · confidence</span></a>
+        </nav>
+      </div>
+    </div>
+  </section>
+
   <section class="section" id="emergency">
     <div class="container">
       <div class="section-head">
@@ -83,7 +98,7 @@ import Layout from "../layouts/Layout.astro";
       <div class="section-head">
         <div>
           <p class="eyebrow">Official support</p>
-          <h2>Government and institutional resources</h2>
+          <h2>Official help, organised by need</h2>
           <p class="muted">Use the official service for the type of help you need rather than relying only on a private platform.</p>
         </div>
       </div>
@@ -155,7 +170,7 @@ import Layout from "../layouts/Layout.astro";
       <div class="section-head">
         <div>
           <p class="eyebrow">Everyday safety</p>
-          <h2>Practical habits for different situations</h2>
+          <h2>Everyday safety, without the clutter</h2>
         </div>
       </div>
       <div class="grid-2">
@@ -208,7 +223,7 @@ import Layout from "../layouts/Layout.astro";
       <div class="section-head">
         <div>
           <p class="eyebrow">Digital safety checklist</p>
-          <h2>Protect your accounts, identity and evidence.</h2>
+          <h2>Keep your accounts and personal information safer.</h2>
         </div>
       </div>
       <div class="grid-4">
@@ -225,7 +240,7 @@ import Layout from "../layouts/Layout.astro";
       <div class="section-head">
         <div>
           <p class="eyebrow">Self-defence & confidence</p>
-          <h2>Learn skills that help you create distance and get away.</h2>
+          <h2>Learn skills focused on awareness and getting to safety.</h2>
           <p class="muted">Self-defence is not about proving strength or winning a fight. The main objective is to recognize danger, create an opportunity to escape and reach help.</p>
         </div>
       </div>
@@ -314,7 +329,7 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 
 <style>
-  .safety-resources-hero{padding-bottom:48px}
+  .safety-resources-hero{padding-bottom:36px}\n  .safety-overview{padding-top:0}\n  .safety-guide{display:grid;gap:22px;padding:24px;border:1px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-surface-raised);box-shadow:var(--shadow-1)}\n  .safety-guide-links{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}\n  .safety-guide-links a{display:grid;gap:4px;padding:14px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);text-decoration:none;color:var(--color-text)}\n  .safety-guide-links a:hover{border-color:var(--color-border-strong);background:var(--color-surface-soft);transform:translateY(-1px)}\n  .safety-guide-links span{font-size:.82rem;color:var(--color-text-muted)}
   .emergency-panel{border-color:color-mix(in srgb,var(--color-danger) 35%,var(--color-border));background:color-mix(in srgb,var(--color-danger) 5%,var(--color-surface))}
   .resource-card{display:grid;align-content:start;gap:10px}
   .resource-number{font-size:2rem;font-weight:850;letter-spacing:-.04em;color:var(--color-primary)}
@@ -326,5 +341,5 @@ import Layout from "../layouts/Layout.astro";
   .source-list a{display:grid;gap:3px;padding:16px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);text-decoration:none;color:var(--color-text)}
   .source-list a:hover{border-color:var(--color-border-strong);background:var(--color-surface-soft)}
   .source-list span{color:var(--color-text-muted);font-size:.9rem}
-  @media(max-width:850px){.source-list{grid-template-columns:1fr}}
+  @media(max-width:850px){.source-list{grid-template-columns:1fr}.safety-guide-links{grid-template-columns:repeat(2,minmax(0,1fr))}}\n  @media(max-width:520px){.safety-guide{padding:18px}.safety-guide-links{grid-template-columns:1fr}}
 </style>
