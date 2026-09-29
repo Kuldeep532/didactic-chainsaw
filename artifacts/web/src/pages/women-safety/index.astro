@@ -1,0 +1,32 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+<Layout title="Women Safety — Nexus Wave Technologies" description="A simple women-safety center with separate pages for urgent help, private complaints, resources, digital safety and self-defence.">
+  <section class="hero">
+    <div class="container hero-shell">
+      <div>
+        <p class="eyebrow">Women Safety</p>
+        <h1>Find the right kind of help without searching through one long page.</h1>
+        <p class="lead">Choose exactly what you need: immediate help, a private complaint, official resources, digital safety guidance, or safety and self-defence information.</p>
+      </div>
+      <div class="hero-panel">
+        <p class="eyebrow">Immediate danger</p>
+        <h2>Get emergency help first.</h2>
+        <p class="muted">In India, call 112 for an emergency. Women Helpline 181 can provide women-focused support and referrals.</p>
+        <div class="actions"><a class="button primary" href="tel:112">Call 112</a><a class="button" href="tel:181">Call 181</a></div>
+      </div>
+    </div>
+  </section>
+  <section class="section"><div class="container grid-3">
+    <a class="card safety-card" href="/women-safety/report"><h2>Private Complaint</h2><p class="muted">Share a concern privately and choose how you would like follow-up support.</p><span class="button primary">Open private complaint</span></a>
+    <a class="card safety-card" href="/women-safety/resources"><h2>Resource Center</h2><p class="muted">Find official emergency, legal, cyber-safety, shelter and support services.</p><span class="button">Open resource center</span></a>
+    <a class="card safety-card" href="/women-safety/digital-safety"><h2>Digital Safety</h2><p class="muted">Practical guidance for accounts, phones, privacy, evidence and online abuse.</p><span class="button">View digital safety</span></a>
+    <a class="card safety-card" href="/women-safety/self-defence"><h2>Safety & Self-defence</h2><p class="muted">Learn awareness, escape planning and responsible self-defence training guidance.</p><span class="button">View safety guidance</span></a>
+    <a class="card safety-card" href="/private-support"><h2>Private Support</h2><p class="muted">Open a secure private-support invitation when you have received one.</p><span class="button">Open private support</span></a>
+  </div></section>
+  <style>
+    .safety-card{display:grid;gap:10px;text-decoration:none;color:var(--color-text)}
+    .safety-card:hover{transform:translateY(-2px)}
+    .safety-card .button{width:max-content}
+  </style>
+</Layout>
