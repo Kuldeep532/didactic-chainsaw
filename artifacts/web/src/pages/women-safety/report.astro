@@ -1,0 +1,31 @@
+---
+import Layout from "../../layouts/Layout.astro";
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
+---
+<Layout title="Private Complaint — Women Safety" description="Submit a women-safety concern privately.">
+  <section class="hero"><div class="container"><p class="eyebrow">Women Safety</p><h1>Private Complaint</h1><p class="lead">Tell us only what you are comfortable sharing. Your complaint is kept out of public community areas.</p></div></section>
+  <section class="section"><div class="container grid-2">
+    <article class="card">
+      <div id="login-note"><h2>Log in to continue</h2><p class="muted">A Nexus account is required so your private request can be connected to a secure support process.</p><a class="button primary" href="/login">Log in</a></div>
+      <form id="safety-report-form" class="form" hidden>
+        <label>Name (optional)<input id="report-name" autocomplete="name" /></label>
+        <label>Are you using Nexus Plus?<select id="nexus-user"><option value="no">No / Not sure</option><option value="yes">Yes</option></select></label>
+        <div id="website-contact"><label>Contact email<input id="report-email" type="email" autocomplete="email" /></label><label>Contact phone<input id="report-phone" type="tel" autocomplete="tel" /></label></div>
+        <label>What do you need help with?<select id="report-type"><option>Harassment or intimidation</option><option>Online abuse or threats</option><option>Domestic or relationship safety concern</option><option>Public-place safety concern</option><option>Support or guidance</option><option>Something else</option></select></label>
+        <label>What happened?<textarea id="report-message" minlength="10" required placeholder="Tell us only what you are comfortable sharing."></textarea></label>
+        <label>Preferred follow-up<select id="report-contact-mode"><option value="secure-chat">Private chat</option><option value="voice">Private voice support</option><option value="either">Chat or voice</option></select></label>
+        <label class="checkbox-row"><input id="report-consent" type="checkbox" required /> I understand this is a support channel and not a replacement for emergency services.</label>
+        <button class="button primary" type="submit">Send private complaint</button>
+        <p id="report-status" class="note" aria-live="polite"></p>
+      </form>
+    </article>
+    <article class="card"><h2>Before you send</h2><p class="muted">Use 112 first if you are in immediate danger. For cyber financial fraud, 1930 may be appropriate. For women-focused support and referrals, 181 is available.</p><div class="actions"><a class="button" href="tel:112">Call 112</a><a class="button" href="tel:181">Call 181</a><a class="button" href="tel:1930">Call 1930</a></div></article>
+  </div></section>
+</Layout>
+<script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
+const token=localStorage.getItem("nexus-access-token");
+const form=document.getElementById("safety-report-form"); const loginNote=document.getElementById("login-note"); const status=document.getElementById("report-status"); const nexusUser=document.getElementById("nexus-user"); const contact=document.getElementById("website-contact");
+const syncContact=()=>{const appUser=nexusUser?.value==="yes";if(contact)contact.hidden=appUser;document.getElementById("report-email").required=!appUser;document.getElementById("report-phone").required=!appUser;};
+if(token){form.hidden=false;loginNote.hidden=true;syncContact();} nexusUser?.addEventListener("change",syncContact);
+form?.addEventListener("submit",async e=>{e.preventDefault();status.textContent="Sending your private complaint…";try{if(!token)throw new Error("Please log in before sending a private complaint.");if(!supabaseUrl||!supabaseKey)throw new Error("Private support is temporarily unavailable. Please try again later.");const r=await fetch(supabaseUrl+"/functions/v1/submit-women-safety-private-report",{method:"POST",headers:{apikey:supabaseKey,Authorization:"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify({contact_name:document.getElementById("report-name").value.trim(),contact_email:document.getElementById("report-email").value.trim(),contact_phone:document.getElementById("report-phone").value.trim(),nexus_plus_user:nexusUser.value==="yes",concern_type:document.getElementById("report-type").value,message:document.getElementById("report-message").value.trim(),contact_mode:document.getElementById("report-contact-mode").value})});if(!r.ok)throw new Error("We could not send your complaint right now. Please try again.");form.reset();syncContact();status.textContent="Your private complaint has been sent. Please keep your account available for follow-up.";}catch(error){status.textContent=error instanceof Error?error.message:"We could not send your complaint right now.";}});</script>
