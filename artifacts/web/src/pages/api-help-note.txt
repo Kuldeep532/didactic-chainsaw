@@ -1,1 +1,0 @@
-This placeholder file should not be used as a runtime API. Nexus Help calls should use the Supabase Edge Function `nexus-help`.
