@@ -862,21 +862,17 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
         <nav class="desktop-nav" aria-label="Primary navigation">
           <a href="/" aria-current={path === "/" ? "page" : undefined}>Home</a>
           <a href="/apps" aria-current={path.startsWith("/apps") ? "page" : undefined}>Apps</a>
-          <a href="/women-safety" aria-current={path.startsWith("/women-safety") || path.startsWith("/safety-resources") ? "page" : undefined}>Women Safety</a>
-          <a href="/community" aria-current={path.startsWith("/community") ? "page" : undefined}>Community</a>
           <a href="/tools" aria-current={path.startsWith("/tools") ? "page" : undefined}>Tools</a>
           <a href="/about" aria-current={path.startsWith("/about") ? "page" : undefined}>About</a>
         </nav>
         <div class="header-actions">
-          <a id="login-link" class="button" href="/login" data-i18n="nav.login">Log in</a>
-          <a id="account-link" class="button primary" href="/account" hidden data-i18n="nav.account">My Account</a>
           <ThemeToggle />
           <button class="mobile-menu-button button" type="button" aria-expanded="false" aria-controls="mobile-nav" data-i18n="nav.menu">Menu</button>
         </div>
       </div>
       <nav id="mobile-nav" hidden class="container mobile-nav" aria-label="Mobile navigation">
-        <a href="/">Home</a><a href="/apps">Apps</a><a href="/women-safety">Women Safety</a><a href="/community">Community</a><a href="/tools">Tools</a><a href="/about">About</a><a href="/shlok">Gita Nexus</a><a href="/join-team">Join the Team</a><a href="/contact">Contact</a>
-        <a id="mobile-login-link" href="/login" data-i18n="nav.login">Log in</a><a id="mobile-account-link" href="/account" hidden data-i18n="nav.account">My Account</a>
+        <a href="/">Home</a><a href="/apps">Apps</a><a href="/tools">Tools</a><a href="/about">About</a><a href="/shlok">Gita Nexus</a><a href="/contact">Contact</a>
+        
       </nav>
     </header>
     <main id="main-content"><slot /></main>
@@ -884,17 +880,8 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
     <SiteFooter />
     <script>
       import { applyTranslations } from "../lib/i18n";
-
-      const syncAccountLinks = (session = null) => {
-        const active = Boolean(session);
-        document.querySelectorAll("#account-link,#mobile-account-link").forEach((el) => { el.hidden = !active; });
-        document.querySelectorAll("#login-link,#mobile-login-link").forEach((el) => { el.hidden = active; });
-      };
-
       const initShell = () => {
         applyTranslations();
-        const active = Boolean(localStorage.getItem("nexus-access-token"));
-        syncAccountLinks(active ? {} : null);
         const mobileButton = document.querySelector(".mobile-menu-button");
         const mobileNav = document.getElementById("mobile-nav");
         if (mobileButton && !mobileButton.hasAttribute("data-ready")) {
@@ -906,21 +893,8 @@ const linkScreen = path === "/" ? "home" : path.replace(/^\//, "").split("/")[0]
           });
         }
       };
-
-      const connectAuthWhenIdle = async () => {
-        try {
-          const { browserSupabase } = await import("../lib/browser-auth");
-          browserSupabase?.auth.onAuthStateChange((_event, session) => syncAccountLinks(session));
-          const { data } = await browserSupabase?.auth.getSession() ?? { data: { session: null } };
-          syncAccountLinks(data.session);
-        } catch {}
-      };
-
       document.addEventListener("astro:page-load", initShell);
       initShell();
-      if ("requestIdleCallback" in window) requestIdleCallback(connectAuthWhenIdle, { timeout: 1800 });
-      else setTimeout(connectAuthWhenIdle, 900);
-
       const initMotion = () => { document.querySelectorAll(".scroll-reveal:not([data-motion-ready])").forEach((el) => { el.dataset.motionReady = "1"; if (!("IntersectionObserver" in window)) { el.classList.add("is-visible"); return; } const io = new IntersectionObserver((entries, obs) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add("is-visible"); obs.unobserve(entry.target); } }), { rootMargin: "0px 0px -10% 0px" }); io.observe(el); }); }; document.addEventListener("astro:page-load", initMotion); initMotion();
       window.NexusSpeak = (text) => {
         if (!("speechSynthesis" in window)) return;
